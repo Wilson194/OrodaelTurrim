@@ -1,0 +1,62 @@
+from pathlib import Path
+
+from PyQt5 import uic, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QFrame, QSplitter, QWidget
+
+from ZNS.presenter.Map import MapWidget
+
+PATH_RES = Path(__file__).parent.parent / 'res'
+
+
+class MainWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.init_ui()
+
+
+    def init_ui(self):
+        hbox = QHBoxLayout(self)
+
+        left = QFrame(self)
+        left.setFrameShape(QFrame.StyledPanel)
+
+        right = QFrame(self)
+        right.setFrameShape(QFrame.StyledPanel)
+
+        splitter1 = QSplitter(Qt.Horizontal)
+        splitter1.addWidget(left)
+        splitter1.addWidget(right)
+
+        hbox.addWidget(splitter1)
+        self.setLayout(hbox)
+
+        map_layout = QHBoxLayout(left)
+
+        map = MapWidget(left)
+        map_layout.addWidget(map)
+        left.setLayout(map_layout)
+
+
+class MainWindow:
+    def __init__(self):
+        self.app = QtWidgets.QApplication([])
+        self.window = QtWidgets.QMainWindow()
+
+        with open(str(PATH_RES / 'ui' / 'main.ui')) as f:
+            uic.loadUi(f, self.window)
+
+        central = self.window.findChild(QtWidgets.QWidget, 'centralWidget')
+
+        layout = QHBoxLayout()
+        main_widget = MainWidget(self.window)
+        layout.addWidget(main_widget)
+        central.setLayout(layout)
+
+
+    def execute(self):
+        self.window.show()
+        self.window.showMaximized()
+
+        return self.app.exec()

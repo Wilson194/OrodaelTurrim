@@ -1,17 +1,194 @@
-from PyQt5.QtWidgets import QGraphicsItem, QWidget
+import math
+from math import sqrt
+from pathlib import Path
+from typing import List
+from PyQt5 import uic
+from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtGui import QPixmap, QPen
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
+    QStyleOptionGraphicsItem
+
+from ZNS.business.Map import Map
+from ZNS.structure.Enums import TerrainType
+from ZNS.structure.Position import Position, Point, Border
+
+
+PATH_RES = Path(__file__).parent.parent / 'res'
+PATH_IMAGES = PATH_RES / 'images'
 
 
 class MapTileGraphicsItem(QGraphicsItem):
-    def __init__(self, tyle, position):
+    """
+    Graphic item for render one map tile
+    """
+    image_size = Point(296, 195)
+    hexagon_offset = Point(149, 127)
+
+
+    def __init__(self, map_object: Map, position: Position, border: Border, size: float = 0.3):
+        """
+        Create QGraphicItem object for rendering
+        :param map_object: reference to map object
+        :param position: position of tile
+        :param border: border class for define border rendering
+        :param size: size multiplication
+        """
         super().__init__()
-        self.x = x
-        self.y = y
+        self.__position = position
+        self.__map_object = map_object
+        self.__tile_size = Point(self.image_size.x * size, self.image_size.y * size)
+        self.__size = size
+        self.__border = border
+        # self.setAcceptHoverEvents(True)
 
 
-    def paint(self, painter, option, widget):
-        pixmap = QPixmap(str(Path(__file__).parent / 'res' / 'forest.png'))
-        painter.drawPixmap(self.x, self.y, 200, 200, pixmap)
+    def __get_center(self) -> Point:
+        """
+        Get center of the tile in pixels
+        :return: center point
+        """
+        p = self.__position.axial
+        x = self.__tile_size.x / 2 * (3 / 2 * p.q)
+        y = self.__tile_size.y / 2 * (sqrt(3) / 2 * p.q + sqrt(3) * p.r)
+        return Point(x, y)
+
+
+    def __hex_corner_offset(self, corner: int) -> float:
+        """
+        Compute offset to corner
+        :param corner: number of corner, start from right corner
+        :return: float offset
+        """
+        angle = 2 * math.pi * corner / 6
+        return self.__tile_size.x / 2 * math.cos((angle)), self.__tile_size.y / 2 * math.sin((angle))
+
+
+    def __get_corners(self) -> List[Point]:
+        """
+        Get list of corners of hexagon
+        :return: list of corners points
+        """
+        center = self.__get_center()
+        corners = []
+        for i in range(6):
+            offset = self.__hex_corner_offset(i)
+            corners.append(Point(
+                center.x + offset[0],
+                (center.y + offset[1]) * sqrt(3) / 2
+            ))
+        return corners
+
+
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
+        """
+        Override paint function. Call every time when need to be render
+        :param painter: painter object
+        :param option: style options of item
+        :param widget: parent widget
+        """
+
+        # Get image
+        image_path = self.__get_tile_image(self.__map_object[self.__position].get_type())
+        pixmap = QPixmap(str(image_path))
+
+        # Draw image
+        center = self.__get_center()
+        painter.drawPixmap(center.x, center.y * sqrt(3) / 2, self.__tile_size.x, self.__tile_size.y + 5, pixmap)
+
+        # Draw border
+        self.__draw_border(painter)
+
+
+    def boundingRect(self) -> QRectF:
+        """
+        Over rider bounding rectangle for determinate paint event
+        :return: rectangle of png image
+        """
+
+        return QRectF(self.__get_center().QPointF, (self.__get_center() + self.image_size * self.__size).QPointF)
+
+
+    def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent'):
+        print('click')
+
+
+    def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent'):
+        pass
+
+
+    def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent'):
+        pass
+
+
+    def __draw_border(self, painter: QPainter) -> None:
+        """
+        Draw border based on border definition
+        :param painter: painter object
+        """
+        colors = self.__border.color
+        borders = self.__border.order
+        corners = self.__get_corners()
+        for i in range(len(corners) - 1, -1, -1):
+            if borders[i] != 0:
+                painter.setPen(QPen(colors[i], borders[i], Qt.SolidLine))
+
+                painter.drawLine(corners[i] + (self.hexagon_offset * self.__size),
+                                 corners[i - 1] + (self.hexagon_offset * self.__size))
+
+
+    def __get_tile_image(self, tile_type: TerrainType) -> Path:
+        """
+        Get path to image based on terrain type
+        :param tile_type: enum of terrain type
+        :return: Path to png image
+        """
+        if tile_type == TerrainType.FIELD:
+            return PATH_IMAGES / 'field.png'
+
+        elif tile_type == TerrainType.FOREST:
+            return PATH_IMAGES / 'forest.png'
+
+        elif tile_type == TerrainType.HILL:
+            return PATH_IMAGES / 'hill.png'
+
+        elif tile_type == TerrainType.MOUNTAIN:
+            return PATH_IMAGES / 'mountain.png'
+
+        elif tile_type == TerrainType.VILLAGE:
+            return PATH_IMAGES / 'village.png'
+
+        else:
+            return PATH_IMAGES / 'river.png'
 
 
 class MapWidget(QWidget):
-    pass
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        with open(str(PATH_RES / 'ui' / 'mapWidget.ui')) as f:
+            uic.loadUi(f, self)
+
+        scroll_area = self.findChild(QScrollArea, 'scrollArea')
+        scroll_layout = QHBoxLayout()
+
+        scene = QGraphicsScene()
+        # scene.setSceneRect(-350, -350, 600, 600)
+        scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+
+        game_map = Map(11, 11)
+
+        for tile in game_map.tiles:
+            scene.addItem(MapTileGraphicsItem(game_map, tile, Border()))
+
+        view = QGraphicsView(scene)
+        view.setRenderHint(QPainter.Antialiasing)
+        view.setCacheMode(QGraphicsView.CacheBackground)
+        view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
+        # view.setDragMode(QGraphicsView.ScrollHandDrag)
+        # view.resize(400, 300)
+
+        scroll_layout.addWidget(view)
+        scroll_area.setLayout(scroll_layout)
+
+        view.show()
