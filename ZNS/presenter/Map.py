@@ -4,12 +4,13 @@ from pathlib import Path
 from typing import List
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPixmap, QPen
+from PyQt5.QtGui import QPixmap, QPen, QColor
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
     QStyleOptionGraphicsItem
 
-from ZNS.business.Map import Map
+from ZNS.business.GameEngine import GameEngine
+from ZNS.business.GameMap import GameMap
 from ZNS.structure.Enums import TerrainType
 from ZNS.structure.Position import Position, Point, Border
 
@@ -26,7 +27,7 @@ class MapTileGraphicsItem(QGraphicsItem):
     hexagon_offset = Point(149, 127)
 
 
-    def __init__(self, map_object: Map, position: Position, border: Border, size: float = 0.3):
+    def __init__(self, map_object: GameMap, position: Position, border: Border, size: float = 0.3):
         """
         Create QGraphicItem object for rendering
         :param map_object: reference to map object
@@ -99,14 +100,19 @@ class MapTileGraphicsItem(QGraphicsItem):
         # Draw border
         self.__draw_border(painter)
 
+        # Draw position
+        self.__draw_position(painter)
+
 
     def boundingRect(self) -> QRectF:
         """
         Over rider bounding rectangle for determinate paint event
         :return: rectangle of png image
         """
+        center = self.__get_center()
 
-        return QRectF(self.__get_center().QPointF, (self.__get_center() + self.image_size * self.__size).QPointF)
+        center *= Point(1., sqrt(3) / 2)
+        return QRectF(center.QPointF, (center + self.image_size * self.__size).QPointF)
 
 
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent'):
@@ -137,6 +143,12 @@ class MapTileGraphicsItem(QGraphicsItem):
                                  corners[i - 1] + (self.hexagon_offset * self.__size))
 
 
+    def __draw_position(self, painter: QPainter) -> None:
+        center = self.__get_center()
+        painter.drawText(self.boundingRect(),
+                         Qt.AlignVCenter | Qt.AlignHCenter, '{},{}'.format(self.__position.offset.q, self.__position.offset.r))
+
+
     def __get_tile_image(self, tile_type: TerrainType) -> Path:
         """
         Get path to image based on terrain type
@@ -163,8 +175,9 @@ class MapTileGraphicsItem(QGraphicsItem):
 
 
 class MapWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, game_engine: GameEngine = None):
         super().__init__(parent)
+        self.__game_engine = game_engine
 
         with open(str(PATH_RES / 'ui' / 'mapWidget.ui')) as f:
             uic.loadUi(f, self)
@@ -174,9 +187,9 @@ class MapWidget(QWidget):
 
         scene = QGraphicsScene()
         # scene.setSceneRect(-350, -350, 600, 600)
-        scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+        # scene.setItemIndexMethod(QGraphicsScene.NoIndex)
 
-        game_map = Map(11, 11)
+        game_map = self.__game_engine.game_map
 
         for tile in game_map.tiles:
             scene.addItem(MapTileGraphicsItem(game_map, tile, Border()))

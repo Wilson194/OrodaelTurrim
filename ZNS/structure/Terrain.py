@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 
-from ZNS.structure.Enums import TerrainType
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ZNS.structure.Enums import TerrainType
 
 
 class Terrain(ABC):
     @abstractmethod
-    def get_move_cost(self, target: 'Terrain') -> int:
+    def get_move_cost(self, target: 'TerrainType') -> int:
         pass
 
 
@@ -20,12 +23,13 @@ class Terrain(ABC):
 
 
     @abstractmethod
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
         pass
 
 
 class Field(Terrain):
-    def get_move_cost(self, target: TerrainType) -> int:
+    def get_move_cost(self, target: 'TerrainType') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.HILL, TerrainType.FOREST, TerrainType.RIVER):
@@ -42,12 +46,18 @@ class Field(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.FIELD
+
+
+    def char(self) -> str:
+        return 'I'
 
 
 class Forest(Terrain):
     def get_move_cost(self, target: 'Terrain') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.HILL, TerrainType.RIVER):
@@ -64,12 +74,18 @@ class Forest(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.FOREST
 
 
+    def char(self) -> str:
+        return 'F'
+
+
 class Hill(Terrain):
-    def get_move_cost(self, target: TerrainType) -> int:
+    def get_move_cost(self, target: 'TerrainType') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.HILL:
             return 1
         else:
@@ -84,12 +100,18 @@ class Hill(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.HILL
 
 
+    def char(self) -> str:
+        return 'H'
+
+
 class Mountain(Terrain):
-    def get_move_cost(self, target: TerrainType) -> int:
+    def get_move_cost(self, target: 'TerrainType') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 2
         else:
@@ -104,12 +126,18 @@ class Mountain(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.MOUNTAIN
 
 
+    def char(self) -> str:
+        return 'M'
+
+
 class River(Terrain):
-    def get_move_cost(self, target: TerrainType) -> int:
+    def get_move_cost(self, target: 'TerrainType') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 4
         elif target in (TerrainType.FOREST, TerrainType.HILL):
@@ -128,12 +156,18 @@ class River(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.RIVER
+
+
+    def char(self) -> str:
+        return 'R'
 
 
 class Village(Terrain):
     def get_move_cost(self, target: 'Terrain') -> int:
+        from ZNS.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.FOREST, TerrainType.HILL, TerrainType.RIVER):
@@ -150,5 +184,10 @@ class Village(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> TerrainType:
+    def get_type(self) -> 'TerrainType':
+        from ZNS.structure.Enums import TerrainType
         return TerrainType.VILLAGE
+
+
+    def char(self) -> str:
+        return 'V'

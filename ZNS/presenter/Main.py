@@ -4,14 +4,16 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QFrame, QSplitter, QWidget
 
+from ZNS.business.GameEngine import GameEngine
 from ZNS.presenter.Map import MapWidget
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 
 
 class MainWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, game_engine: GameEngine = None):
         super().__init__(parent)
+        self.__game_engine = game_engine
 
         self.init_ui()
 
@@ -34,13 +36,13 @@ class MainWidget(QWidget):
 
         map_layout = QHBoxLayout(left)
 
-        map = MapWidget(left)
-        map_layout.addWidget(map)
+        map_widget = MapWidget(left, self.__game_engine)
+        map_layout.addWidget(map_widget)
         left.setLayout(map_layout)
 
 
 class MainWindow:
-    def __init__(self):
+    def __init__(self, game_engine: GameEngine):
         self.app = QtWidgets.QApplication([])
         self.window = QtWidgets.QMainWindow()
 
@@ -50,7 +52,7 @@ class MainWindow:
         central = self.window.findChild(QtWidgets.QWidget, 'centralWidget')
 
         layout = QHBoxLayout()
-        main_widget = MainWidget(self.window)
+        main_widget = MainWidget(self.window, game_engine)
         layout.addWidget(main_widget)
         central.setLayout(layout)
 

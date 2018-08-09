@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
-from math import sqrt, tan, radians
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from PyQt5.QtCore import QPoint, QPointF
 from PyQt5.QtGui import QColor
+
+if TYPE_CHECKING:
+    from ZNS.structure.Enums import Nudge, HexDirection
 
 
 class Point(QPointF):
@@ -25,8 +27,15 @@ class Point(QPointF):
         return Point(self.x + other.x, self.y + other.y)
 
 
-    def __mul__(self, other: [float, int]):
-        return Point(self.x * other, self.y * other)
+    def __mul__(self, other: [float, int, 'Point']) -> 'Point':
+        if isinstance(other, Point):
+            return Point(self.x * other.x, self.y * other.y)
+        else:
+            return Point(self.x * other, self.y * other)
+
+
+    def __sub__(self, other):
+        return Point(self.x - other.x, self.y - other.y)
 
 
     @property
@@ -35,6 +44,16 @@ class Point(QPointF):
 
 
 class Position(ABC):
+    # Correction for aligning along X axis
+    CORRECTION_X = 1e-6
+
+    # Correction for aligning along Y axis
+    CORRECTION_Y = 2e-6
+
+    # Correction for aligning along Z axis
+    CORRECTION_Z = -3e-6
+
+
     def __init__(self):
         pass
 
@@ -55,6 +74,65 @@ class Position(ABC):
     @abstractmethod
     def offset(self) -> 'OffsetPosition':
         pass
+
+
+    @property
+    @abstractmethod
+    def int_coord(self) -> 'Position':
+        pass
+
+
+    def __sub__(self, other: 'Position') -> 'Position':
+        return CubicPosition(self.cubic.x - other.cubic.x, self.cubic.y - other.cubic.y, self.cubic.z - other.cubic.z)
+
+
+    def __add__(self, other: 'Position') -> 'Position':
+        return CubicPosition(self.cubic.x + other.cubic.x, self.cubic.y + other.cubic.y, self.cubic.z + other.cubic.z)
+
+
+    def length(self):
+        return (abs(self.cubic.x) + abs(self.cubic.y) + abs(self.cubic.z)) // 2
+
+
+    def interpolate(self, start: float, finish: float, progress: float) -> float:
+        return start + (finish - start) * progress
+
+
+    def interpolate_to(self, position: 'Position', progress: float, nudge: 'Nudge') -> 'Position':
+        x = self.interpolate(self.cubic.x + nudge.nudge(Position.CORRECTION_X),
+                             position.cubic.x + nudge.nudge(Position.CORRECTION_X), progress)
+        y = self.interpolate(self.cubic.y + nudge.nudge(Position.CORRECTION_Y),
+                             position.cubic.y + nudge.nudge(Position.CORRECTION_Y), progress)
+        z = self.interpolate(self.cubic.z + nudge.nudge(Position.CORRECTION_Z),
+                             position.cubic.z + nudge.nudge(Position.CORRECTION_Z), progress)
+        return CubicPosition(x, y, z)
+
+
+    def distance_from(self, position: 'Position') -> int:
+        return (self - position).length()
+
+
+    def neighbour(self, direction: 'HexDirection') -> 'Position':
+        return self + CubicPosition(direction.value.cubic.x, direction.value.cubic.y, direction.value.cubic.z)
+
+
+    def get_all_neighbours(self) -> List['Position']:
+        from ZNS.structure.Enums import HexDirection
+        return [self.neighbour(x) for x in
+                [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
+                 HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER] if self.neighbour(x)]
+
+
+    def plot_line(self, position: 'Position', nudge: 'Nudge') -> List['Position']:
+        distance = self.distance_from(position)
+
+        step = 1.0 / max(distance, 1)
+        line = list()
+
+        for i in range(distance + 1):
+            line.append(self.interpolate_to(position, step * i, nudge))
+
+        return line
 
 
 class CubicPosition(Position):
@@ -79,7 +157,7 @@ class CubicPosition(Position):
     @property
     def offset(self) -> 'OffsetPosition':
         col = self.__x_position
-        row = self.__z_position + (self.__x_position - (self.__x_position & 1)) // 2
+        row = self.__z_position + (self.__x_position - (abs(self.__x_position) % 2)) // 2
         return OffsetPosition(col, row)
 
 
@@ -99,8 +177,35 @@ class CubicPosition(Position):
 
 
     def __eq__(self, other: 'CubicPosition'):
-        print(other.x, other.y, other.z)
-        return self.x == other.x and self.y == other.y and self.z == other.z
+        return self.x == other.cubic.x and self.y == other.cubic.y and self.z == other.cubic.z
+
+
+    def __hash__(self):
+        return hash((self.__x_position, self.__y_position, self.__z_position))
+
+
+    def __lt__(self, other):
+        return self.x < other.cubic.x if self.x != other.cubic.x else self.y < other.cubic.y if self.y != other.cubic.y else self.z < other.z
+
+
+    @property
+    def int_coord(self):
+        rx = int(round(self.__x_position))
+        ry = int(round(self.__y_position))
+        rz = int(round(self.__z_position))
+
+        x_diff = abs(rx - self.__x_position)
+        y_diff = abs(ry - self.__y_position)
+        z_diff = abs(rz - self.__z_position)
+
+        if x_diff > y_diff and x_diff > z_diff:
+            rx = -ry - rz
+        elif y_diff > z_diff:
+            ry = -rx - rz
+        else:
+            rz = -rx - ry
+
+        return CubicPosition(rx, ry, rz)
 
 
     def __repr__(self):
@@ -140,8 +245,18 @@ class AxialPosition(Position):
         return self.__r
 
 
+    @property
+    def int_coord(self):
+        p = self.cubic.int_coord.axial
+        return AxialPosition(p.q, p.r)
+
+
     def __eq__(self, other: 'AxialPosition') -> bool:
         return self.q == other.q and self.r == other.r
+
+
+    def __hash__(self):
+        return hash((self.__r, self.__q))
 
 
     def __repr__(self):
@@ -184,7 +299,24 @@ class OffsetPosition(Position):
 
 
     def __eq__(self, other: 'OffsetPosition'):
-        return self.q == other.q and self.r == other.r
+        return self.q == other.offset.q and self.r == other.offset.r
+
+
+    def __hash__(self):
+        return hash((self.__r, self.__q))
+
+
+    def __lt__(self, other):
+        if self.q == other.q:
+            return self.r < other.q
+
+        return self.q < other.q
+
+
+    @property
+    def int_coord(self):
+        p = self.cubic.int_coord.offset
+        return OffsetPosition(p.q, p.r)
 
 
     def __repr__(self):

@@ -1,3 +1,4 @@
+from ZNS.business.GameMap import GameMap
 from ZNS.structure.Position import *
 import pytest
 
@@ -44,3 +45,21 @@ def test_axial_to_cubic(cube, axial):
 ])
 def test_cubic_to_axial(cube, axial):
     assert axial == cube.axial
+
+
+@pytest.mark.parametrize('position,state', [
+    (OffsetPosition(-6, -6), False),
+    (OffsetPosition(-5, -5), True),
+    (OffsetPosition(6, 6), False),
+    (OffsetPosition(5, 5), True),
+    (OffsetPosition(-6, 6), False),
+    (OffsetPosition(-5, 5), True),
+    (OffsetPosition(6, -6), False),
+    (OffsetPosition(5, -5), True),
+    (OffsetPosition(0, 0), True),
+])
+def test_position_on_map(position, state):
+    map = GameMap(11, 11)
+    assert map.position_on_map(position) == state
+
+

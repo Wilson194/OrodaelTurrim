@@ -32,6 +32,8 @@ Obránci
 
        **Životy:** 100
 
+       **Vzdálenost útoku:** 1
+
        **Aktivní schopnost:** Nablískaný štít - Oslepení
 
        **Pasivní schopnost:** Pevné brnění - Neoslabitelý
@@ -51,6 +53,8 @@ Obránci
 
        **Životy:** 75
 
+       **Vzdálenost útoku:** 2
+
        **Aktivní schopnost:** Ohnivá koule - Zapálení
 
        **Pasivní schopnost:** Nehořlavý plášť - Nezapálitelný
@@ -68,6 +72,8 @@ Obránci
        **Cena:** 5
 
        **Životy:** 50
+
+       **Vzdálenost útoku:** 3
 
        **Aktivní schopnost:** -
 
@@ -87,6 +93,8 @@ Obránci
 
        **Životy:** 200
 
+       **Vzdálenost útoku:** 1
+
        **Aktivní schopnost:** Popínavé kořeny - oslabení
 
        **Pasivní schopnost:** Tvrdá kůra - nazmrazitelný
@@ -104,6 +112,8 @@ Obránci
        **Cena:** 25
 
        **Životy:** 100
+
+       **Vzdálenost útoku:** 2
 
        **Aktivní schopnost:** Tuhá zima - zmražení
 

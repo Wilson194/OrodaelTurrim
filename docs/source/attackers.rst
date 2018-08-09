@@ -41,6 +41,8 @@
 
        **Životy:** 80
 
+       **Vzdálenost útoku:** 2
+
        **Aktivní schopnost:** Žádná
 
        **Pasivní schopnost:** Nezapálitelný
@@ -62,6 +64,8 @@
        **Cena:** 80
 
        **Životy:** 150
+
+       **Vzdálenost útoku:** 3
 
        **Aktivní schopnost:** Zapálení
 
@@ -87,6 +91,8 @@
 
        **Životy:** 60
 
+       **Vzdálenost útoku:** 2
+
        **Aktivní schopnost:** Zapálení
 
        **Pasivní schopnost:** Imunní vůči ohni
@@ -111,6 +117,8 @@
 
        **Životy:** 60
 
+       **Vzdálenost útoku:** 1
+
        **Aktivní schopnost:**
 
        **Pasivní schopnost:** Nezmrazitelný, létání
@@ -134,6 +142,8 @@
 
        **Životy:** 150
 
+       **Vzdálenost útoku:** 1
+
        **Aktivní schopnost:** Žádné
 
        **Pasivní schopnost:** Nesvazatelný
@@ -156,6 +166,8 @@
        **Cena:** 50
 
        **Životy:** 75
+
+       **Vzdálenost útoku:** 2
 
        **Aktivní schopnost:** Vyvolání kostlivce
 
@@ -181,6 +193,8 @@
 
        **Životy:** 35
 
+       **Vzdálenost útoku:** 1
+
        **Aktivní schopnost:** Žádná
 
        **Pasivní schopnost:** Žádná
@@ -203,6 +217,8 @@
        **Cena:** 5
 
        **Životy:** 20
+
+       **Vzdálenost útoku:** 1
 
        **Aktivní schopnost:** Dva útoky
 
