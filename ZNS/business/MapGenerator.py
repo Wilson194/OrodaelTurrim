@@ -8,12 +8,15 @@ from ZNS.structure.Position import AxialPosition, OffsetPosition, Position
 from ZNS.structure.Terrain import River, Field, Terrain
 
 RIVER_ON_MAP = 0.9
-MOUNTAIN = 0.2
-FIELD = 0.3
-HILL = 0.2
+
+MOUNTAIN = 0.1
+FIELD = 0.5
+HILL = 0.1
 FOREST = 0.2
 VILLAGE = 0.01
 PRECISION = 100
+
+NEIGHBOUR_ADD = 2
 
 
 class MapGenerator:
@@ -62,11 +65,14 @@ class MapGenerator:
 
 
     def get_random_terrain_type(self, position: Position) -> Terrain:
+        neigbours = self.__game_map.filter_positions_on_map(position.get_all_neighbours())
+
+        for neigbour in neigbours:
+            if self.__game_map[neigbour].get_type() not in (TerrainType.FIELD, TerrainType.RIVER):
+                for i in range(NEIGHBOUR_ADD):
+                    self.__base_random_list.append(self.__game_map[neigbour].get_type())
+
         terrain_type = random.choice(self.__base_random_list)
-
-        neigbours = position.get_all_neighbours()
-
-        # for neigbour in neigbours
 
         return terrain_type.value
 
@@ -101,22 +107,22 @@ class MapGenerator:
             side = random.randint(0, 3)
 
             if SIDES[side] == 'T':
-                position = random.randint(-self.__horizontal_radius, self.__horizontal_radius)
+                position = random.randint(-self.__horizontal_radius+1, self.__horizontal_radius-1)
                 start = OffsetPosition(position, -self.__vertical_radius)
                 self.__game_map.set_tile(start, River())
 
             elif SIDES[side] == 'R':
-                position = random.randint(-self.__vertical_radius, self.__vertical_radius)
+                position = random.randint(-self.__vertical_radius+1, self.__vertical_radius-1)
                 start = OffsetPosition(self.__horizontal_radius, position)
                 self.__game_map.set_tile(start, River())
 
             elif SIDES[side] == 'B':
-                position = random.randint(-self.__horizontal_radius, self.__horizontal_radius)
+                position = random.randint(-self.__horizontal_radius+1, self.__horizontal_radius-1)
                 start = OffsetPosition(position, self.__vertical_radius)
                 self.__game_map.set_tile(start, River())
 
             elif SIDES[side] == 'L':
-                position = random.randint(-self.__vertical_radius, self.__vertical_radius)
+                position = random.randint(-self.__vertical_radius+1, self.__vertical_radius-1)
                 start = OffsetPosition(-self.__horizontal_radius, position)
                 self.__game_map.set_tile(start, River())
 
@@ -134,6 +140,9 @@ class MapGenerator:
                 if neighbours:
                     for i in range(6):
                         neighbours.append(neighbours[0])
+
+                if not neighbours:
+                    break
 
                 neighbour = random.choice(neighbours)
                 self.__game_map.set_tile(neighbour, River())
