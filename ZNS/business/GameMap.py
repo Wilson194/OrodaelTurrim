@@ -4,7 +4,6 @@ from ZNS.structure.Exceptions import IllegalArgumentException
 from ZNS.structure.Position import Position, OffsetPosition
 from collections import deque
 
-
 if TYPE_CHECKING:
     from ZNS.structure.Enums import Nudge, TerrainType
     from ZNS.structure.Terrain import Terrain
@@ -15,6 +14,9 @@ class GameMap:
         self.__size = (width, height)
         if width % 2 == 0 or height % 2 == 0:
             raise IllegalArgumentException('Map size must be odd numbers')
+
+        self.__width = width
+        self.__height = height
 
         self.__vertical_radius = (height - 1) // 2
         self.__horizontal_radius = (width - 1) // 2
@@ -31,14 +33,11 @@ class GameMap:
                     position = OffsetPosition(x - self.__horizontal_radius, y - self.__vertical_radius)
                     self.set_tile(position, terrain_type.value)
 
-
     def __sizeof__(self):
         return self.__size
 
-
     def __getitem__(self, position: Position) -> 'Terrain':
         return self.__tiles[position.offset.q + self.__horizontal_radius][position.offset.r + self.__vertical_radius]
-
 
     def set_tile(self, position: Position, terrain: 'Terrain') -> None:
         """
@@ -52,7 +51,6 @@ class GameMap:
 
         self.__tiles[column][row] = terrain
 
-
     @property
     def tiles(self):
         """
@@ -62,6 +60,9 @@ class GameMap:
             for x in range(-self.__vertical_radius, self.__vertical_radius + 1):
                 yield OffsetPosition(y, x)
 
+    @property
+    def size(self):
+        return self.__width, self.__height
 
     def position_on_map(self, position: Position) -> bool:
         """
@@ -74,7 +75,6 @@ class GameMap:
 
         return - self.__vertical_radius <= x <= self.__vertical_radius and - self.__horizontal_radius <= y <= self.__horizontal_radius
 
-
     def filter_positions_on_map(self, positions: List[Position]):
         on_map_positions = []
         for position in positions:
@@ -83,16 +83,11 @@ class GameMap:
 
         return on_map_positions
 
-
     def position_on_edge(self, position: Position) -> bool:
         x = position.offset.r
         y = position.offset.q
 
-        print(x, y, self.__vertical_radius, self.__horizontal_radius)
-
-
         return self.__vertical_radius == x or -self.__vertical_radius == x or self.__horizontal_radius == y or -self.__horizontal_radius == y
-
 
     def can_been_seen(self, start: Position, end: Position, sight: int, nudge: 'Nudge') -> bool:
         if start == end:
@@ -103,7 +98,6 @@ class GameMap:
             sight = self[tile.int_coord].get_remaining_sigh(sight)
 
         return sight > 0
-
 
     def get_visible_tiles(self, position: Position, sight: int) -> List[Position]:
         from ZNS.structure.Enums import Nudge
@@ -121,7 +115,8 @@ class GameMap:
                 visited.append(current)
 
             if current not in visible and (
-                    self.can_been_seen(position, current, sight, Nudge.NEGATIVE) or self.can_been_seen(position, current, sight,
+                    self.can_been_seen(position, current, sight, Nudge.NEGATIVE) or self.can_been_seen(position,
+                                                                                                       current, sight,
                                                                                                        Nudge.POSITIVE)):
                 visible.append(current)
 
@@ -130,7 +125,6 @@ class GameMap:
                     pool.append(tile)
 
         return visible
-
 
     def get_accessible_tiles(self, position: Position, actions: int) -> Dict[Position, int]:
         if not self.position_on_map(position):
@@ -155,7 +149,6 @@ class GameMap:
                         pool.append(neighbour)
 
         return result_map
-
 
     def __repr__(self):
         map_repr = ''

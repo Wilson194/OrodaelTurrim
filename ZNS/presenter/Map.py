@@ -1,4 +1,5 @@
 import math
+import random
 from math import sqrt
 from pathlib import Path
 from typing import List
@@ -14,7 +15,6 @@ from ZNS.business.GameMap import GameMap
 from ZNS.structure.Enums import TerrainType
 from ZNS.structure.Position import Position, Point, Border
 
-
 PATH_RES = Path(__file__).parent.parent / 'res'
 PATH_IMAGES = PATH_RES / 'images'
 
@@ -25,7 +25,6 @@ class MapTileGraphicsItem(QGraphicsItem):
     """
     image_size = Point(296, 195)
     hexagon_offset = Point(149, 127)
-
 
     def __init__(self, map_object: GameMap, position: Position, border: Border, size: float = 0.3):
         """
@@ -43,7 +42,6 @@ class MapTileGraphicsItem(QGraphicsItem):
         self.__border = border
         # self.setAcceptHoverEvents(True)
 
-
     def __get_center(self) -> Point:
         """
         Get center of the tile in pixels
@@ -54,7 +52,6 @@ class MapTileGraphicsItem(QGraphicsItem):
         y = self.__tile_size.y / 2 * (sqrt(3) / 2 * p.q + sqrt(3) * p.r)
         return Point(x, y)
 
-
     def __hex_corner_offset(self, corner: int) -> float:
         """
         Compute offset to corner
@@ -63,7 +60,6 @@ class MapTileGraphicsItem(QGraphicsItem):
         """
         angle = 2 * math.pi * corner / 6
         return self.__tile_size.x / 2 * math.cos((angle)), self.__tile_size.y / 2 * math.sin((angle))
-
 
     def __get_corners(self) -> List[Point]:
         """
@@ -79,7 +75,6 @@ class MapTileGraphicsItem(QGraphicsItem):
                 (center.y + offset[1]) * sqrt(3) / 2
             ))
         return corners
-
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
         """
@@ -103,7 +98,6 @@ class MapTileGraphicsItem(QGraphicsItem):
         # Draw position
         self.__draw_position(painter)
 
-
     def boundingRect(self) -> QRectF:
         """
         Over rider bounding rectangle for determinate paint event
@@ -114,18 +108,14 @@ class MapTileGraphicsItem(QGraphicsItem):
         center *= Point(1., sqrt(3) / 2)
         return QRectF(center.QPointF, (center + self.image_size * self.__size).QPointF)
 
-
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent'):
         print('click')
-
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent'):
         pass
 
-
     def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent'):
         pass
-
 
     def __draw_border(self, painter: QPainter) -> None:
         """
@@ -142,12 +132,11 @@ class MapTileGraphicsItem(QGraphicsItem):
                 painter.drawLine(corners[i] + (self.hexagon_offset * self.__size),
                                  corners[i - 1] + (self.hexagon_offset * self.__size))
 
-
     def __draw_position(self, painter: QPainter) -> None:
         center = self.__get_center()
         painter.drawText(self.boundingRect(),
-                         Qt.AlignVCenter | Qt.AlignHCenter, '{},{}'.format(self.__position.offset.q, self.__position.offset.r))
-
+                         Qt.AlignVCenter | Qt.AlignHCenter,
+                         '{},{}'.format(self.__position.offset.q, self.__position.offset.r))
 
     def __get_tile_image(self, tile_type: TerrainType) -> Path:
         """
@@ -169,9 +158,22 @@ class MapTileGraphicsItem(QGraphicsItem):
 
         elif tile_type == TerrainType.VILLAGE:
             return PATH_IMAGES / 'village.png'
-
         else:
-            return PATH_IMAGES / 'river.png'
+            river_direction = []
+            out_of_map_direction = []
+            for i, position in enumerate(self.__position.get_all_neighbours()):
+                if not self.__map_object.position_on_map(position):
+                    out_of_map_direction.append(i)
+
+                elif self.__map_object[position].get_type() == TerrainType.RIVER:
+                    river_direction.append(int(i))
+
+            if out_of_map_direction:
+                river_direction.append(
+                    sorted(out_of_map_direction, key=lambda x: abs(river_direction[0] - x), reverse=True)[0])
+
+            river_direction.sort()
+            return PATH_IMAGES / 'river_{}.png'.format('-'.join(map(str, river_direction)))
 
 
 class MapWidget(QWidget):
