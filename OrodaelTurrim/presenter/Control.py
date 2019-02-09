@@ -4,7 +4,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QPushButton
 
-from ZNS.business.GameEngine import GameEngine
+from OrodaelTurrim.business.GameEngine import GameEngine
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 

@@ -1,9 +1,9 @@
 import sys
 from typing import List
 
-from ZNS.structure.Enums import AttributeType
-from ZNS.structure.Position import Position
-from ZNS.structure.filter.FilterPattern import MoveFilter
+from OrodaelTurrim.structure.Enums import AttributeType
+from OrodaelTurrim.structure.Position import Position
+from OrodaelTurrim.structure.filter.FilterPattern import MoveFilter
 
 
 class MoveToBaseFilter(MoveFilter):

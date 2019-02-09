@@ -10,10 +10,10 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
     QStyleOptionGraphicsItem
 
-from ZNS.business.GameEngine import GameEngine
-from ZNS.business.GameMap import GameMap
-from ZNS.structure.Enums import TerrainType
-from ZNS.structure.Position import Position, Point, Border
+from OrodaelTurrim.business.GameEngine import GameEngine
+from OrodaelTurrim.business.GameMap import GameMap
+from OrodaelTurrim.structure.Enums import TerrainType
+from OrodaelTurrim.structure.Position import Position, Point, Border
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 PATH_IMAGES = PATH_RES / 'images'

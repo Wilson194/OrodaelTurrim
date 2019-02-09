@@ -1,7 +1,7 @@
 from enum import Enum
 
-from ZNS.structure.Position import Position, CubicPosition
-from ZNS.structure.Terrain import Field, Forest, Hill, Mountain, River, Village
+from OrodaelTurrim.structure.Position import Position, CubicPosition
+from OrodaelTurrim.structure.Terrain import Field, Forest, Hill, Mountain, River, Village
 
 
 class AutoNumber(Enum):

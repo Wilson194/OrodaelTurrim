@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ZNS.structure.Enums import TerrainType
+    from OrodaelTurrim.structure.Enums import TerrainType
 
 
 class Terrain(ABC):
@@ -29,7 +29,7 @@ class Terrain(ABC):
 
 class Field(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.HILL, TerrainType.FOREST, TerrainType.RIVER):
@@ -47,7 +47,7 @@ class Field(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FIELD
 
 
@@ -57,7 +57,7 @@ class Field(Terrain):
 
 class Forest(Terrain):
     def get_move_cost(self, target: 'Terrain') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.HILL, TerrainType.RIVER):
@@ -75,7 +75,7 @@ class Forest(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FOREST
 
 
@@ -85,7 +85,7 @@ class Forest(Terrain):
 
 class Hill(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.HILL:
             return 1
         else:
@@ -101,7 +101,7 @@ class Hill(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.HILL
 
 
@@ -111,7 +111,7 @@ class Hill(Terrain):
 
 class Mountain(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 2
         else:
@@ -127,7 +127,7 @@ class Mountain(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.MOUNTAIN
 
 
@@ -137,7 +137,7 @@ class Mountain(Terrain):
 
 class River(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 4
         elif target in (TerrainType.FOREST, TerrainType.HILL):
@@ -157,7 +157,7 @@ class River(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.RIVER
 
 
@@ -167,7 +167,7 @@ class River(Terrain):
 
 class Village(Terrain):
     def get_move_cost(self, target: 'Terrain') -> int:
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
             return 3
         elif target in (TerrainType.FOREST, TerrainType.HILL, TerrainType.RIVER):
@@ -185,7 +185,7 @@ class Village(Terrain):
 
 
     def get_type(self) -> 'TerrainType':
-        from ZNS.structure.Enums import TerrainType
+        from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.VILLAGE
 
 

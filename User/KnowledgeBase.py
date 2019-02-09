@@ -1,4 +1,4 @@
-from ZNS.User.UserFramework import IKnowledgeBase
+from ExpertSystem.Business.UserFramework import IKnowledgeBase
 
 
 class KnowledgeBase(IKnowledgeBase):

@@ -2,10 +2,10 @@ import random
 import sys
 from typing import List
 
-from ZNS.business.GameMap import GameMap
-from ZNS.structure.Enums import TerrainType
-from ZNS.structure.Position import AxialPosition, OffsetPosition, Position
-from ZNS.structure.Terrain import River, Field, Terrain
+from OrodaelTurrim.business.GameMap import GameMap
+from OrodaelTurrim.structure.Enums import TerrainType
+from OrodaelTurrim.structure.Position import AxialPosition, OffsetPosition, Position
+from OrodaelTurrim.structure.Terrain import River, Field, Terrain
 
 RIVER_ON_MAP = 0.9
 

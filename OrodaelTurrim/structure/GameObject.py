@@ -1,7 +1,7 @@
 from typing import List
 
-from ZNS.structure.Attributes import AttributeBundle
-from ZNS.structure.Enums import AttributeType, EffectType, GameObjectType
+from OrodaelTurrim.structure.Attributes import AttributeBundle
+from OrodaelTurrim.structure.Enums import AttributeType, EffectType, GameObjectType
 
 
 class GameObject:

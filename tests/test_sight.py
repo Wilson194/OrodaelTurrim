@@ -1,8 +1,8 @@
 import pytest
 
-from ZNS.business.GameMap import GameMap
-from ZNS.structure.Enums import Nudge
-from ZNS.structure.Position import OffsetPosition
+from OrodaelTurrim.business.GameMap import GameMap
+from OrodaelTurrim.structure.Enums import Nudge
+from OrodaelTurrim.structure.Position import OffsetPosition
 
 
 @pytest.mark.parametrize('start,end,sight,result', [

@@ -1,5 +1,5 @@
-from ZNS.business.GameMap import GameMap
-from ZNS.structure.Position import *
+from OrodaelTurrim.business.GameMap import GameMap
+from OrodaelTurrim.structure.Position import *
 import pytest
 
 

@@ -4,9 +4,9 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QFrame, QSplitter, QWidget
 
-from ZNS.business.GameEngine import GameEngine
-from ZNS.presenter.Control import ControlWidget
-from ZNS.presenter.Map import MapWidget
+from OrodaelTurrim.business.GameEngine import GameEngine
+from OrodaelTurrim.presenter.Control import ControlWidget
+from OrodaelTurrim.presenter.Map import MapWidget
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 

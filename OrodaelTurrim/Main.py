@@ -1,7 +1,6 @@
-from ZNS.User.Proxy import ActionProxy
-from ZNS.business.GameEngine import GameEngine
-from ZNS.business.MapGenerator import MapGenerator
-from ZNS.presenter.Main import MainWindow
+from OrodaelTurrim.business.GameEngine import GameEngine
+from OrodaelTurrim.business.MapGenerator import MapGenerator
+from OrodaelTurrim.presenter.Main import MainWindow
 
 
 def main():

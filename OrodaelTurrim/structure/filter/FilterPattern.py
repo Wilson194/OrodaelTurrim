@@ -2,9 +2,9 @@ import sys
 from abc import ABC, abstractmethod
 from typing import List
 
-from ZNS.business.Interface.Accessor import GameObjectAccessor, MapTileAccessor
-from ZNS.structure.GameObject import GameObject
-from ZNS.structure.Position import Position
+from OrodaelTurrim.business.Interface.Accessor import GameObjectAccessor, MapTileAccessor
+from OrodaelTurrim.structure.GameObject import GameObject
+from OrodaelTurrim.structure.Position import Position
 
 
 class TileFilter(ABC):

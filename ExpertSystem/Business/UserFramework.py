@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import List, TYPE_CHECKING
 
-from ZNS.structure.Parser.RuleBase import Rule
+from ExpertSystem.Structure.RuleBase import Rule
 
 if TYPE_CHECKING:
     from User.ActionBase import ActionBase
-    from ZNS.structure.ExpertSystem import Knowledge
-    from ZNS.User.Proxy import ActionProxy, DataProxy
+    from OrodaelTurrim.structure.ExpertSystem import Knowledge
+    from ExpertSystem.Business.Proxy import ActionProxy, DataProxy
 
 
 class IKnowledgeBase(ABC):

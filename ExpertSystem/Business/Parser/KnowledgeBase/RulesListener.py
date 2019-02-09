@@ -1,7 +1,7 @@
 # Generated from Rules.g4 by ANTLR 4.7.1
 from antlr4 import *
 
-from ZNS.structure.Parser.RuleBase import Rule, Expression, ExpressionNode, ExpressionTree
+from ExpertSystem.Structure.RuleBase import Rule, Expression, ExpressionNode
 
 if __name__ is not None and "." in __name__:
     from .RulesParser import RulesParser

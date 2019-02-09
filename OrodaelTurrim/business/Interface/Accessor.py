@@ -1,8 +1,8 @@
 from typing import List
 
-from ZNS.business.GameEngine import GameEngine
-from ZNS.structure.GameObject import GameObject
-from ZNS.structure.Position import Position
+from OrodaelTurrim.business.GameEngine import GameEngine
+from OrodaelTurrim.structure.GameObject import GameObject
+from OrodaelTurrim.structure.Position import Position
 
 
 class GameObjectAccessor:

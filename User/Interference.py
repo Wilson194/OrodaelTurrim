@@ -1,9 +1,9 @@
 from typing import List
 
 from User import ActionBase
-from ZNS.User.UserFramework import IInterference
-from ZNS.structure.ExpertSystem import Knowledge
-from ZNS.structure.Parser.RuleBase import Rule
+from ExpertSystem.Business.UserFramework import IInterference
+from OrodaelTurrim.structure.ExpertSystem import Knowledge
+from ExpertSystem.Structure.RuleBase import Rule
 
 
 class Interference(IInterference):

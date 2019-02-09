@@ -5,7 +5,7 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtGui import QColor
 
 if TYPE_CHECKING:
-    from ZNS.structure.Enums import Nudge, HexDirection
+    from OrodaelTurrim.structure.Enums import Nudge, HexDirection
 
 
 class Point(QPointF):
@@ -98,7 +98,7 @@ class Position(ABC):
         return self + CubicPosition(direction.value.cubic.x, direction.value.cubic.y, direction.value.cubic.z)
 
     def get_all_neighbours(self) -> List['Position']:
-        from ZNS.structure.Enums import HexDirection
+        from OrodaelTurrim.structure.Enums import HexDirection
         return [self.neighbour(x) for x in
                 [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
                  HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER] if self.neighbour(x)]

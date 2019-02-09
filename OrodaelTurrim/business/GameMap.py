@@ -1,12 +1,12 @@
 import random
 from typing import List, TYPE_CHECKING, Dict
-from ZNS.structure.Exceptions import IllegalArgumentException
-from ZNS.structure.Position import Position, OffsetPosition
+from OrodaelTurrim.structure.Exceptions import IllegalArgumentException
+from OrodaelTurrim.structure.Position import Position, OffsetPosition
 from collections import deque
 
 if TYPE_CHECKING:
-    from ZNS.structure.Enums import Nudge, TerrainType
-    from ZNS.structure.Terrain import Terrain
+    from OrodaelTurrim.structure.Enums import Nudge, TerrainType
+    from OrodaelTurrim.structure.Terrain import Terrain
 
 
 class GameMap:
@@ -100,7 +100,7 @@ class GameMap:
         return sight > 0
 
     def get_visible_tiles(self, position: Position, sight: int) -> List[Position]:
-        from ZNS.structure.Enums import Nudge
+        from OrodaelTurrim.structure.Enums import Nudge
         if not self.position_on_map(position):
             return []
         visited = []

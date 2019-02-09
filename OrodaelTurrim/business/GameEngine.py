@@ -5,16 +5,16 @@ from antlr4 import *
 from User.ActionBase import ActionBase
 from User.Interference import Interference
 from User.KnowledgeBase import KnowledgeBase
-from ZNS import USER_ROOT
-from ZNS.business.GameMap import GameMap
-from ZNS.business.Parser.KnowledgeBase.RulesLexer import RulesLexer
-from ZNS.business.Parser.KnowledgeBase.RulesListener import RulesListener
-from ZNS.business.Parser.KnowledgeBase.RulesParser import RulesParser
-from ZNS.structure.Enums import AttributeType
-from ZNS.structure.GameObject import GameObject
-from ZNS.structure.Parser.RuleBase import Rule
-from ZNS.structure.Position import Position
-from ZNS.structure.TypeStrucutre import TwoWayDict
+from OrodaelTurrim import USER_ROOT
+from OrodaelTurrim.business.GameMap import GameMap
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesListener import RulesListener
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
+from OrodaelTurrim.structure.Enums import AttributeType
+from OrodaelTurrim.structure.GameObject import GameObject
+from ExpertSystem.Structure.RuleBase import Rule
+from OrodaelTurrim.structure.Position import Position
+from OrodaelTurrim.structure.TypeStrucutre import TwoWayDict
 
 
 class GameEngine:
@@ -33,12 +33,12 @@ class GameEngine:
         self.__interference = Interference()
 
         # Initialize knowledge base
-        from ZNS.User.Proxy import DataProxy
+        from ExpertSystem.Business.Proxy import DataProxy
         data_proxy = DataProxy(self)
         self.__knowledge_base = KnowledgeBase(data_proxy)
 
         # Initialize action base
-        from ZNS.User.Proxy import ActionProxy
+        from ExpertSystem.Business.Proxy import ActionProxy
         proxy = ActionProxy(self)
         self.__action_base = ActionBase(proxy)
 
