@@ -1,22 +1,19 @@
 import math
-import random
 from math import sqrt
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPixmap, QPen, QColor
+from PyQt5.QtGui import QPixmap, QPen
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
-    QStyleOptionGraphicsItem
+    QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent
 
+from OrodaelTurrim import IMAGES_ROOT, UI_ROOT
 from OrodaelTurrim.business.GameEngine import GameEngine
 from OrodaelTurrim.business.GameMap import GameMap
 from OrodaelTurrim.structure.Enums import TerrainType
-from OrodaelTurrim.structure.Position import Position, Point, Border
-
-PATH_RES = Path(__file__).parent.parent / 'res'
-PATH_IMAGES = PATH_RES / 'images'
+from OrodaelTurrim.structure.Position import Position, Point, Border, CubicPosition
 
 
 class MapTileGraphicsItem(QGraphicsItem):
@@ -52,14 +49,14 @@ class MapTileGraphicsItem(QGraphicsItem):
         y = self.__tile_size.y / 2 * (sqrt(3) / 2 * p.q + sqrt(3) * p.r)
         return Point(x, y)
 
-    def __hex_corner_offset(self, corner: int) -> float:
+    def __hex_corner_offset(self, corner: int) -> Tuple[float, float]:
         """
         Compute offset to corner
         :param corner: number of corner, start from right corner
         :return: float offset
         """
         angle = 2 * math.pi * corner / 6
-        return self.__tile_size.x / 2 * math.cos((angle)), self.__tile_size.y / 2 * math.sin((angle))
+        return self.__tile_size.x / 2 * math.cos(angle), self.__tile_size.y / 2 * math.sin((angle))
 
     def __get_corners(self) -> List[Point]:
         """
@@ -98,6 +95,10 @@ class MapTileGraphicsItem(QGraphicsItem):
         # Draw position
         self.__draw_position(painter)
 
+        painter.drawRect(self.boundingRect())
+
+        painter.drawEllipse(self.__get_center()*Point(1., sqrt(3) / 2), 3, 3)
+
     def boundingRect(self) -> QRectF:
         """
         Over rider bounding rectangle for determinate paint event
@@ -107,15 +108,6 @@ class MapTileGraphicsItem(QGraphicsItem):
 
         center *= Point(1., sqrt(3) / 2)
         return QRectF(center.QPointF, (center + self.image_size * self.__size).QPointF)
-
-    def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent'):
-        print('click')
-
-    def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent'):
-        pass
-
-    def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent'):
-        pass
 
     def __draw_border(self, painter: QPainter) -> None:
         """
@@ -133,7 +125,6 @@ class MapTileGraphicsItem(QGraphicsItem):
                                  corners[i - 1] + (self.hexagon_offset * self.__size))
 
     def __draw_position(self, painter: QPainter) -> None:
-        center = self.__get_center()
         painter.drawText(self.boundingRect(),
                          Qt.AlignVCenter | Qt.AlignHCenter,
                          '{},{}'.format(self.__position.offset.q, self.__position.offset.r))
@@ -145,19 +136,19 @@ class MapTileGraphicsItem(QGraphicsItem):
         :return: Path to png image
         """
         if tile_type == TerrainType.FIELD:
-            return PATH_IMAGES / 'field.png'
+            return IMAGES_ROOT / 'field.png'
 
         elif tile_type == TerrainType.FOREST:
-            return PATH_IMAGES / 'forest.png'
+            return IMAGES_ROOT / 'forest.png'
 
         elif tile_type == TerrainType.HILL:
-            return PATH_IMAGES / 'hill.png'
+            return IMAGES_ROOT / 'hill.png'
 
         elif tile_type == TerrainType.MOUNTAIN:
-            return PATH_IMAGES / 'mountain.png'
+            return IMAGES_ROOT / 'mountain.png'
 
         elif tile_type == TerrainType.VILLAGE:
-            return PATH_IMAGES / 'village.png'
+            return IMAGES_ROOT / 'village.png'
         else:
             river_direction = []
             out_of_map_direction = []
@@ -173,7 +164,7 @@ class MapTileGraphicsItem(QGraphicsItem):
                     sorted(out_of_map_direction, key=lambda x: abs(river_direction[0] - x), reverse=True)[0])
 
             river_direction.sort()
-            return PATH_IMAGES / 'river_{}.png'.format('-'.join(map(str, river_direction)))
+            return IMAGES_ROOT / 'river_{}.png'.format('-'.join(map(str, river_direction)))
 
 
 class MapWidget(QWidget):
@@ -181,29 +172,37 @@ class MapWidget(QWidget):
         super().__init__(parent)
         self.__game_engine = game_engine
 
-        with open(str(PATH_RES / 'ui' / 'mapWidget.ui')) as f:
+        with open(str(UI_ROOT / 'mapWidget.ui')) as f:
             uic.loadUi(f, self)
 
-        scroll_area = self.findChild(QScrollArea, 'scrollArea')
+        self.scroll_area = self.findChild(QScrollArea, 'scrollArea')
         scroll_layout = QHBoxLayout()
 
-        scene = QGraphicsScene()
-        # scene.setSceneRect(-350, -350, 600, 600)
+        self.scene = QGraphicsScene()
+        # scene.setSceneRect(0, 0, 600, 600)
         # scene.setItemIndexMethod(QGraphicsScene.NoIndex)
 
         game_map = self.__game_engine.game_map
 
         for tile in game_map.tiles:
-            scene.addItem(MapTileGraphicsItem(game_map, tile, Border()))
+            self.scene.addItem(MapTileGraphicsItem(game_map, tile, Border()))
 
-        view = QGraphicsView(scene)
-        view.setRenderHint(QPainter.Antialiasing)
-        view.setCacheMode(QGraphicsView.CacheBackground)
-        view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
+        self.view = QGraphicsView(self.scene)
+        self.view.setRenderHint(QPainter.Antialiasing)
+        self.view.setCacheMode(QGraphicsView.CacheBackground)
+        self.view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
         # view.setDragMode(QGraphicsView.ScrollHandDrag)
         # view.resize(400, 300)
 
-        scroll_layout.addWidget(view)
-        scroll_area.setLayout(scroll_layout)
+        scroll_layout.addWidget(self.view)
+        self.scroll_area.setLayout(scroll_layout)
 
-        view.show()
+        self.scene.mousePressEvent = self.click_on_map
+
+        self.view.show()
+
+    def click_on_map(self, event: 'QGraphicsSceneMouseEvent'):
+        # print(Position.from_pixel(event.pos()).offset)
+        # print('scene', event.scenePos())
+        print(event.scenePos())
+        print('-' * 50)

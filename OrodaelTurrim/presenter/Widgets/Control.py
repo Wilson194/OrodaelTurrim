@@ -1,12 +1,9 @@
-from pathlib import Path
-
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QPushButton
 
+from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.business.GameEngine import GameEngine
-
-PATH_RES = Path(__file__).parent.parent / 'res'
 
 
 class ControlWidget(QWidget):
@@ -14,7 +11,7 @@ class ControlWidget(QWidget):
         super().__init__(parent)
         self.__game_engine = game_engine
 
-        with open(str(PATH_RES / 'ui' / 'controlWidget.ui')) as f:
+        with open(str(UI_ROOT / 'controlWidget.ui')) as f:
             uic.loadUi(f, self)
 
         self.init_ui()

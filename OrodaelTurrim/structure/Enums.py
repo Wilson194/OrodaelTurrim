@@ -25,7 +25,6 @@ class Nudge(Enum):
     POSITIVE = 1
     NEGATIVE = -1
 
-
     def nudge(self, value: float) -> float:
         return self.value * value
 

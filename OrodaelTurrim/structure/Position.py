@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Union
+import math
 
-from PyQt5.QtCore import QPointF
+from PyQt5.QtCore import QPointF, QPoint
 from PyQt5.QtGui import QColor
 
 if TYPE_CHECKING:
@@ -19,6 +20,10 @@ class Point(QPointF):
     @property
     def y(self):
         return super().y()
+
+    @property
+    def QPointF(self):
+        return QPointF(super().x(), super().y())
 
     def __add__(self, other: 'Point'):
         return Point(self.x + other.x, self.y + other.y)
@@ -114,6 +119,12 @@ class Position(ABC):
 
         return line
 
+    @staticmethod
+    def from_pixel(point: Union[QPoint, Point, QPointF]):
+        q = (2 / 3 * point.x()) / (296 * 0.3 / 2)
+        r = (-1 / 3 * point.x() + math.sqrt(3) / 3 * point.y()) / (195 * 0.3 / 2)
+        return AxialPosition(q, r).int_coord
+
 
 class CubicPosition(Position):
     def __init__(self, x_position, y_position, z_position):
@@ -182,7 +193,7 @@ class CubicPosition(Position):
 
 
 class AxialPosition(Position):
-    def __init__(self, q: int, r):
+    def __init__(self, q: Union[int, float], r: Union[int, float]):
         super().__init__()
 
         self.__q = q
