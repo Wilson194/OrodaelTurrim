@@ -10,7 +10,7 @@ from OrodaelTurrim.structure.Terrain import River, Field, Terrain
 RIVER_ON_MAP = 0.9
 
 MOUNTAIN = 0.1
-FIELD = 0.5
+FIELD = 1 #0.5
 HILL = 0.1
 FOREST = 0.2
 VILLAGE = 0.01

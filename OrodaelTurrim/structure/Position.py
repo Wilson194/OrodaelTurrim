@@ -37,10 +37,6 @@ class Point(QPointF):
     def __sub__(self, other):
         return Point(self.x - other.x, self.y - other.y)
 
-    @property
-    def QPointF(self):
-        return QPointF(self.x, self.y)
-
 
 class Position(ABC):
     # Correction for aligning along X axis
@@ -120,9 +116,15 @@ class Position(ABC):
         return line
 
     @staticmethod
-    def from_pixel(point: Union[QPoint, Point, QPointF]):
-        q = (2 / 3 * point.x()) / (296 * 0.3 / 2)
-        r = (-1 / 3 * point.x() + math.sqrt(3) / 3 * point.y()) / (195 * 0.3 / 2)
+    def from_pixel(point: Union[QPoint, Point, QPointF], transformation: float) -> "AxialPosition":
+        from OrodaelTurrim.presenter.Widgets.Map import HEXAGON_SIZE
+
+        x_size = (HEXAGON_SIZE.x * transformation / 2)
+        y_size = (HEXAGON_SIZE.y * transformation / math.sqrt(3))
+
+        q = (2 / 3 * point.x()) / x_size
+        r = ((-1 / 3 * point.x()) / x_size) + ((math.sqrt(3) / 3 * point.y()) / y_size)
+
         return AxialPosition(q, r).int_coord
 
 
@@ -220,7 +222,7 @@ class AxialPosition(Position):
         return self.__r
 
     @property
-    def int_coord(self):
+    def int_coord(self) -> "AxialPosition":
         p = self.cubic.int_coord.axial
         return AxialPosition(p.q, p.r)
 
