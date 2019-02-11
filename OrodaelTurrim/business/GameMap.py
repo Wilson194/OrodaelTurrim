@@ -1,6 +1,7 @@
 import random
-from typing import List, TYPE_CHECKING, Dict
+from typing import List, TYPE_CHECKING, Dict, Union
 from OrodaelTurrim.structure.Exceptions import IllegalArgumentException
+from OrodaelTurrim.structure.Map import Tile
 from OrodaelTurrim.structure.Position import Position, OffsetPosition
 from collections import deque
 
@@ -21,7 +22,7 @@ class GameMap:
         self.__vertical_radius = (height - 1) // 2
         self.__horizontal_radius = (width - 1) // 2
 
-        self.__tiles = []
+        self.__tiles = []  # type: List[List[Union[Tile,None]]]
         for i in range(height):
             self.__tiles.append([])
             for j in range(width):
@@ -36,7 +37,7 @@ class GameMap:
     def __sizeof__(self):
         return self.__size
 
-    def __getitem__(self, position: Position) -> 'Terrain':
+    def __getitem__(self, position: Position) -> Union['Tile', None]:
         return self.__tiles[position.offset.q + self.__horizontal_radius][position.offset.r + self.__vertical_radius]
 
     def set_tile(self, position: Position, terrain: 'Terrain') -> None:
@@ -49,7 +50,7 @@ class GameMap:
         column = position.offset.q + offset[0]
         row = position.offset.r + offset[1]
 
-        self.__tiles[column][row] = terrain
+        self.__tiles[column][row] = Tile(terrain)
 
     @property
     def tiles(self):

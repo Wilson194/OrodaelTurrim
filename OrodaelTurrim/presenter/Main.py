@@ -37,7 +37,7 @@ class MainWidget(QWidget):
 
         map_layout = QHBoxLayout(left)
 
-        map_widget = MapWidget(left, self.__game_engine)
+        map_widget = MapWidget(self, self.__game_engine)
         map_layout.addWidget(map_widget)
         left.setLayout(map_layout)
 

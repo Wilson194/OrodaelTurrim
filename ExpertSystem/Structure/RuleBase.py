@@ -3,6 +3,7 @@ from typing import Union, List
 
 class Expression:
     """Class that represent one expression"""
+
     def __init__(self):
         self.__name = None
         self.__args = []
@@ -154,3 +155,7 @@ class Rule:
 
     def __repr__(self):
         return 'IF {} THEN {}'.format(self.condition.__repr__(), self.conclusion.__repr__())
+
+
+class Fact:
+    pass

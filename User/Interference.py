@@ -1,9 +1,9 @@
 from typing import List
 
-from OrodaelTurrim.structure.ExpertSystem import Fact
+
 from User import ActionBase
 from ExpertSystem.Business.UserFramework import IInterference
-from ExpertSystem.Structure.RuleBase import Rule
+from ExpertSystem.Structure.RuleBase import Rule, Fact
 
 
 class Interference(IInterference):

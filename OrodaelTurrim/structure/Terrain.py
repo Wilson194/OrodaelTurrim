@@ -23,6 +23,9 @@ class Terrain(ABC):
     def get_type(self) -> 'TerrainType':
         pass
 
+    def info_text(self):
+        return ""
+
 
 class Field(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
@@ -46,6 +49,12 @@ class Field(Terrain):
 
     def char(self) -> str:
         return 'I'
+
+    def info_text(self):
+        return """    
+        <br>            
+        <h3>Beautiful field</h3>
+        """.format()
 
 
 class Forest(Terrain):

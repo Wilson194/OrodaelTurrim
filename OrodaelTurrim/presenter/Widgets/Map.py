@@ -3,7 +3,7 @@ from math import sqrt
 from pathlib import Path
 from typing import List, Tuple
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QRectF, QRect
+from PyQt5.QtCore import Qt, QRectF, QRect, pyqtSlot
 from PyQt5.QtGui import QPixmap, QPen, QColor
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
@@ -12,8 +12,10 @@ from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsVie
 from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG
 from OrodaelTurrim.business.GameEngine import GameEngine
 from OrodaelTurrim.business.GameMap import GameMap
+from OrodaelTurrim.presenter.Connector import Connector
 from OrodaelTurrim.structure.Enums import TerrainType
-from OrodaelTurrim.structure.Position import Position, Point, Border
+from OrodaelTurrim.structure.Map import Border
+from OrodaelTurrim.structure.Position import Position, Point
 
 IMAGE_SIZE = Point(296, 200)
 HEXAGON_SIZE = Point(296, 148)
@@ -25,7 +27,7 @@ class MapTileGraphicsItem(QGraphicsItem):
     """
     hexagon_offset = Point(149, 127)
 
-    def __init__(self, map_object: GameMap, position: Position, border: Border, transformation: float = 0.3):
+    def __init__(self, map_object: GameMap, position: Position, transformation: float = 0.3):
         """
         Create QGraphicItem object for rendering
         :param map_object: reference to map object
@@ -39,10 +41,10 @@ class MapTileGraphicsItem(QGraphicsItem):
         self.__image_size = Point(IMAGE_SIZE.x * transformation, IMAGE_SIZE.y * transformation)
         self.__transformation = transformation
         self.__size = HEXAGON_SIZE.x * self.__transformation / 2
+        self.__border = None
 
         self.__size_w = HEXAGON_SIZE.x * self.__transformation / 2
         self.__size_h = HEXAGON_SIZE.y * self.__transformation / math.sqrt(3)
-        self.__border = border
         # self.setAcceptHoverEvents(True)
 
     def __get_center(self) -> Point:
@@ -61,8 +63,8 @@ class MapTileGraphicsItem(QGraphicsItem):
         :param corner: number of corner, start from right corner
         :return: float offset
         """
-        angle = 2 * math.pi * corner / 6
-        return self.__image_size.x / 2 * math.cos(angle), self.__image_size.y / 2 * math.sin(angle)
+        angle = math.pi / 180 * (corner * 60)
+        return self.__size_w * math.cos(angle), self.__size_h * math.sin(angle)
 
     def __get_corners(self) -> List[Point]:
         """
@@ -73,10 +75,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         corners = []
         for i in range(6):
             offset = self.__hex_corner_offset(i)
-            corners.append(Point(
-                center.x + offset[0],
-                (center.y + offset[1]) * sqrt(3) / 2
-            ))
+            corners.append(Point(center.x + offset[0], (center.y + offset[1])))
         return corners
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
@@ -88,7 +87,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         """
 
         # Get image
-        image_path = self.__get_tile_image(self.__map_object[self.__position].get_type())
+        image_path = self.__get_tile_image(self.__map_object[self.__position].terrain.get_type())
         pixmap = QPixmap(str(image_path))
 
         painter.drawPixmap(self.boundingRect().toRect(), pixmap)
@@ -123,6 +122,13 @@ class MapTileGraphicsItem(QGraphicsItem):
         Draw border based on border definition
         :param painter: painter object
         """
+        self.__border = self.__map_object[self.__position].border
+
+        if not self.__border:
+            return
+
+        painter.setOpacity(0.65)
+
         colors = self.__border.color
         borders = self.__border.order
         corners = self.__get_corners()
@@ -130,8 +136,7 @@ class MapTileGraphicsItem(QGraphicsItem):
             if borders[i] != 0:
                 painter.setPen(QPen(colors[i], borders[i], Qt.SolidLine))
 
-                painter.drawLine(corners[i] + (self.hexagon_offset * self.__transformation),
-                                 corners[i - 1] + (self.hexagon_offset * self.__transformation))
+                painter.drawLine(corners[i], corners[i - 1])
 
     def __draw_position(self, painter: QPainter) -> None:
         """
@@ -173,7 +178,7 @@ class MapTileGraphicsItem(QGraphicsItem):
                 if not self.__map_object.position_on_map(position):
                     out_of_map_direction.append(i)
 
-                elif self.__map_object[position].get_type() == TerrainType.RIVER:
+                elif self.__map_object[position].terrain.get_type() == TerrainType.RIVER:
                     river_direction.append(int(i))
 
             if out_of_map_direction:
@@ -200,14 +205,14 @@ class MapWidget(QWidget):
         scroll_area = self.findChild(QScrollArea, 'scrollArea')
         scroll_layout = QHBoxLayout()
 
-        scene = QGraphicsScene()
+        self.scene = QGraphicsScene()
 
         game_map = self.__game_engine.game_map
 
-        for tile in game_map.tiles:
-            scene.addItem(MapTileGraphicsItem(game_map, tile, Border()))
+        for position in game_map.tiles:
+            self.scene.addItem(MapTileGraphicsItem(game_map, position))
 
-        view = QGraphicsView(scene)
+        view = QGraphicsView(self.scene)
         view.setRenderHint(QPainter.Antialiasing)
         view.setCacheMode(QGraphicsView.CacheBackground)
         view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
@@ -216,10 +221,12 @@ class MapWidget(QWidget):
         scroll_layout.addWidget(view)
         scroll_area.setLayout(scroll_layout)
 
-        scene.mousePressEvent = self.click_on_map
+        self.scene.mousePressEvent = lambda x: Connector().connector('map_tile_select', x, self.transformation)
+
+        Connector().subscribe('redraw_map', self.redraw_map)
 
         view.show()
 
-    def click_on_map(self, event: 'QGraphicsSceneMouseEvent'):
-        position = Position.from_pixel(event.scenePos(), self.transformation)
-
+    @pyqtSlot()
+    def redraw_map(self):
+        self.scene.update()
