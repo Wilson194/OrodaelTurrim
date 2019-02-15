@@ -1,6 +1,11 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Dict, Set
 
 from PyQt5.QtGui import QColor
+
+from OrodaelTurrim.business.Interface.Player import IPlayer
+from OrodaelTurrim.structure.Enums import GameRole
+from OrodaelTurrim.structure.GameObject import GameObject
+from OrodaelTurrim.structure.Position import Position
 
 if TYPE_CHECKING:
     from OrodaelTurrim.structure.Terrain import Terrain
@@ -41,3 +46,44 @@ class Border:
     @color.setter
     def color(self, value: [List[QColor], QColor]):
         self.__color = value
+
+
+class VisibilityMap:
+    def __init__(self):
+        self.__visibility_map = {}  # type: Dict[IPlayer, Dict[Position, Set[GameObject]]]
+
+    def register_player(self, player: IPlayer):
+        self.__visibility_map[player] = {}
+
+    def add_vision(self, game_object: GameObject, new_visible_positions: List[Position]):
+        for position in new_visible_positions:
+            if position not in self.__visibility_map[game_object.owner]:
+                self.__visibility_map[game_object.owner][position] = set()
+
+            self.__visibility_map[game_object.owner][position].add(game_object)
+
+    def remove_vision(self, game_object: GameObject, no_longer_visible: List[Position]):
+        player_map = self.__visibility_map[game_object.owner]  # type: Dict[Position,Set[GameObject]]
+
+        for position in no_longer_visible:
+            if position not in player_map:
+                continue
+
+            watcher = player_map[position]
+            watcher.remove(game_object)
+
+            if len(watcher) == 0:
+                player_map.pop(position)
+
+    def get_visible_tiles(self, player: IPlayer) -> List[Position]:
+        return list(self.__visibility_map[player].keys())
+
+    def get_watching_enemies(self, role: GameRole, position: Position) -> list:
+        watching_enemies = set()
+        for player in self.__visibility_map.keys():
+            if role.is_enemy(player.role):
+                player_visibility = self.__visibility_map[player]
+                if position in player_visibility:
+                    watching_enemies.update(player_visibility[position])
+
+        return list(watching_enemies)

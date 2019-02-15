@@ -59,6 +59,11 @@ class GameRole(AutoNumber):
     DEFENDER = ()
     NEUTRAL = ()
 
+    def is_enemy(self, role: "GameRole"):
+        if self == role or self == GameRole.NEUTRAL or role == GameRole.NEUTRAL:
+            return False
+        return True
+
 
 class GameObjectType(Enum):
     NONE = (GameRole.NEUTRAL, 0)

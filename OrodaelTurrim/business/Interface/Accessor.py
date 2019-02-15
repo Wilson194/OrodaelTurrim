@@ -10,7 +10,7 @@ class GameObjectAccessor:
         self.__game_engine = game_engine
 
 
-class MapTileAccessor:
+class IMapTileAccessor:
     def __init__(self, game_engine: GameEngine):
         self.__game_engine = game_engine
 
