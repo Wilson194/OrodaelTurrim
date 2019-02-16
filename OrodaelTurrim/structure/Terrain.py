@@ -11,17 +11,22 @@ class Terrain(ABC):
     def get_move_cost(self, target: 'TerrainType') -> int:
         pass
 
+
     @abstractmethod
     def get_remaining_sigh(self, current_sight: int) -> int:
         pass
+
 
     @abstractmethod
     def affect_attribute(self, attribute, original_value: float) -> float:
         pass
 
+
     @abstractmethod
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         pass
+
 
     def info_text(self):
         return ""
@@ -37,18 +42,23 @@ class Field(Terrain):
         else:
             return 1
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 1
 
+
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
+
 
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FIELD
 
+
     def char(self) -> str:
         return 'I'
+
 
     def info_text(self):
         return """    
@@ -67,15 +77,19 @@ class Forest(Terrain):
         else:
             return 1
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 3
+
 
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
 
+
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FOREST
+
 
     def char(self) -> str:
         return 'F'
@@ -89,15 +103,19 @@ class Hill(Terrain):
         else:
             return 2
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight // 2
+
 
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
 
+
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.HILL
+
 
     def char(self) -> str:
         return 'H'
@@ -111,15 +129,19 @@ class Mountain(Terrain):
         else:
             return 3
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return 0
+
 
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
 
+
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.MOUNTAIN
+
 
     def char(self) -> str:
         return 'M'
@@ -137,15 +159,19 @@ class River(Terrain):
         else:
             return 2
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 1
+
 
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
 
+
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.RIVER
+
 
     def char(self) -> str:
         return 'R'
@@ -161,15 +187,19 @@ class Village(Terrain):
         else:
             return 1
 
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 1
+
 
     def affect_attribute(self, attribute, original_value: float) -> float:
         raise NotImplemented
 
+
     def get_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.VILLAGE
+
 
     def char(self) -> str:
         return 'V'

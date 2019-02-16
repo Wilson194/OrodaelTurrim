@@ -1,7 +1,7 @@
 from typing import List
 
 from OrodaelTurrim.business.GameEngine import GameEngine
-from OrodaelTurrim.structure.GameObject import GameObject
+from OrodaelTurrim.structure.GameObjects.GameObject import GameObject
 from OrodaelTurrim.structure.Position import Position
 
 

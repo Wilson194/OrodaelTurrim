@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, Dict
 
 from antlr4 import *
 
-from OrodaelTurrim.business.Interface import Player
 from OrodaelTurrim.business.Interface.Player import IPlayer
 from OrodaelTurrim.structure.Exceptions import IllegalActionException
 from OrodaelTurrim.structure.Map import VisibilityMap
@@ -15,8 +14,8 @@ from OrodaelTurrim.business.GameMap import GameMap
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListener import RulesListener
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
-from OrodaelTurrim.structure.Enums import AttributeType, GameObjectType
-from OrodaelTurrim.structure.GameObject import GameObject, SpawnInformation
+from OrodaelTurrim.structure.Enums import AttributeType, GameObjectType, TerrainType
+from OrodaelTurrim.structure.GameObjects.GameObject import GameObject, SpawnInformation
 from ExpertSystem.Structure.RuleBase import Rule
 from OrodaelTurrim.structure.Position import Position
 from OrodaelTurrim.structure.TypeStrucutre import TwoWayDict
@@ -29,7 +28,7 @@ class GameEngine:
         self.__players = []
         self.__player_resources = {}
         self.__player_units = {}
-        self.__defender_bases = {}
+        self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
         self.__game_object_hit_points = {}
         self.__game_object_effects = {}
         self.__game_object_positions = TwoWayDict()
@@ -48,6 +47,7 @@ class GameEngine:
         proxy = ActionProxy(self)
         self.__action_base = ActionBase(proxy)
 
+
     def inference_turn(self):
         # Create knowledge base for current turn
         self.__knowledge_base.create_knowledge_base()
@@ -58,6 +58,7 @@ class GameEngine:
 
         # Start interference
         self.__interference.interfere(knowledge_base, rules, self.__action_base)
+
 
     def __parse_rules_file(self) -> List[Rule]:
         input_file = FileStream(str(USER_ROOT / 'rules'))
@@ -74,13 +75,16 @@ class GameEngine:
 
         return rules
 
+
     @property
     def game_map(self):
         return self.__game_map
 
+
     @game_map.setter
     def game_map(self, value):
         self.__game_map = value
+
 
     def get_bases_positions(self) -> List[Position]:
         positions = []
@@ -90,18 +94,24 @@ class GameEngine:
 
         return positions
 
-    def get_visible_tiles(self, game_object: GameObject):
+
+    def get_object_visible_tiles(self, game_object: GameObject):
         return self.game_map.get_visible_tiles(self.__game_object_positions[game_object],
                                                int(game_object.get_attribute(AttributeType.SIGH)))
+
 
     def get_tiles_in_range(self, game_object: GameObject):
         return self.game_map.get_visible_tiles(self.__game_object_positions[game_object],
                                                int(game_object.get_attribute(AttributeType.RANGE)))
 
+
     def register_player(self, player: IPlayer, resources: PlayerResources, unit_spawn_info: List[SpawnInformation]):
         self.__players.append(player)
         self.__player_resources[player] = resources
         self.__player_units[player] = []
+
+        self.__visibility_map.register_player(player)
+
 
     def register_game_object(self, game_object: GameObject):
         owner = game_object.owner
@@ -112,6 +122,70 @@ class GameEngine:
                 self.__defender_bases[owner] = game_object
 
         self.__player_units[owner].append(game_object)
-        self.__game_object_positions[game_object.position]
-        
+        self.__game_object_positions[game_object.position] = game_object
 
+
+    def compute_attribute(self, game_object: GameObject, attribute_type: AttributeType, original_value: float) -> float:
+        affected = self.__game_map[game_object.position].affect_attribute(attribute_type, original_value)
+
+        for effect in game_object.active_effects:
+            affected = effect.affect_attribute(attribute_type, affected)
+
+        return affected
+
+
+    @property
+    def map_height(self) -> int:
+        return self.__game_map.size[1]
+
+
+    @property
+    def map_width(self) -> int:
+        return self.__game_map.size[0]
+
+
+    def get_terrain_type(self, position: Position) -> TerrainType:
+        return self.__game_map[position].terrain_type
+
+
+    def is_position_on_map(self, position: Position) -> bool:
+        return self.__game_map.position_on_map(position)
+
+
+    def is_position_occupied(self, position: Position) -> bool:
+        return position in self.__game_object_positions
+
+
+    @property
+    def bases_positions(self):
+        return [x.position for x in self.__defender_bases.values()]
+
+
+    def get_visible_tiles(self, position: Position, sight: int) -> List[Position]:
+        return self.__game_map.get_visible_tiles(position, sight)
+
+
+    def get_accessible_tiles(self, position: Position, actions: int) -> List[Position]:
+        return self.__game_map.get_visible_tiles(position, actions)
+
+
+    def create_move_action(self, game_object: GameObject, position: Position):
+        if game_object and position:
+            pass
+
+
+    def damage(self, game_object: GameObject, damage: float):
+        game_object.take_damage(damage)
+
+
+    def heal(self, game_object: GameObject, amount: float):
+        game_object.receive_healing(amount)
+
+
+    def move(self, game_object: GameObject, to: Position):
+        position_from = game_object.position
+
+        self.__game_object_positions.__delitem__(position_from)
+        self.__game_object_positions[to] = game_object
+
+        game_object.position = to

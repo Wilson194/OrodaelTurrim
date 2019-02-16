@@ -51,7 +51,7 @@ class AttributeType(AutoNumber):
     DEFENSE = ()
     HIT_POINTS = ()
     RANGE = ()
-    SIGH = ()
+    SIGHT = ()
 
 
 class GameRole(AutoNumber):

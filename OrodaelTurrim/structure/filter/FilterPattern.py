@@ -1,9 +1,8 @@
-import sys
 from abc import ABC, abstractmethod
 from typing import List
 
 from OrodaelTurrim.business.Interface.Accessor import GameObjectAccessor, MapTileAccessor
-from OrodaelTurrim.structure.GameObject import GameObject
+from OrodaelTurrim.structure.GameObjects.GameObject import GameObject
 from OrodaelTurrim.structure.Position import Position
 
 
