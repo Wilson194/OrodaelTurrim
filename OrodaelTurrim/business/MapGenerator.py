@@ -42,6 +42,7 @@ class MapGenerator:
             for j in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
                 self.__game_map.set_tile(OffsetPosition(i, j), Field())
 
+
     def create_base_random_list(self) -> List[TerrainType]:
         random_list = []
 
@@ -62,39 +63,44 @@ class MapGenerator:
 
         return random_list
 
+
     def get_random_terrain_type(self, position: Position) -> Terrain:
         neigbours = self.__game_map.filter_positions_on_map(position.get_all_neighbours())
 
         for neigbour in neigbours:
-            if self.__game_map[neigbour].terrain.get_type() not in (TerrainType.FIELD, TerrainType.RIVER):
+            if self.__game_map[neigbour].terrain_type not in (TerrainType.FIELD, TerrainType.RIVER):
                 for i in range(NEIGHBOUR_ADD):
-                    self.__base_random_list.append(self.__game_map[neigbour].terrain.get_type())
+                    self.__base_random_list.append(self.__game_map[neigbour].terrain_type)
 
         terrain_type = random.choice(self.__base_random_list)
 
         return terrain_type.value
+
 
     def generate(self) -> GameMap:
         self.__generate_river()
         self.__generate_tiles()
         return self.__game_map
 
+
     def __generate_tiles(self):
         for i in range(-self.__vertical_radius, self.__vertical_radius + 1):
             for j in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
                 position = OffsetPosition(i, j)
-                if self.__game_map[position].terrain.get_type() != TerrainType.RIVER:
+                if self.__game_map[position].terrain_type != TerrainType.RIVER:
                     self.__game_map.set_tile(position, self.get_random_terrain_type(position))
+
 
     def __generate_river(self):
         def filter_river_neighbour(position, ancestor):
-            neighbours = [self.__game_map[x].terrain.get_type() for x in
+            neighbours = [self.__game_map[x].terrain_type for x in
                           self.__game_map.filter_positions_on_map(position.get_all_neighbours()) if ancestor != x]
 
             if TerrainType.RIVER in neighbours:
                 return False
 
             return True
+
 
         if random.random() < RIVER_ON_MAP:
             SIDES = ['T', 'R', 'B', 'L']
@@ -126,7 +132,7 @@ class MapGenerator:
                 # Filter neighbours on map
                 neighbours = self.__game_map.filter_positions_on_map(current.get_all_neighbours())
                 # Filter neighbours which are not RIVER
-                neighbours = [x for x in neighbours if self.__game_map[x].terrain.get_type() != TerrainType.RIVER]
+                neighbours = [x for x in neighbours if self.__game_map[x].terrain_type != TerrainType.RIVER]
                 # Filter neighbours which are have not river as neighbour
                 neighbours = [x for x in neighbours if filter_river_neighbour(x, current)]
 

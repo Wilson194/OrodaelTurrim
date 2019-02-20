@@ -3,11 +3,8 @@ from pathlib import Path
 from typing import List
 
 from OrodaelTurrim import IMAGES_ROOT
-from OrodaelTurrim.structure.Attributes import AttributeBundle
+from OrodaelTurrim.structure.GameObjects.Attributes import AttributeBundle
 from OrodaelTurrim.structure.Enums import GameObjectType, GameRole, AttributeType, EffectType
-from OrodaelTurrim.structure.GameObjects.Prototypes.Attackers import Cyclops, Demon, Elemental, Gargoyle, Minotaur, Necromancer, \
-    Orc, Skeleton
-from OrodaelTurrim.structure.GameObjects.Prototypes.Defenders import Base, Archer, Druid, Ent, Knight, Magician
 
 
 class GameObjectPrototype(ABC):
@@ -15,7 +12,8 @@ class GameObjectPrototype(ABC):
     ASSET_FOLDER = IMAGES_ROOT / 'Objects'
 
 
-    def __init__(self, attributes: AttributeBundle, cost: int, object_type: GameObjectType, role: GameRole, asset_name: str):
+    def __init__(self, attributes: AttributeBundle, cost: int, object_type: GameObjectType, role: GameRole,
+                 asset_name: str):
         self.__attributes = attributes
         self.__cost = cost
         self.__object_type = object_type
@@ -51,19 +49,22 @@ class GameObjectPrototype(ABC):
         return self.ASSET_FOLDER / (self.__asset_name + self.ASSET_FORMAT)
 
 
-    @abstractmethod
     @property
+    @abstractmethod
     def attack_effects(self) -> List[EffectType]:
         pass
 
 
-    @abstractmethod
     @property
+    @abstractmethod
     def resistances(self) -> List[EffectType]:
         pass
 
 
 class GameObjectPrototypePool:
+    from OrodaelTurrim.structure.GameObjects.Prototypes.Attackers import Cyclops, Demon, Elemental, Gargoyle, \
+        Minotaur, Necromancer, Orc, Skeleton
+    from OrodaelTurrim.structure.GameObjects.Prototypes.Defenders import Base, Archer, Druid, Ent, Knight, Magician
     prototypes = {
         GameObjectType.BASE, Base(),
         GameObjectType.ARCHER, Archer(),

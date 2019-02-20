@@ -1,6 +1,6 @@
 from typing import List
 
-from OrodaelTurrim.structure.Attributes import AttributeBundle
+from OrodaelTurrim.structure.GameObjects.Attributes import AttributeBundle
 from OrodaelTurrim.structure.Enums import EffectType, GameObjectType, GameRole
 from OrodaelTurrim.structure.GameObjects.Prototypes.Prototype import GameObjectPrototype
 

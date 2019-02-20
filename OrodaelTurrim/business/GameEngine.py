@@ -31,7 +31,7 @@ class GameEngine:
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
         self.__game_object_hit_points = {}
         self.__game_object_effects = {}
-        self.__game_object_positions = TwoWayDict()
+        self.__game_object_positions = TwoWayDict()  # type: Dict[Position,GameObject]
 
         self.__visibility_map = VisibilityMap()
 
@@ -105,6 +105,36 @@ class GameEngine:
                                                int(game_object.get_attribute(AttributeType.RANGE)))
 
 
+    def get_type(self, position: Position) -> GameObjectType:
+        if position not in self.__game_object_positions:
+            return GameObjectType.NONE
+        return self.__game_object_positions[position].object_type
+
+
+    def get_current_hit_points(self, position: Position) -> float:
+        if position not in self.__game_object_positions:
+            return 0.0
+        return self.__game_object_positions[position].current_hit_points
+
+
+    def get_attribute(self, position: Position, attribute_type: AttributeType) -> float:
+        if position not in self.__game_object_positions:
+            return 0.0
+        return self.__game_object_positions[position].get_attribute(attribute_type)
+
+
+    def get_attack_effect(self, position):
+        if position not in self.__game_object_positions:
+            return []
+        return self.__game_object_positions[position].attack_effects
+
+
+    def get_resistances(self, position):
+        if position not in self.__game_object_positions:
+            return []
+        return self.__game_object_positions[position]
+
+
     def register_player(self, player: IPlayer, resources: PlayerResources, unit_spawn_info: List[SpawnInformation]):
         self.__players.append(player)
         self.__player_resources[player] = resources
@@ -134,6 +164,13 @@ class GameEngine:
         return affected
 
 
+    def get_visible_enemies(self, position: Position) -> Dict[Position, int]:
+        if position not in self.__game_object_positions:
+            return dict()
+
+        return self.__game_object_positions[position].visible_enemies
+
+
     @property
     def map_height(self) -> int:
         return self.__game_map.size[1]
@@ -158,6 +195,10 @@ class GameEngine:
 
     @property
     def bases_positions(self):
+        """
+        Test documentation
+        :return:
+        """
         return [x.position for x in self.__defender_bases.values()]
 
 
@@ -165,13 +206,17 @@ class GameEngine:
         return self.__game_map.get_visible_tiles(position, sight)
 
 
-    def get_accessible_tiles(self, position: Position, actions: int) -> List[Position]:
-        return self.__game_map.get_visible_tiles(position, actions)
+    def get_accessible_tiles(self, position: Position, actions: int) -> Dict[Position, int]:
+        return self.__game_map.get_accessible_tiles(position, actions)
 
 
     def create_move_action(self, game_object: GameObject, position: Position):
         if game_object and position:
             pass
+
+
+    def create_attack_action(self, game_object: GameObject, position: Position):
+        pass
 
 
     def damage(self, game_object: GameObject, damage: float):

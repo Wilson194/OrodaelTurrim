@@ -1,9 +1,9 @@
 import math
 from math import sqrt
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QRectF, QRect, pyqtSlot
+from PyQt5.QtCore import Qt, QRectF, QRect, pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QPixmap, QPen, QColor
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
@@ -27,7 +27,8 @@ class MapTileGraphicsItem(QGraphicsItem):
     """
     hexagon_offset = Point(149, 127)
 
-    def __init__(self, map_object: GameMap, position: Position, transformation: float = 0.3):
+
+    def __init__(self, parent: "MapWidget", map_object: GameMap, position: Position, transformation: float = 0.3):
         """
         Create QGraphicItem object for rendering
         :param map_object: reference to map object
@@ -36,6 +37,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         :param transformation: size multiplication
         """
         super().__init__()
+        self.parent = parent
         self.__position = position
         self.__map_object = map_object
         self.__image_size = Point(IMAGE_SIZE.x * transformation, IMAGE_SIZE.y * transformation)
@@ -47,6 +49,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         self.__size_h = HEXAGON_SIZE.y * self.__transformation / math.sqrt(3)
         # self.setAcceptHoverEvents(True)
 
+
     def __get_center(self) -> Point:
         """
         Get center of the tile in pixels
@@ -57,6 +60,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         y = self.__size_h * ((sqrt(3) / 2 * p.q) + (sqrt(3) * p.r))
         return Point(x, y)
 
+
     def __hex_corner_offset(self, corner: int) -> Tuple[float, float]:
         """
         Compute offset to corner
@@ -65,6 +69,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         """
         angle = math.pi / 180 * (corner * 60)
         return self.__size_w * math.cos(angle), self.__size_h * math.sin(angle)
+
 
     def __get_corners(self) -> List[Point]:
         """
@@ -78,6 +83,7 @@ class MapTileGraphicsItem(QGraphicsItem):
             corners.append(Point(center.x + offset[0], (center.y + offset[1])))
         return corners
 
+
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
         """
         Override paint function. Call every time when need to be render
@@ -87,7 +93,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         """
 
         # Get image
-        image_path = self.__get_tile_image(self.__map_object[self.__position].terrain.get_type())
+        image_path = self.__get_tile_image(self.__map_object[self.__position].terrain_type)
         pixmap = QPixmap(str(image_path))
 
         painter.drawPixmap(self.boundingRect().toRect(), pixmap)
@@ -99,6 +105,7 @@ class MapTileGraphicsItem(QGraphicsItem):
             # Draw position
             self.__draw_position(painter)
             painter.drawRect(self.boundingRect())
+
 
     def boundingRect(self) -> QRectF:
         """
@@ -117,12 +124,13 @@ class MapTileGraphicsItem(QGraphicsItem):
                       (IMAGE_SIZE.x * self.__transformation),
                       (IMAGE_SIZE.y * self.__transformation))
 
+
     def __draw_border(self, painter: QPainter) -> None:
         """
         Draw border based on border definition
         :param painter: painter object
         """
-        self.__border = self.__map_object[self.__position].border
+        self.__border = self.parent.borders.get(self.__position, None)
 
         if not self.__border:
             return
@@ -138,6 +146,7 @@ class MapTileGraphicsItem(QGraphicsItem):
 
                 painter.drawLine(corners[i], corners[i - 1])
 
+
     def __draw_position(self, painter: QPainter) -> None:
         """
         Draw offset position to each tile
@@ -150,6 +159,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         painter.drawText(self.boundingRect(),
                          Qt.AlignVCenter | Qt.AlignHCenter,
                          '{},{}'.format(self.__position.offset.q, self.__position.offset.r))
+
 
     def __get_tile_image(self, tile_type: TerrainType) -> Path:
         """
@@ -178,7 +188,7 @@ class MapTileGraphicsItem(QGraphicsItem):
                 if not self.__map_object.position_on_map(position):
                     out_of_map_direction.append(i)
 
-                elif self.__map_object[position].terrain.get_type() == TerrainType.RIVER:
+                elif self.__map_object[position].terrain_type == TerrainType.RIVER:
                     river_direction.append(int(i))
 
             if out_of_map_direction:
@@ -190,13 +200,19 @@ class MapTileGraphicsItem(QGraphicsItem):
 
 
 class MapWidget(QWidget):
+    map_tile_selected = pyqtSignal(Position)
+
+
     def __init__(self, parent=None, game_engine: GameEngine = None):
         super().__init__(parent)
         self.__game_engine = game_engine
 
+        self.borders = {}  # type: Dict[Position, Border]
+
         self.transformation = 0.3
 
         self.init_ui()
+
 
     def init_ui(self):
         with open(str(UI_ROOT / 'mapWidget.ui')) as f:
@@ -210,7 +226,7 @@ class MapWidget(QWidget):
         game_map = self.__game_engine.game_map
 
         for position in game_map.tiles:
-            self.scene.addItem(MapTileGraphicsItem(game_map, position))
+            self.scene.addItem(MapTileGraphicsItem(self, game_map, position))
 
         view = QGraphicsView(self.scene)
         view.setRenderHint(QPainter.Antialiasing)
@@ -221,12 +237,21 @@ class MapWidget(QWidget):
         scroll_layout.addWidget(view)
         scroll_area.setLayout(scroll_layout)
 
-        self.scene.mousePressEvent = lambda x: Connector().connector('map_tile_select', x, self.transformation)
+        self.map_tile_selected.connect(lambda x: Connector().connector('map_tile_select', x))
 
-        Connector().subscribe('redraw_map', self.redraw_map)
+        self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
         view.show()
 
+
     @pyqtSlot()
-    def redraw_map(self):
+    def click_on_map(self, event: QGraphicsSceneMouseEvent, transformation: float):
+        position = Position.from_pixel(event.scenePos(), transformation).offset
+
+        if self.__game_engine.game_map.position_on_map(position):
+            self.borders.clear()
+
+            self.borders[position] = Border.full(3, QColor(255, 0, 0))
+            self.map_tile_selected.emit(position)
+
         self.scene.update()

@@ -12,7 +12,6 @@ from OrodaelTurrim.structure.Position import Position
 
 
 class MapInfoWidget(QWidget):
-    redraw_map = pyqtSignal()
 
     def __init__(self, parent=None, game_engine: GameEngine = None):
         super().__init__(parent)
@@ -23,20 +22,20 @@ class MapInfoWidget(QWidget):
 
         self.init_ui()
 
+
     def init_ui(self):
         with open(str(UI_ROOT / 'mapInfoWidget.ui')) as f:
             uic.loadUi(f, self)
 
         Connector().subscribe('map_tile_select', self.map_tile_select_slot)
 
-        self.redraw_map.connect(lambda: Connector().connector('redraw_map'))
-
         self.findChild(QLabel, 'tileLabel').setVisible(False)
         self.findChild(QLabel, 'characterLabel').setVisible(False)
 
-    def draw_tile_info(self):
-        tile = self.__game_engine.game_map[self.__selected_tile]
-        tile_type = tile.terrain.get_type()
+
+    def draw_tile_info(self, position: Position):
+        tile = self.__game_engine.game_map[position]
+        tile_type = tile.terrain_type
 
         if tile_type == TerrainType.FIELD:
             img = IMAGES_ROOT / 'field.png'
@@ -62,27 +61,17 @@ class MapInfoWidget(QWidget):
 
         text = self.findChild(QTextEdit, 'tileInfoText')  # type: QTextEdit
         text.clear()
-        text.insertHtml(tile.terrain.info_text())
+        text.insertHtml(tile.info_text())
 
         tile_label = self.findChild(QLabel, 'tileLabel')  # type: QLabel
         tile_label.setVisible(True)
-        tile_label.setText('Map tile: {}'.format(tile.terrain.__class__.__name__))
+        tile_label.setText('Map tile: {}'.format(tile.__class__.__name__))
 
-    def draw_character_info(self):
+
+    def draw_character_info(self, position: Position):
         self.findChild(QLabel, 'characterLabel').setVisible(True)
 
-    def draw_tile_border(self):
-        self.__game_engine.game_map[self.__selected_tile].border = Border.full(3, QColor(255, 0, 0))
-        self.redraw_map.emit()
 
-    def map_tile_select_slot(self, event: QGraphicsSceneMouseEvent, transformation: float):
-        position = Position.from_pixel(event.scenePos(), transformation)
-
-        if self.__game_engine.game_map.position_on_map(position):
-            if self.__selected_tile:
-                self.__game_engine.game_map[self.__selected_tile].border = None
-
-            self.__selected_tile = position
-            self.draw_tile_info()
-            self.draw_character_info()
-            self.draw_tile_border()
+    def map_tile_select_slot(self, position: Position):
+        self.draw_tile_info(position)
+        self.draw_character_info(position)

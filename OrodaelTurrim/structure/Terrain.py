@@ -22,8 +22,8 @@ class Terrain(ABC):
         pass
 
 
-    @abstractmethod
     @property
+    @abstractmethod
     def terrain_type(self) -> 'TerrainType':
         pass
 
@@ -51,7 +51,8 @@ class Field(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FIELD
 
@@ -86,7 +87,8 @@ class Forest(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.FOREST
 
@@ -112,7 +114,8 @@ class Hill(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.HILL
 
@@ -138,7 +141,8 @@ class Mountain(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.MOUNTAIN
 
@@ -168,7 +172,8 @@ class River(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.RIVER
 
@@ -196,7 +201,8 @@ class Village(Terrain):
         raise NotImplemented
 
 
-    def get_type(self) -> 'TerrainType':
+    @property
+    def terrain_type(self) -> 'TerrainType':
         from OrodaelTurrim.structure.Enums import TerrainType
         return TerrainType.VILLAGE
 
