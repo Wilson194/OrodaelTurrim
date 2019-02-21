@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List
+from typing import List, Set
 
 from OrodaelTurrim import IMAGES_ROOT
 from OrodaelTurrim.Structure.GameObjects.Attributes import AttributeBundle
@@ -51,7 +51,7 @@ class GameObjectPrototype(ABC):
 
     @property
     @abstractmethod
-    def attack_effects(self) -> List[EffectType]:
+    def attack_effects(self) -> Set[EffectType]:
         pass
 
 

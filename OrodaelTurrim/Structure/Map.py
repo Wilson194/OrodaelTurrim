@@ -81,7 +81,7 @@ class VisibilityMap:
         return list(self.__visibility_map[player].keys())
 
 
-    def get_watching_enemies(self, role: GameRole, position: Position) -> list[GameObject]:
+    def get_watching_enemies(self, role: GameRole, position: Position) -> List[GameObject]:
         watching_enemies = set()
         for player in self.__visibility_map.keys():
             if role.is_enemy(player.role):

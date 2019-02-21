@@ -1,10 +1,14 @@
-from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
+
 
 class EarnResourcesAction(GameAction):
-    def __init__(self, game_engine: GameEngine, player: IPlayer, amount: int):
+    def __init__(self, game_engine: "GameEngine", player: IPlayer, amount: int):
         super().__init__(game_engine)
         self.__amount = amount
         self.__player = player
@@ -24,7 +28,7 @@ class EarnResourcesAction(GameAction):
 
 
 class SpendResourcesAction(GameAction):
-    def __init__(self, game_engine: GameEngine, player: IPlayer, amount: int):
+    def __init__(self, game_engine: "GameEngine", player: IPlayer, amount: int):
         super().__init__(game_engine)
         self.__amount = amount
         self.__player = player

@@ -1,11 +1,16 @@
-from OrodaelTurrim.Business.GameEngine import GameEngine
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
+
 
 class TerrainDamageAction(GameAction):
-    def __init__(self, game_engine: GameEngine, game_object: GameObject, terrain_type: TerrainType, damage: float):
+    def __init__(self, game_engine: "GameEngine", game_object: GameObject, terrain_type: TerrainType, damage: float):
         super().__init__(game_engine)
 
         self.__damage = damage

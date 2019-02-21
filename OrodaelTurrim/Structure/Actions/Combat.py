@@ -1,12 +1,16 @@
-from OrodaelTurrim.Business.GameEngine import GameEngine
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import AttributeType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 from OrodaelTurrim.Structure.Position import Position
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
 class AttackAction(GameAction):
-    def __init__(self, game_engine: GameEngine, attacker: GameObject, target: GameObject):
+    def __init__(self, game_engine: "GameEngine", attacker: GameObject, target: GameObject):
         super().__init__(game_engine)
 
         self.__attacker = attacker
@@ -35,7 +39,7 @@ class AttackAction(GameAction):
 
 
 class MoveAction(GameAction):
-    def __init__(self, game_engine: GameEngine, game_object: GameObject, from_position: Position,
+    def __init__(self, game_engine: "GameEngine", game_object: GameObject, from_position: Position,
                  to_position: Position):
         super().__init__(game_engine)
 

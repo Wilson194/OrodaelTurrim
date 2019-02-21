@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from OrodaelTurrim.Business.GameEngine import GameEngine
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
 class GameAction(ABC):
     TIME_STAMP_FORMAT = '%M:%h:%s'
 
 
-    def __init__(self, game_engine: GameEngine):
+    def __init__(self, game_engine: "GameEngine"):
         self._game_engine = game_engine
         self.__time_stamp = datetime.now()
 

@@ -1,10 +1,14 @@
-from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
+
 
 class DieAction(GameAction):
-    def __init__(self, game_engine: GameEngine, dead_object: GameObject):
+    def __init__(self, game_engine: "GameEngine", dead_object: GameObject):
         super().__init__(game_engine)
 
         self.__dead_object = dead_object
@@ -24,7 +28,7 @@ class DieAction(GameAction):
 
 
 class SpawnAction(GameAction):
-    def __init__(self, game_engine: GameEngine, spawned_object: GameObject):
+    def __init__(self, game_engine: "GameEngine", spawned_object: GameObject):
         super().__init__(game_engine)
         self.__spawned_object = spawned_object
 

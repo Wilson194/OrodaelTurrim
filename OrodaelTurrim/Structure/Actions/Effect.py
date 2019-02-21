@@ -1,11 +1,15 @@
-from OrodaelTurrim.Business.GameEngine import GameEngine
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
 class EffectApplyAction(GameAction):
-    def __init__(self, game_engine: GameEngine, effect: Effect, owner: GameObject):
+    def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
         self.__effect = effect
         self.__owner = owner
@@ -26,7 +30,7 @@ class EffectApplyAction(GameAction):
 
 
 class EffectDamageAction(GameAction):
-    def __init__(self, game_engine: GameEngine, effect: Effect, owner: GameObject, damage: float):
+    def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject, damage: float):
         super().__init__(game_engine)
 
         self.__effect = effect
@@ -49,7 +53,7 @@ class EffectDamageAction(GameAction):
 
 
 class EffectExpireAction(GameAction):
-    def __init__(self, game_engine: GameEngine, effect: Effect, owner: GameObject):
+    def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
 
         self.__effect = effect
@@ -71,7 +75,7 @@ class EffectExpireAction(GameAction):
 
 
 class EffectRefreshAction(GameAction):
-    def __init__(self, game_engine: GameEngine, effect: Effect, owner: GameObject):
+    def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
 
         self.__effect = effect
@@ -96,7 +100,7 @@ class EffectRefreshAction(GameAction):
 
 
 class EffectTickAction(GameAction):
-    def __init__(self, game_engine: GameEngine, effect: Effect, owner: GameObject):
+    def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
         self.__effect = effect
         self.__owner = owner

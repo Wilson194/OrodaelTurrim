@@ -156,7 +156,7 @@ class GameObject:
 
 
     @property
-    def attack_effects(self):
+    def attack_effects(self) -> Set[EffectType]:
         return self.__prototype.attack_effects
 
 

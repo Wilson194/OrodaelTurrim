@@ -1,32 +1,67 @@
 from abc import ABC, abstractmethod
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
-    from OrodaelTurrim.Structure.Enums import TerrainType
+    from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType
 
 
 class Terrain(ABC):
     def compute_damage(self, hit_points: float) -> float:
-        return hit_points
+        return 0
 
 
+    def affect_actions(self, original_value: float) -> float:
+        return original_value
+
+
+    def affect_max_hit_points(self, original_value: int) -> int:
+        return original_value
+
+
+    def affect_range(self, original_value: int) -> int:
+        return original_value
+
+
+    def affect_sight(self, original_value: int) -> int:
+        return original_value
+
+
+    def affect_attack(self, original_value: float) -> float:
+        return original_value
+
+
+    def affect_defense(self, original_value: float) -> float:
+        return original_value
+
+
+    def affect_attribute(self, attribute: "AttributeType", original_value: Union[int, float]) -> Union[float, int]:
+        if attribute == AttributeType.ACTIONS:
+            return self.affect_actions(original_value)
+
+        elif attribute == AttributeType.HIT_POINTS:
+            return self.affect_max_hit_points(original_value)
+
+        elif attribute == AttributeType.RANGE:
+            return self.affect_range(original_value)
+
+        elif attribute == AttributeType.SIGHT:
+            return self.affect_sight(original_value)
+
+        elif attribute == AttributeType.ATTACK:
+            return self.affect_attack(original_value)
+
+        elif attribute == AttributeType.DEFENSE:
+            return self.affect_defense(original_value)
+
+
+    @abstractmethod
     def get_move_cost(self, target: 'TerrainType') -> int:
         pass
 
 
     @abstractmethod
     def get_remaining_sigh(self, current_sight: int) -> int:
-        pass
-
-
-    @abstractmethod
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        pass
-
-
-    @abstractmethod
-    def compute_damage(self, hit_points: float) -> float:
         pass
 
 
@@ -53,10 +88,6 @@ class Field(Terrain):
 
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 1
-
-
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
 
 
     @property
@@ -87,12 +118,16 @@ class Forest(Terrain):
             return 1
 
 
+    def affect_attack(self, original_value: float):  # TODO: Check value of multiplier
+        return original_value * 0.2
+
+
+    def affect_defense(self, original_value: float):
+        return original_value * 0.1
+
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 3
-
-
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
 
 
     @property
@@ -114,12 +149,16 @@ class Hill(Terrain):
             return 2
 
 
+    def affect_attack(self, original_value: float):
+        return original_value * 0.1
+
+
+    def affect_defense(self, original_value: float):
+        return original_value * 0.1
+
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight // 2
-
-
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
 
 
     @property
@@ -141,12 +180,24 @@ class Mountain(Terrain):
             return 3
 
 
+    def affect_attack(self, original_value: float):
+        return original_value * -0.2
+
+
+    def affect_defense(self, original_value: float):
+        return original_value * 0.5
+
+
+    def affect_sight(self, original_value: int):
+        return original_value + 3
+
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return 0
 
 
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
+    def compute_damage(self, hit_points: float):
+        return hit_points * 0.05
 
 
     @property
@@ -176,8 +227,16 @@ class River(Terrain):
         return current_sight - 1
 
 
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
+    def affect_attack(self, original_value: float):
+        return original_value * -0.2
+
+
+    def affect_defense(self, original_value: float):
+        return original_value * -0.2
+
+
+    def affect_actions(self, original_value: float):
+        return original_value - 1
 
 
     @property
@@ -201,12 +260,20 @@ class Village(Terrain):
             return 1
 
 
+    def affect_attack(self, original_value: float):
+        return original_value * 0
+
+
+    def affect_defense(self, original_value: float):
+        return original_value * 0.3
+
+
+    def affect_actions(self, original_value: float):
+        return original_value + 1
+
+
     def get_remaining_sigh(self, current_sight: int) -> int:
         return current_sight - 1
-
-
-    def affect_attribute(self, attribute, original_value: float) -> float:
-        raise NotImplemented
 
 
     @property

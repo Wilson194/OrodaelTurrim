@@ -7,7 +7,12 @@ from OrodaelTurrim.Business.Factory import EffectFactory
 from OrodaelTurrim.Business.History import GameHistory
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
-from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectApplyAction
+from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
+from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectApplyAction, EffectTickAction, \
+    EffectDamageAction, EffectExpireAction
+from OrodaelTurrim.Structure.Actions.Placement import DieAction
+from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction
+from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
 from OrodaelTurrim.Structure.Map import VisibilityMap
@@ -32,7 +37,7 @@ class GameEngine:
         self.__remaining_turns = turns
         self.__game_map = game_map
         self.__players = []
-        self.__player_resources = {}
+        self.__player_resources = {}  # type: Dict[IPlayer, PlayerResources]
         self.__player_units = {}  # type: Dict[IPlayer, List[GameObject]]
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
         self.__game_object_hit_points = {}
@@ -162,68 +167,123 @@ class GameEngine:
 
     def execute_terrain_turn(self, game_object: GameObject) -> None:
         terrain = self.__game_map[game_object.position]
-        pass
+        potential_damage = terrain.compute_damage(game_object.current_hit_points)
+
+        if potential_damage != 0:
+            self.execute_action(TerrainDamageAction(self, game_object, terrain.terrain_type, potential_damage))
 
 
     def execute_effect_turn(self, effect: Effect, owner: GameObject) -> None:
-        pass
+        self.execute_action(EffectTickAction(self, effect, owner))
+
+        potential_damage = effect.compute_damage(owner.current_hit_points)
+        if potential_damage != 0:
+            self.execute_action(EffectDamageAction(self, effect, owner, potential_damage))
+
+        if effect.hax_expired:
+            self.execute_action(EffectExpireAction(self, effect, owner))
 
 
     def execute_unit_turn(self, unit: GameObject) -> None:
-        pass
+        self.execute_terrain_turn(unit)
+
+        effects = unit.active_effects
+        for effect in effects:
+            self.execute_effect_turn(effect, unit)
+
+        if not unit.is_dead():
+            unit.act()
 
 
     def simulate_rest_of_player_turn(self, player) -> None:
-        pass
+        units = self.__player_units[player]
+
+        for unit in units:
+            self.execute_unit_turn(unit)
+
+        income = self.__player_resources[player].income
+        self.execute_action(EarnResourcesAction(self, player, income))
+
+        self.__game_history.end_turn()
 
 
     def damage(self, game_object: GameObject, damage: float):
         game_object.take_damage(damage)
+        if game_object.is_dead():
+            self.execute_action(DieAction(self, game_object))
 
 
-    def heal(self, game_object: GameObject, amount: float):
+    def heal(self, game_object: GameObject, amount: float) -> None:
         game_object.receive_healing(amount)
 
 
-    def move(self, game_object: GameObject, to: Position):
+    def move(self, game_object: GameObject, to: Position) -> None:
         position_from = game_object.position
 
-        self.__game_object_positions.__delitem__(position_from)
+        del self.__game_object_positions[position_from]
         self.__game_object_positions[to] = game_object
 
+        old_visibility = game_object.visible_tiles
         game_object.position = to
+        new_visibility = game_object.visible_tiles
+
+        self.handle_self_vision_loss(game_object, old_visibility, new_visibility)
+        self.handle_self_vision_gain(game_object, old_visibility, new_visibility)
+
+        self.handle_enemy_vision_loss(game_object, position_from)
+        self.handle_enemy_vision_loss(game_object, to)
 
 
     def apply_effect(self, game_object: GameObject, effect: Effect) -> None:
-        pass
+        old_sight = game_object.get_attribute(AttributeType.SIGHT)
+        old_visibility = game_object.visible_tiles
+
+        game_object.apply_effect(effect)
+        self.handle_sight_affection(game_object, old_sight, old_visibility)
 
 
     def remove_effect(self, game_object: GameObject, effect_type: EffectType) -> None:
-        pass
+        old_sight = game_object.get_attribute(AttributeType.SIGHT)
+        old_visibility = game_object.visible_tiles
+
+        game_object.remove_effect(effect_type)
+
+        self.handle_sight_affection(game_object, old_sight, old_visibility)
 
 
     def remove(self, game_object: GameObject) -> None:
-        pass
+        self.delete_game_object(game_object)
 
 
     def place(self, game_object: GameObject) -> None:
-        pass
+        self.register_game_object(game_object)
 
 
     def earn(self, player: IPlayer, amount: int) -> None:
-        pass
+        self.__player_resources[player].add_resources(amount)
 
 
     def spend(self, player: IPlayer, amount: int) -> None:
-        pass
+        self.__player_resources[player].remove_resources(amount)
 
 
     def create_move_action(self, game_object: GameObject, position: Position) -> None:
-        pass
+        if game_object is not None and position is not None:
+            self.execute_action(MoveAction(self, game_object, game_object.position, position))
 
 
     def create_attack_action(self, game_object: GameObject, position: Position) -> None:
-        pass
+        if game_object is None or position is None or not position in self.__game_object_positions:
+            return
+
+        attacked = self.__game_object_positions[position]
+        self.execute_action(AttackAction(self, game_object, attacked))
+
+        attack_effects = copy.deepcopy(game_object.attack_effects)
+        attack_effects.difference_update(attacked.resistances)
+
+        for effect_type in attack_effects:
+            self.handle_effect_attack(attacked, effect_type)
 
 
     def compute_attribute(self, game_object: GameObject, attribute_type: AttributeType, original_value: float) -> float:
