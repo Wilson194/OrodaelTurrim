@@ -2,9 +2,9 @@ from typing import List
 
 import pytest
 
-from OrodaelTurrim.business.GameMap import GameMap
-from OrodaelTurrim.structure.Enums import TerrainType
-from OrodaelTurrim.structure.Position import Position
+from OrodaelTurrim.Business.GameMap import GameMap
+from OrodaelTurrim.Structure.Enums import TerrainType
+from OrodaelTurrim.Structure.Position import Position
 
 
 @pytest.fixture

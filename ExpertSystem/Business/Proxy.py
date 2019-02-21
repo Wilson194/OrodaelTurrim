@@ -1,4 +1,4 @@
-from OrodaelTurrim.business.GameEngine import GameEngine
+from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
 class ActionProxy:

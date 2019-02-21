@@ -5,7 +5,7 @@ from ExpertSystem.Structure.RuleBase import Rule
 
 if TYPE_CHECKING:
     from User.ActionBase import ActionBase
-    from OrodaelTurrim.structure.ExpertSystem import Fact
+    from OrodaelTurrim.Structure.ExpertSystem import Fact
     from ExpertSystem.Business.Proxy import ActionProxy, DataProxy
 
 

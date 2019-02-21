@@ -1,5 +1,5 @@
-from OrodaelTurrim.business.GameMap import GameMap
-from OrodaelTurrim.structure.Position import *
+from OrodaelTurrim.Business.GameMap import GameMap
+from OrodaelTurrim.Structure.Position import *
 import pytest
 
 

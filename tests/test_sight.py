@@ -1,8 +1,8 @@
 import pytest
 
-from OrodaelTurrim.business.GameMap import GameMap
-from OrodaelTurrim.structure.Enums import Nudge
-from OrodaelTurrim.structure.Position import OffsetPosition
+from OrodaelTurrim.Business.GameMap import GameMap
+from OrodaelTurrim.Structure.Enums import Nudge
+from OrodaelTurrim.Structure.Position import OffsetPosition
 
 
 @pytest.mark.parametrize('start,end,sight,result', [

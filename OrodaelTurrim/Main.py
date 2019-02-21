@@ -1,6 +1,6 @@
-from OrodaelTurrim.business.GameEngine import GameEngine
-from OrodaelTurrim.business.MapGenerator import MapGenerator
-from OrodaelTurrim.presenter.Main import MainWindow
+from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Business.MapGenerator import MapGenerator
+from OrodaelTurrim.Presenter.Main import MainWindow
 
 
 def main():
