@@ -56,8 +56,8 @@ class GameObject:
 
 
     def recalculate_cache(self) -> None:
-        self.__visible_tiles = self.__game_engine.get_visible_tiles(self.position,
-                                                                    int(self.get_attribute(AttributeType.SIGHT)))
+        self.__visible_tiles = self.__game_engine.get_object_visible_tiles(self.position,
+                                                                           int(self.get_attribute(AttributeType.SIGHT)))
 
         self.__accessible_tiles = self.__game_engine.get_accessible_tiles(self.position, int(
             self.get_attribute(AttributeType.ACTIONS))).keys()
@@ -181,8 +181,9 @@ class GameObject:
 
 
 class SpawnInformation:
-    def __init__(self, owner: Player, object_type: GameObjectType, position: Position, attack_filters, move_filters):
-        self.owner = owner
+    def __init__(self, owner: IPlayer, object_type: GameObjectType, position: Position,
+                 attack_filters: List[TileFilter], move_filters: List[TileFilter]):
+        self.owner = owner  # type: IPlayer
         self.object_type = object_type
         self.position = position
         self.attack_filters = attack_filters

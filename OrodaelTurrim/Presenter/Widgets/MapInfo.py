@@ -69,8 +69,10 @@ class MapInfoWidget(QWidget):
 
 
     def draw_character_info(self, position: Position):
-        self.findChild(QLabel, 'characterLabel').setVisible(True)
-
+        if self.__game_engine.is_position_occupied(position):
+            self.findChild(QLabel, 'characterLabel').setVisible(True)
+        else:
+            self.findChild(QLabel, 'characterLabel').setVisible(False)
 
     def map_tile_select_slot(self, position: Position):
         self.draw_tile_info(position)

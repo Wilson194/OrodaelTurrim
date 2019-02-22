@@ -32,7 +32,7 @@ class Base(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.BASE, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property

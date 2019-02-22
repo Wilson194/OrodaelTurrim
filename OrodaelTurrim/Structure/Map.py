@@ -77,8 +77,8 @@ class VisibilityMap:
                 player_map.pop(position)
 
 
-    def get_visible_tiles(self, player: IPlayer) -> List[Position]:
-        return list(self.__visibility_map[player].keys())
+    def get_visible_tiles(self, player: IPlayer) -> Set[Position]:
+        return set(self.__visibility_map[player].keys())
 
 
     def get_watching_enemies(self, role: GameRole, position: Position) -> List[GameObject]:

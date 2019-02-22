@@ -10,38 +10,32 @@ from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
 from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectApplyAction, EffectTickAction, \
     EffectDamageAction, EffectExpireAction
-from OrodaelTurrim.Structure.Actions.Placement import DieAction
-from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction
+from OrodaelTurrim.Structure.Actions.Placement import DieAction, SpawnAction
+from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction
 from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
+from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototypePool
 from OrodaelTurrim.Structure.Map import VisibilityMap
 from OrodaelTurrim.Structure.Resources import PlayerResources
-from User.ActionBase import ActionBase
-from User.Interference import Interference
-from User.KnowledgeBase import KnowledgeBase
-from OrodaelTurrim import USER_ROOT
 from OrodaelTurrim.Business.GameMap import GameMap
-from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
-from ExpertSystem.Business.Parser.KnowledgeBase.RulesListener import RulesListener
-from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, TerrainType, EffectType, GameRole
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject, SpawnInformation
-from ExpertSystem.Structure.RuleBase import Rule
 from OrodaelTurrim.Structure.Position import Position
 from OrodaelTurrim.Structure.TypeStrucutre import TwoWayDict
 
 
 class GameEngine:
-    def __init__(self, turns, game_map: GameMap):
-        self.__remaining_turns = turns
+    def __init__(self, game_map: GameMap):
+        GameEngine.__new__ = lambda x: print('Cannot create GameEngine instance')
+        self.__remaining_turns = None
         self.__game_map = game_map
-        self.__players = []
+        self.__players = []  # type: List[IPlayer]
         self.__player_resources = {}  # type: Dict[IPlayer, PlayerResources]
         self.__player_units = {}  # type: Dict[IPlayer, List[GameObject]]
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
-        self.__game_object_hit_points = {}
-        self.__game_object_effects = {}
+        # self.__game_object_hit_points = {}
+        # self.__game_object_effects = {}
         self.__game_object_positions = TwoWayDict()  # type: Dict[Position,GameObject]
 
         self.__game_history = None  # type: GameHistory
@@ -78,7 +72,7 @@ class GameEngine:
         self.__player_units[owner].append(game_object)
         self.__game_object_positions[game_object.position] = game_object
 
-        self.__visibility_map.add_vision(game_object.position, game_object.visible_tiles)
+        self.__visibility_map.add_vision(game_object, game_object.visible_tiles)
 
         self.handle_self_vision_gain(game_object, set(), game_object.visible_tiles)
         self.handle_enemy_vision_gain(game_object, game_object.position)
@@ -308,28 +302,50 @@ class GameEngine:
 
 
     def get_attack_effect(self, position: Position) -> Set[EffectType]:
-        pass
+        if position not in self.__game_object_positions:
+            return set()
+
+        return self.__game_object_positions[position].attack_effects
 
 
     def get_resistances(self, position: Position) -> Set[EffectType]:
-        pass
+        if position not in self.__game_object_positions:
+            return set()
+
+        return self.__game_object_positions[position].resistances
 
 
     def get_active_effects(self, position: Position) -> Dict[EffectType, int]:
-        pass
+        active_effects = {}
+        if position not in self.__game_object_positions:
+            return active_effects
+
+        effects = self.__game_object_positions[position].active_effects
+        for effect in effects:
+            active_effects[effect.effect_type] = effect.remaining_duration
+
+        return active_effects
 
 
     def get_object_type(self, position: Position) -> GameObjectType:
-        pass
+        if position not in self.__game_object_positions:
+            return GameObjectType.NONE
+
+        return self.__game_object_positions[position].object_type
 
 
     def get_role(self, position: Position) -> GameRole:
-        pass
+        if position not in self.__game_object_positions:
+            return GameRole.NEUTRAL
+
+        return self.__game_object_positions[position].role
 
 
-    def get_object_visible_tiles(self, game_object: GameObject) -> Set[Position]:
-        return self.game_map.get_visible_tiles(self.__game_object_positions[game_object],
-                                               int(game_object.get_attribute(AttributeType.SIGH)))
+    def get_visible_tiles(self, position: Position) -> Set[Position]:
+        if position not in self.__game_object_positions:
+            return set()
+
+        return self.__game_object_positions[position].visible_tiles
 
 
     def get_visible_enemies(self, position: Position) -> Dict[Position, int]:
@@ -353,30 +369,6 @@ class GameEngine:
         return self.__game_map[position].terrain_type
 
 
-    @property
-    def game_map(self):
-        return self.__game_map
-
-
-    @game_map.setter
-    def game_map(self, value):
-        self.__game_map = value
-
-
-    def get_bases_positions(self) -> List[Position]:
-        positions = []
-
-        for base in self.__defender_bases:
-            positions.append(self.__game_object_positions[base])
-
-        return positions
-
-
-    def get_tiles_in_range(self, game_object: GameObject):
-        return self.game_map.get_visible_tiles(self.__game_object_positions[game_object],
-                                               int(game_object.get_attribute(AttributeType.RANGE)))
-
-
     def is_position_on_map(self, position: Position) -> bool:
         return self.__game_map.position_on_map(position)
 
@@ -386,20 +378,24 @@ class GameEngine:
 
 
     @property
-    def bases_positions(self):
+    def bases_positions(self) -> Set[Position]:
         """
         Test documentation
         :return:
         """
-        return [x.position for x in self.__defender_bases.values()]
+        return set([x.position for x in self.__defender_bases.values()])
 
 
     @property
     def border_tiles(self) -> Set[Position]:
-        pass
+        return self.__game_map.border_tiles
 
 
-    def get_visible_tiles(self, position: Position, sight: int) -> Set[Position]:
+    def get_player_visible_tiles(self, player: IPlayer) -> Set[Position]:
+        return self.__visibility_map.get_visible_tiles(player)
+
+
+    def get_object_visible_tiles(self, position: Position, sight: int) -> Set[Position]:
         return self.__game_map.get_visible_tiles(position, sight)
 
 
@@ -408,8 +404,39 @@ class GameEngine:
 
 
     def spawn_unit(self, information: SpawnInformation) -> None:
-        pass
+        prototype = GameObjectPrototypePool[information.object_type]
+
+        resources = self.__player_resources[information.owner].resources
+
+        if information.owner in self.__defender_bases:
+            raise IllegalActionException('You cannot spawn additional base!')
+
+        if resources < prototype.cost:
+            raise IllegalActionException('Insufficient resources!')
+
+        if not self.is_position_on_map(information.position):
+            raise IllegalActionException('Position is not on the map!')
+
+        if self.is_position_occupied(information.position):
+            raise IllegalActionException('Tile is already occupied!')
+
+        if information.owner.role != prototype.role:
+            print(information.owner.role, prototype.role)
+            raise IllegalActionException('Attempt to spawn unit of different role!')
+
+        self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))
+        self.execute_action(SpawnAction(self, self.create_unit(information)))
 
 
     def get_resources(self, player: IPlayer) -> int:
-        pass
+        return self.__player_resources[player].resources
+
+
+    @property
+    def game_map(self):
+        return self.__game_map
+
+
+    @game_map.setter
+    def game_map(self, value):
+        self.__game_map = value

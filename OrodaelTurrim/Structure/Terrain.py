@@ -36,6 +36,8 @@ class Terrain(ABC):
 
 
     def affect_attribute(self, attribute: "AttributeType", original_value: Union[int, float]) -> Union[float, int]:
+        from OrodaelTurrim.Structure.Enums import AttributeType
+
         if attribute == AttributeType.ACTIONS:
             return self.affect_actions(original_value)
 
@@ -103,7 +105,7 @@ class Field(Terrain):
     def info_text(self):
         return """    
         <br>            
-        <h3>Beautiful field</h3>
+        <p>Sight cost: 1</p>        
         """.format()
 
 
@@ -140,6 +142,15 @@ class Forest(Terrain):
         return 'F'
 
 
+    def info_text(self):
+        return """    
+        <br>            
+        <p>Sight cost: 3</p>        
+        <p>Attack bonus: 0.2</p>        
+        <p>Defence bonus: 0.1</p>        
+        """.format()
+
+
 class Hill(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
@@ -169,6 +180,15 @@ class Hill(Terrain):
 
     def char(self) -> str:
         return 'H'
+
+
+    def info_text(self):
+        return """    
+        <br>            
+        <p>Sight cost: half</p>        
+        <p>Attack bonus: 0.1</p>        
+        <p>Defence bonus: 0.1</p>        
+        """.format()
 
 
 class Mountain(Terrain):
@@ -209,6 +229,16 @@ class Mountain(Terrain):
     def char(self) -> str:
         return 'M'
 
+    def info_text(self):
+        return """    
+        <br>            
+        <p>Sight cost: all</p>        
+        <p>Attack bonus: -0.2</p>        
+        <p>Defence bonus: 0.5</p>        
+        <p>Damage: 0.05</p>        
+        """.format()
+
+
 
 class River(Terrain):
     def get_move_cost(self, target: 'TerrainType') -> int:
@@ -248,6 +278,16 @@ class River(Terrain):
     def char(self) -> str:
         return 'R'
 
+    def info_text(self):
+        return """    
+        <br>            
+        <p>Sight cost: 1</p>        
+        <p>Attack bonus: -0.2</p>        
+        <p>Action reduction: 1</p>        
+        <p>Defence bonus: -0.2</p>        
+        """.format()
+
+
 
 class Village(Terrain):
     def get_move_cost(self, target: 'Terrain') -> int:
@@ -284,3 +324,13 @@ class Village(Terrain):
 
     def char(self) -> str:
         return 'V'
+
+    def info_text(self):
+        return """    
+        <br>            
+        <p>Sight cost: 1</p>        
+        <p>Attack bonus: 0</p>        
+        <p>Defence bonus: 0.3</p>        
+        <p>Actions bonus: 1</p>        
+        """.format()
+

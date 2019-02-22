@@ -23,7 +23,7 @@ class GameObjectPrototype(ABC):
 
     def get_attribute_value(self, attribute_type: AttributeType) -> float:
         try:
-            return getattr(self.__attributes, attribute_type.name.capitalize())
+            return getattr(self.__attributes, attribute_type.name.lower())
         except AttributeError:
             print('Unknown type of attribute - {}!'.format(attribute_type))
             return 0.0
@@ -61,24 +61,29 @@ class GameObjectPrototype(ABC):
         pass
 
 
-class GameObjectPrototypePool:
+class GetMeta(type):
+    def __getitem__(self, item):
+        return GameObjectPrototypePool.prototypes[item]
+
+
+class GameObjectPrototypePool(metaclass=GetMeta):
     from OrodaelTurrim.Structure.GameObjects.Prototypes.Attackers import Cyclops, Demon, Elemental, Gargoyle, \
         Minotaur, Necromancer, Orc, Skeleton
     from OrodaelTurrim.Structure.GameObjects.Prototypes.Defenders import Base, Archer, Druid, Ent, Knight, Magician
     prototypes = {
-        GameObjectType.BASE, Base(),
-        GameObjectType.ARCHER, Archer(),
-        GameObjectType.DRUID, Druid(),
-        GameObjectType.ENT, Ent(),
-        GameObjectType.KNIGHT, Knight(),
-        GameObjectType.MAGICIAN, Magician(),
+        GameObjectType.BASE: Base(),
+        GameObjectType.ARCHER: Archer(),
+        GameObjectType.DRUID: Druid(),
+        GameObjectType.ENT: Ent(),
+        GameObjectType.KNIGHT: Knight(),
+        GameObjectType.MAGICIAN: Magician(),
 
-        GameObjectType.CYCLOPS, Cyclops(),
-        GameObjectType.DEMON, Demon(),
-        GameObjectType.ELEMENTAL, Elemental(),
-        GameObjectType.GARGOYLE, Gargoyle(),
-        GameObjectType.MINOTAUR, Minotaur(),
-        GameObjectType.NECROMANCER, Necromancer(),
-        GameObjectType.ORC, Orc(),
-        GameObjectType.SKELETON, Skeleton()
+        GameObjectType.CYCLOPS: Cyclops(),
+        GameObjectType.DEMON: Demon(),
+        GameObjectType.ELEMENTAL: Elemental(),
+        GameObjectType.GARGOYLE: Gargoyle(),
+        GameObjectType.MINOTAUR: Minotaur(),
+        GameObjectType.NECROMANCER: Necromancer(),
+        GameObjectType.ORC: Orc(),
+        GameObjectType.SKELETON: Skeleton()
     }
