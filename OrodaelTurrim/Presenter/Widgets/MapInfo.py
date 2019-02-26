@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QWidget, QGraphicsSceneMouseEvent, QLabel, QTextEdit
 from OrodaelTurrim import UI_ROOT, IMAGES_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position
@@ -71,8 +72,18 @@ class MapInfoWidget(QWidget):
     def draw_character_info(self, position: Position):
         if self.__game_engine.is_position_occupied(position):
             self.findChild(QLabel, 'characterLabel').setVisible(True)
+
+            label = self.findChild(QLabel, 'characterImageLabel')  # type: QLabel
+            label.setScaledContents(True)
+            img = self.__game_engine.get_object_type(position)
+
+            label.setPixmap(
+                QPixmap(str(AssetsEncoder[img])).scaled(130, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            # .scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
         else:
             self.findChild(QLabel, 'characterLabel').setVisible(False)
+
 
     def map_tile_select_slot(self, position: Position):
         self.draw_tile_info(position)

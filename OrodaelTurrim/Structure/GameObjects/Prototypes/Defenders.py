@@ -12,7 +12,7 @@ class Archer(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.ARCHER, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property
@@ -52,7 +52,7 @@ class Druid(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.DRUID, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property
@@ -72,7 +72,7 @@ class Ent(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.ENT, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property
@@ -92,7 +92,7 @@ class Knight(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.KNIGHT, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property
@@ -112,7 +112,7 @@ class Magician(GameObjectPrototype):
 
 
     def __init__(self):
-        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.CYCLOPS, GameRole.ATTACKER, self.ASSET_NAME)
+        super().__init__(self.ATTRIBUTES, self.COST, GameObjectType.MAGICIAN, GameRole.DEFENDER, self.ASSET_NAME)
 
 
     @property

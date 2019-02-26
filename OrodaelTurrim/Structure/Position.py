@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING, Union
+from typing import List, TYPE_CHECKING, Union, Set
 import math
 
 from PyQt5.QtCore import QPointF, QPoint
@@ -154,6 +154,9 @@ class Position(ABC):
 
 
 class CubicPosition(Position):
+    __slots__ = ['__x_position', '__y_position', '__z_position']
+
+
     def __init__(self, x_position, y_position, z_position):
         super().__init__()
 
@@ -231,6 +234,9 @@ class CubicPosition(Position):
 
 
 class AxialPosition(Position):
+    __slots__ = ['__q', '__r']
+
+
     def __init__(self, q: Union[int, float], r: Union[int, float]):
         super().__init__()
 
@@ -282,6 +288,9 @@ class AxialPosition(Position):
 
 
 class OffsetPosition(Position):
+    __slots__ = ['__q', '__r']
+
+
     def __init__(self, q: int, r: int):
         super().__init__()
         self.__q = q

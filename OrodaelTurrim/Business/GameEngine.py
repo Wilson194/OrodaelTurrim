@@ -408,7 +408,7 @@ class GameEngine:
 
         resources = self.__player_resources[information.owner].resources
 
-        if information.owner in self.__defender_bases:
+        if information.object_type == GameObjectType.BASE and information.owner in self.__defender_bases:
             raise IllegalActionException('You cannot spawn additional base!')
 
         if resources < prototype.cost:
@@ -440,3 +440,7 @@ class GameEngine:
     @game_map.setter
     def game_map(self, value):
         self.__game_map = value
+
+
+    def get_game_object(self, position: Position) -> GameObject:
+        return self.__game_object_positions[position]

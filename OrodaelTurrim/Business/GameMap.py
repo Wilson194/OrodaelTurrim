@@ -3,6 +3,7 @@ from typing import List, TYPE_CHECKING, Dict, Union, Set
 from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
 from OrodaelTurrim.Structure.Position import Position, OffsetPosition
 from collections import deque
+from OrodaelTurrim.Structure.Enums import Nudge
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Enums import Nudge, TerrainType
@@ -110,19 +111,18 @@ class GameMap:
 
 
     def get_visible_tiles(self, position: Position, sight: int) -> Set[Position]:
-        from OrodaelTurrim.Structure.Enums import Nudge
         if not self.position_on_map(position):
             return set()
-        visited = []
+        visited = set()
         visible = set()
-        pool = deque()
-        pool.append(position)
+        pool = set()
+        pool.add(position)
 
         while len(pool) > 0:
-            current = pool.popleft()
+            current = pool.pop()
 
             if current not in visited:
-                visited.append(current)
+                visited.add(current)
 
             if current not in visible and (
                     self.can_been_seen(position, current, sight, Nudge.NEGATIVE) or self.can_been_seen(position,
@@ -132,7 +132,7 @@ class GameMap:
 
             for tile in current.get_all_neighbours():
                 if self.position_on_map(tile) and tile not in visited:
-                    pool.append(tile)
+                    pool.add(tile)
 
         return visible
 
