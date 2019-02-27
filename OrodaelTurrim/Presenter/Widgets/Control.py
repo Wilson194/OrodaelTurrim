@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QGraphicsSceneMou
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Presenter.Widgets.LogWidget import LogWidget
 from OrodaelTurrim.Presenter.Widgets.MapInfo import MapInfoWidget
 
 
@@ -17,19 +18,27 @@ class ControlWidget(QWidget):
 
         self.init_ui()
 
+
     def init_ui(self):
         with open(str(UI_ROOT / 'controlWidget.ui')) as f:
             uic.loadUi(f, self)
 
+        # Tab for map information
         map_tab = self.findChild(QWidget, 'mapTab')  # type: QWidget
         map_tab_layout = QVBoxLayout(map_tab)
 
         self.map_info_widget = MapInfoWidget(map_tab, self.__game_engine)
-
         map_tab_layout.addWidget(self.map_info_widget)
 
-        # run_inference_button = self.findChild(QPushButton, 'runInferenceButton')
-        # run_inference_button.clicked.connect(self.run_inference_action)
+
+        # Tab for log information
+        log_tab = self.findChild(QWidget, 'logTab')  # type: QWidget
+
+        log_tab_layout = QVBoxLayout(log_tab)
+
+        log_widget = LogWidget(log_tab, self.__game_engine)
+        log_tab_layout.addWidget(log_widget)
+
 
     @pyqtSlot()
     def run_inference_action(self, event: QGraphicsSceneMouseEvent):

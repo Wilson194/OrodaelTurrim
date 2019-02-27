@@ -432,7 +432,6 @@ class GameEngine:
         self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))
         self.execute_action(SpawnAction(self, self.create_unit(information)))
 
-        print('Ahoj')
         self.unit_spawn_signal(information.position)
 
 
@@ -452,3 +451,8 @@ class GameEngine:
 
     def get_game_object(self, position: Position) -> GameObject:
         return self.__game_object_positions[position]
+
+
+    @property
+    def game_history(self) -> GameHistory:
+        return self.__game_history

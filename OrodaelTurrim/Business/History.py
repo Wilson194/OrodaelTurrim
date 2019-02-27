@@ -1,5 +1,6 @@
 from typing import List, TYPE_CHECKING
 from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Exceptions import IllegalHistoryOperation
 
 if TYPE_CHECKING:
@@ -16,6 +17,8 @@ class GameHistory:
         self.__current_action = -1
 
         self.__turns = []  # type: List[List[List["GameAction"]]]
+
+        self.__log_signal = Connector().functor('update_log')
 
         self.start_next_game_turn()
 
@@ -150,6 +153,7 @@ class GameHistory:
 
         self.__turns[self.__current_turn][self.__current_player].append(action)
         self.__current_action += 1
+        self.__log_signal()
 
 
     def end_turn(self) -> None:
@@ -236,12 +240,13 @@ class GameHistory:
 
 
     def __str__(self):
-        result = ''
+        result = '<ul>'
         for turn in range(self.turns_count):
             player_turn = self.__turns[turn]
             for p_turn in range(len(player_turn)):
                 actions = player_turn[p_turn]
                 for action in actions:
-                    result += '   - Turn {} 		- Player {} 			- {}'.format(turn, p_turn, action)
+                    result += '<li>Turn {} 		- Player {} 			- {}</li>'.format(turn, p_turn, action)
+        result += '</ul'
 
         return result

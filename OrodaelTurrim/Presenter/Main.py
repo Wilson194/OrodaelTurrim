@@ -35,12 +35,14 @@ class MainWidget(QWidget):
         hbox.addWidget(splitter1)
         self.setLayout(hbox)
 
+        # Create map widget in left split
         map_layout = QHBoxLayout(left)
 
         map_widget = MapWidget(self, self.__game_engine)
         map_layout.addWidget(map_widget)
         left.setLayout(map_layout)
 
+        # Create control widget in right split
         control_layout = QHBoxLayout(right)
         control_widget = ControlWidget(right, self.__game_engine)
         control_layout.addWidget(control_widget)

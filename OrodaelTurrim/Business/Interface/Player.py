@@ -49,3 +49,18 @@ class Player(IPlayer):
     @property
     def name(self) -> str:
         return 'Dummy'
+
+
+class Enemy(IPlayer):
+    def act(self) -> None:
+        pass
+
+
+    @property
+    def role(self) -> GameRole:
+        return GameRole.ATTACKER
+
+
+    @property
+    def name(self) -> str:
+        return 'Dummy'

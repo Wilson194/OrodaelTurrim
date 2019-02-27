@@ -43,5 +43,6 @@ class SpawnAction(GameAction):
 
     @property
     def text(self) -> str:
-        return 'Player {} spawned {} on {}'.format(self.__spawned_object.owner.name, self.__spawned_object.object_type,
+        return 'Player {} spawned {} on {}'.format(self.__spawned_object.owner.name,
+                                                   self.__spawned_object.object_type.name.capitalize(),
                                                    self.__spawned_object.position.offset)

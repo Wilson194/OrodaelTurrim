@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class GameAction(ABC):
-    TIME_STAMP_FORMAT = '%M:%h:%s'
+    TIME_STAMP_FORMAT = '%H:%M:%S'
 
 
     def __init__(self, game_engine: "GameEngine"):
