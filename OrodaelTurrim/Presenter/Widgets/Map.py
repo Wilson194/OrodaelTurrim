@@ -8,12 +8,15 @@ from PyQt5.QtGui import QPixmap, QPen, QColor
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
     QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent
+from qtpy import QtGui
 
 from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import TerrainType
+from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position, Point
 
@@ -167,21 +170,7 @@ class MapTileGraphicsItem(QGraphicsItem):
         :param tile_type: enum of terrain type
         :return: Path to png image
         """
-        if tile_type == TerrainType.FIELD:
-            return IMAGES_ROOT / 'field.png'
-
-        elif tile_type == TerrainType.FOREST:
-            return IMAGES_ROOT / 'forest.png'
-
-        elif tile_type == TerrainType.HILL:
-            return IMAGES_ROOT / 'hill.png'
-
-        elif tile_type == TerrainType.MOUNTAIN:
-            return IMAGES_ROOT / 'mountain.png'
-
-        elif tile_type == TerrainType.VILLAGE:
-            return IMAGES_ROOT / 'village.png'
-        else:
+        if tile_type == TerrainType.RIVER:
             river_direction = []
             out_of_map_direction = []
             for i, position in enumerate(self.__position.get_all_neighbours()):
@@ -196,7 +185,73 @@ class MapTileGraphicsItem(QGraphicsItem):
                     sorted(out_of_map_direction, key=lambda x: abs(river_direction[0] - x), reverse=True)[0])
 
             river_direction.sort()
-            return IMAGES_ROOT / 'river_{}.png'.format('-'.join(map(str, river_direction)))
+            return AssetsEncoder['river_{}'.format('-'.join(map(str, river_direction)))]
+        else:
+            return AssetsEncoder[tile_type]
+
+
+class ObjectGraphicsItem(QGraphicsItem):
+    def __init__(self, parent: "MapWidget", game_engine: GameEngine, position: Position, transformation: float = 0.3):
+        """
+        Create QGraphicItem object for rendering
+        :param map_object: reference to map object
+        :param position: position of tile
+        :param border: border class for define border rendering
+        :param transformation: size multiplication
+        """
+        super().__init__()
+        self.parent = parent
+        self.__position = position
+        self.__game_engine = game_engine
+        self.__image_size = Point(IMAGE_SIZE.x * transformation, IMAGE_SIZE.y * transformation)
+        self.__transformation = transformation
+        self.__size = HEXAGON_SIZE.x * self.__transformation / 2
+        self.__border = None
+
+        self.__size_w = HEXAGON_SIZE.x * self.__transformation / 2
+        self.__size_h = HEXAGON_SIZE.y * self.__transformation / math.sqrt(3)
+        # self.setAcceptHoverEvents(True)
+
+
+    def __get_center(self) -> Point:
+        """
+        Get center of the tile in pixels
+        :return: center point
+        """
+        p = self.__position.axial
+        x = self.__size_w * (3. / 2 * p.q)
+        y = self.__size_h * ((sqrt(3) / 2 * p.q) + (sqrt(3) * p.r))
+        return Point(x, y)
+
+
+    def boundingRect(self) -> QRectF:
+        """
+        Over rider bounding rectangle for determinate paint event
+        :return: rectangle of png image
+        """
+        center = self.__get_center()
+
+        rect_size = min(self.__size_h, self.__size_w) * 1.6
+
+        return QRectF(center.x - rect_size / 2,
+                      center.y - rect_size / 2,
+                      rect_size,
+                      rect_size)
+
+
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
+        """
+        Override paint function. Call every time when need to be render
+        :param painter: painter object
+        :param option: style options of item
+        :param widget: parent widget
+        """
+
+        # Get image
+        image_path = AssetsEncoder[self.__game_engine.get_object_type(self.__position)]
+        pixmap = QPixmap(str(image_path))
+
+        painter.drawPixmap(self.boundingRect().toRect(), pixmap)
 
 
 class MapWidget(QWidget):
@@ -209,7 +264,7 @@ class MapWidget(QWidget):
 
         self.borders = {}  # type: Dict[Position, Border]
 
-        self.transformation = 0.3
+        self.transformation = 0.4
 
         self.init_ui()
 
@@ -226,7 +281,7 @@ class MapWidget(QWidget):
         game_map = self.__game_engine.game_map
 
         for position in game_map.tiles:
-            self.scene.addItem(MapTileGraphicsItem(self, game_map, position))
+            self.scene.addItem(MapTileGraphicsItem(self, game_map, position, self.transformation))
 
         view = QGraphicsView(self.scene)
         view.setRenderHint(QPainter.Antialiasing)
@@ -238,6 +293,9 @@ class MapWidget(QWidget):
         scroll_area.setLayout(scroll_layout)
 
         self.map_tile_selected.connect(lambda x: Connector().connector('map_tile_select', x))
+
+        Connector().subscribe('register_game_object', self.register_game_object)
+        Connector().subscribe('unregister_game_object', self.unregister_game_object)
 
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
@@ -255,3 +313,14 @@ class MapWidget(QWidget):
             self.map_tile_selected.emit(position)
 
         self.scene.update()
+
+
+    @pyqtSlot()
+    def register_game_object(self, position: Position) -> None:
+        self.scene.addItem(ObjectGraphicsItem(self, self.__game_engine, position, self.transformation))
+        self.scene.update()
+
+
+    @pyqtSlot()
+    def unregister_game_object(self):
+        pass

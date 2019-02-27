@@ -17,13 +17,15 @@ def main():
 
     player = Player()
 
+    main_window = MainWindow(game_engine)
+
     game_engine.register_player(player, PlayerResources(100, 10), [])
     game_engine.start(500)
     game_engine.spawn_unit(SpawnInformation(player, GameObjectType.BASE, OffsetPosition(0, 0), [], []))
     game_engine.spawn_unit(SpawnInformation(player, GameObjectType.ARCHER, OffsetPosition(1, 0), [], []))
     game_engine.spawn_unit(SpawnInformation(player, GameObjectType.ARCHER, OffsetPosition(2, 0), [], []))
 
-    MainWindow(game_engine).execute()
+    main_window.execute()
 
 
 if __name__ == '__main__':

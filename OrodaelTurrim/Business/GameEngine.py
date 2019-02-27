@@ -1,11 +1,13 @@
 import copy
 from typing import List, Dict, Set
 
+from PyQt5.QtCore import pyqtSignal
 from antlr4 import *
 
 from OrodaelTurrim.Business.Factory import EffectFactory
 from OrodaelTurrim.Business.History import GameHistory
 from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
 from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectApplyAction, EffectTickAction, \
@@ -26,6 +28,7 @@ from OrodaelTurrim.Structure.TypeStrucutre import TwoWayDict
 
 
 class GameEngine:
+
     def __init__(self, game_map: GameMap):
         GameEngine.__new__ = lambda x: print('Cannot create GameEngine instance')
         self.__remaining_turns = None
@@ -41,6 +44,8 @@ class GameEngine:
         self.__game_history = None  # type: GameHistory
 
         self.__visibility_map = VisibilityMap()
+
+        self.unit_spawn_signal = Connector().functor('register_game_object')
 
 
     def start(self, turn_limit: int) -> None:
@@ -426,6 +431,9 @@ class GameEngine:
 
         self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))
         self.execute_action(SpawnAction(self, self.create_unit(information)))
+
+        print('Ahoj')
+        self.unit_spawn_signal(information.position)
 
 
     def get_resources(self, player: IPlayer) -> int:

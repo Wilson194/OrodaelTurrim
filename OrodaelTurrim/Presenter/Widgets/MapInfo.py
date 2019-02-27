@@ -34,26 +34,11 @@ class MapInfoWidget(QWidget):
         self.findChild(QLabel, 'characterLabel').setVisible(False)
 
 
-    def draw_tile_info(self, position: Position):
+    def draw_tile_info(self, position: Position) -> None:
         tile = self.__game_engine.game_map[position]
         tile_type = tile.terrain_type
 
-        if tile_type == TerrainType.FIELD:
-            img = IMAGES_ROOT / 'field.png'
-
-        elif tile_type == TerrainType.FOREST:
-            img = IMAGES_ROOT / 'forest.png'
-
-        elif tile_type == TerrainType.HILL:
-            img = IMAGES_ROOT / 'hill.png'
-
-        elif tile_type == TerrainType.MOUNTAIN:
-            img = IMAGES_ROOT / 'mountain.png'
-
-        elif tile_type == TerrainType.VILLAGE:
-            img = IMAGES_ROOT / 'village.png'
-        else:
-            img = IMAGES_ROOT / 'river_0-2.png'
+        img = AssetsEncoder[tile_type]
 
         label = self.findChild(QLabel, 'tileImageLabel')  # type: QLabel
         label.setScaledContents(True)
@@ -71,18 +56,23 @@ class MapInfoWidget(QWidget):
 
     def draw_character_info(self, position: Position):
         if self.__game_engine.is_position_occupied(position):
-            self.findChild(QLabel, 'characterLabel').setVisible(True)
+            character_label = self.findChild(QLabel, 'characterLabel')  # type: QLabel
+            character_label.setVisible(True)
+            character_label.setContentsMargins(0,0,0,20)
+            character_label.setText(
+                'Character: {}'.format(self.__game_engine.get_object_type(position).name.capitalize()))
 
-            label = self.findChild(QLabel, 'characterImageLabel')  # type: QLabel
-            label.setScaledContents(True)
+            character_image_label = self.findChild(QLabel, 'characterImageLabel')  # type: QLabel
+            character_image_label.setVisible(True)
+
             img = self.__game_engine.get_object_type(position)
 
-            label.setPixmap(
-                QPixmap(str(AssetsEncoder[img])).scaled(130, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-            # .scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            character_image_label.setPixmap(
+                QPixmap(str(AssetsEncoder[img])).scaled(226, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
         else:
             self.findChild(QLabel, 'characterLabel').setVisible(False)
+            self.findChild(QLabel, 'characterImageLabel').setVisible(False)
 
 
     def map_tile_select_slot(self, position: Position):
