@@ -295,7 +295,7 @@ class MapWidget(QWidget):
         scroll_layout.addWidget(view)
         scroll_area.setLayout(scroll_layout)
 
-        self.map_tile_selected.connect(lambda x: Connector().connector('map_tile_select', x))
+        self.map_tile_selected.connect(Connector().functor('map_tile_select'))
 
         Connector().subscribe('redraw_map', self.redraw_map)
 
