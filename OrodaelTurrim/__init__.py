@@ -7,5 +7,6 @@ USER_ROOT = (Path(__file__).parent.parent / 'User').absolute()
 RESOURCES_ROOT = ORODAEL_TURRIM_ROOT / 'res'
 UI_ROOT = RESOURCES_ROOT / 'ui'
 IMAGES_ROOT = RESOURCES_ROOT / 'images'
+ICONS_ROOT = IMAGES_ROOT / 'icons'
 
 DEBUG = False

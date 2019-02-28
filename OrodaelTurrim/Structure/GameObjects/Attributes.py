@@ -2,12 +2,12 @@ from OrodaelTurrim.Structure.Enums import AttributeType
 
 
 class AttributeBundle:
-    def __init__(self, attack: float, defense: float, hit_points: float, move_range: int, sight: int, actions: int = 0):
+    def __init__(self, attack: float, defense: float, hit_points: float, attack_range: int, sight: int, actions: int = 0):
         self.actions = actions
         self.attack = attack
         self.defense = defense
         self.hit_points = hit_points
-        self.move_range = move_range
+        self.attack_range = attack_range
         self.sight = sight
 
 
@@ -28,7 +28,7 @@ class AttributeAffection:
         return original_value
 
 
-    def affect_range(self, original_value: int):
+    def affect_attack_range(self, original_value: int):
         return original_value
 
 
@@ -45,8 +45,8 @@ class AttributeAffection:
             return self.affect_defense(original_value)
         elif attribute == AttributeType.HIT_POINTS:
             return self.affect_hit_points(original_value)
-        elif attribute == AttributeType.RANGE:
-            return float(self.affect_range(int(original_value)))
+        elif attribute == AttributeType.ATTACK_RANGE:
+            return float(self.affect_attack_range(int(original_value)))
         elif attribute == AttributeType.SIGHT:
             return float(self.affect_sight(int(original_value)))
 

@@ -6,6 +6,7 @@ from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Widgets.LogWidget import LogWidget
 from OrodaelTurrim.Presenter.Widgets.MapInfo import MapInfoWidget
+from OrodaelTurrim.Presenter.Widgets.RoundControlWidget import RoundControlWidget
 
 
 class ControlWidget(QWidget):
@@ -30,7 +31,6 @@ class ControlWidget(QWidget):
         self.map_info_widget = MapInfoWidget(map_tab, self.__game_engine)
         map_tab_layout.addWidget(self.map_info_widget)
 
-
         # Tab for log information
         log_tab = self.findChild(QWidget, 'logTab')  # type: QWidget
 
@@ -38,6 +38,14 @@ class ControlWidget(QWidget):
 
         log_widget = LogWidget(log_tab, self.__game_engine)
         log_tab_layout.addWidget(log_widget)
+
+        # Tab for game control
+        round_tab = self.findChild(QWidget, 'roundTab')  # type: QWidget
+
+        round_tab_layout = QVBoxLayout(round_tab)
+
+        round_widget = RoundControlWidget(round_tab, self.__game_engine)
+        round_tab_layout.addWidget(round_widget)
 
 
     @pyqtSlot()

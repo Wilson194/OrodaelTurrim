@@ -118,7 +118,7 @@ class Position(ABC):
 
 
     def neighbour(self, direction: 'HexDirection') -> 'Position':
-        return self + CubicPosition(direction.value.cubic.x, direction.value.cubic.y, direction.value.cubic.z)
+        return (self + CubicPosition(direction.value.cubic.x, direction.value.cubic.y, direction.value.cubic.z)).offset
 
 
     def get_all_neighbours(self) -> List['Position']:
@@ -233,6 +233,11 @@ class CubicPosition(Position):
         return '<Cubic> {}, {}, {}'.format(self.x, self.y, self.z)
 
 
+    @property
+    def string(self):
+        return '{} {} {}'.format(self.x, self.y, self.z)
+
+
 class AxialPosition(Position):
     __slots__ = ['__q', '__r']
 
@@ -285,6 +290,11 @@ class AxialPosition(Position):
 
     def __repr__(self):
         return '<Axial> {}, {}'.format(self.q, self.r)
+
+
+    @property
+    def string(self):
+        return '{} {}'.format(self.q, self.r)
 
 
 class OffsetPosition(Position):
@@ -348,3 +358,8 @@ class OffsetPosition(Position):
 
     def __repr__(self):
         return '<Offset> {}, {}'.format(self.q, self.r)
+
+
+    @property
+    def string(self):
+        return '{} {}'.format(self.q, self.r)

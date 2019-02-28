@@ -61,6 +61,22 @@ class GameObjectPrototype(ABC):
         pass
 
 
+    @property
+    def description(self) -> str:
+        return '''Actions: {} <br>
+        Attack: {}<br>        
+        Defense: {}<br>
+        Attack range: {}<br>
+        Sight: {} <br>
+        Hit points: {} / {{}}'''.format(self.get_attribute_value(AttributeType.ACTIONS),
+                                      self.get_attribute_value(AttributeType.ATTACK),
+                                      self.get_attribute_value(AttributeType.DEFENSE),
+                                      self.get_attribute_value(AttributeType.ATTACK_RANGE),
+                                      self.get_attribute_value(AttributeType.SIGHT),
+                                      self.get_attribute_value(AttributeType.HIT_POINTS),
+                                      )
+
+
 class GetMeta(type):
     def __getitem__(self, item):
         return GameObjectPrototypePool.prototypes[item]

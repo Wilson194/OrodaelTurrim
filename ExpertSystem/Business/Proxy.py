@@ -8,6 +8,6 @@ class ActionProxy:
 
 class DataProxy:
     def __init__(self, game_engine: GameEngine):
-        self.get_map_size = game_engine.game_map.size
+        self.get_map_size = game_engine.get_game_map.size
 
         del game_engine

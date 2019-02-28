@@ -1,4 +1,3 @@
-
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import AttributeType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject

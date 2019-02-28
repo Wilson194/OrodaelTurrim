@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from OrodaelTurrim.Structure.GameObjects.Attributes import AttributeBundle
 from OrodaelTurrim.Structure.Enums import EffectType, GameObjectType, GameRole
@@ -36,13 +36,13 @@ class Demon(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.BURN}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BURN, EffectType.FREEZE]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BURN, EffectType.FREEZE}
 
 
 class Elemental(GameObjectPrototype):

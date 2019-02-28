@@ -50,7 +50,7 @@ class AttributeType(AutoNumber):
     ATTACK = ()
     DEFENSE = ()
     HIT_POINTS = ()
-    RANGE = ()
+    ATTACK_RANGE = ()
     SIGHT = ()
 
 

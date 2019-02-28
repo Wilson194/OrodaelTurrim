@@ -37,8 +37,7 @@ class GameEngine:
         self.__player_resources = {}  # type: Dict[IPlayer, PlayerResources]
         self.__player_units = {}  # type: Dict[IPlayer, List[GameObject]]
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
-        # self.__game_object_hit_points = {}
-        # self.__game_object_effects = {}
+
         self.__game_object_positions = TwoWayDict()  # type: Dict[Position,GameObject]
 
         self.__game_history = None  # type: GameHistory
@@ -132,8 +131,9 @@ class GameEngine:
     def handle_self_vision_loss(self, game_object: GameObject, old_vision: Set[Position],
                                 new_vision: Set[Position]) -> None:
 
-        old_vision.difference_update(new_vision)
-        for position in old_vision:
+        lost_vision = copy.deepcopy(old_vision)
+        lost_vision.difference_update(new_vision)
+        for position in lost_vision:
             game_object.on_enemy_disappear(position)
 
 
@@ -145,7 +145,8 @@ class GameEngine:
 
         for active_effect in game_object.active_effects:
             if active_effect.effect_type == effect.effect_type:
-                self.execute_action(EffectRefreshAction(self, effect, game_object))
+                self.execute_action(EffectRefreshAction(self, active_effect, game_object))
+                break
         else:
             self.execute_action(EffectApplyAction(self, effect, game_object))
 
@@ -230,7 +231,7 @@ class GameEngine:
         self.handle_self_vision_gain(game_object, old_visibility, new_visibility)
 
         self.handle_enemy_vision_loss(game_object, position_from)
-        self.handle_enemy_vision_loss(game_object, to)
+        self.handle_enemy_vision_gain(game_object, to)
 
 
     def apply_effect(self, game_object: GameObject, effect: Effect) -> None:
@@ -251,6 +252,9 @@ class GameEngine:
 
 
     def remove(self, game_object: GameObject) -> None:
+        if game_object.object_type == GameObjectType.BASE:
+            print('Game Over!')
+            exit(0)
         self.delete_game_object(game_object)
 
 
@@ -360,13 +364,11 @@ class GameEngine:
         return self.__game_object_positions[position].visible_enemies
 
 
-    @property
-    def map_height(self) -> int:
+    def get_map_height(self) -> int:
         return self.__game_map.size[1]
 
 
-    @property
-    def map_width(self) -> int:
+    def get_map_width(self) -> int:
         return self.__game_map.size[0]
 
 
@@ -382,8 +384,7 @@ class GameEngine:
         return position in self.__game_object_positions
 
 
-    @property
-    def bases_positions(self) -> Set[Position]:
+    def get_bases_positions(self) -> Set[Position]:
         """
         Test documentation
         :return:
@@ -391,8 +392,7 @@ class GameEngine:
         return set([x.position for x in self.__defender_bases.values()])
 
 
-    @property
-    def border_tiles(self) -> Set[Position]:
+    def get_border_tiles(self) -> Set[Position]:
         return self.__game_map.border_tiles
 
 
@@ -439,13 +439,11 @@ class GameEngine:
         return self.__player_resources[player].resources
 
 
-    @property
-    def game_map(self):
+    def get_game_map(self):
         return self.__game_map
 
 
-    @game_map.setter
-    def game_map(self, value):
+    def set_game_map(self, value):
         self.__game_map = value
 
 
@@ -453,6 +451,9 @@ class GameEngine:
         return self.__game_object_positions[position]
 
 
-    @property
-    def game_history(self) -> GameHistory:
+    def get_player(self, player_index: int) -> IPlayer:
+        return self.__players[player_index]
+
+
+    def get_game_history(self) -> GameHistory:
         return self.__game_history

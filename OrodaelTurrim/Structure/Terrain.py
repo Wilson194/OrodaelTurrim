@@ -44,7 +44,7 @@ class Terrain(ABC):
         elif attribute == AttributeType.HIT_POINTS:
             return self.affect_max_hit_points(original_value)
 
-        elif attribute == AttributeType.RANGE:
+        elif attribute == AttributeType.ATTACK_RANGE:
             return self.affect_range(original_value)
 
         elif attribute == AttributeType.SIGHT:
@@ -121,11 +121,11 @@ class Forest(Terrain):
 
 
     def affect_attack(self, original_value: float):  # TODO: Check value of multiplier
-        return original_value * 0.2
+        return original_value * 1.2
 
 
     def affect_defense(self, original_value: float):
-        return original_value * 0.1
+        return original_value * 1.1
 
 
     def get_remaining_sigh(self, current_sight: int) -> int:
@@ -161,11 +161,11 @@ class Hill(Terrain):
 
 
     def affect_attack(self, original_value: float):
-        return original_value * 0.1
+        return original_value * 1.1
 
 
     def affect_defense(self, original_value: float):
-        return original_value * 0.1
+        return original_value * 1.1
 
 
     def get_remaining_sigh(self, current_sight: int) -> int:
@@ -201,11 +201,11 @@ class Mountain(Terrain):
 
 
     def affect_attack(self, original_value: float):
-        return original_value * -0.2
+        return original_value * 0.8
 
 
     def affect_defense(self, original_value: float):
-        return original_value * 0.5
+        return original_value * 1.5
 
 
     def affect_sight(self, original_value: int):
@@ -258,11 +258,11 @@ class River(Terrain):
 
 
     def affect_attack(self, original_value: float):
-        return original_value * -0.2
+        return original_value * 0.8
 
 
     def affect_defense(self, original_value: float):
-        return original_value * -0.2
+        return original_value * 0.8
 
 
     def affect_actions(self, original_value: float):
@@ -301,11 +301,11 @@ class Village(Terrain):
 
 
     def affect_attack(self, original_value: float):
-        return original_value * 0
+        return original_value * 1
 
 
     def affect_defense(self, original_value: float):
-        return original_value * 0.3
+        return original_value * 1.3
 
 
     def affect_actions(self, original_value: float):

@@ -30,6 +30,6 @@ class LogWidget(QWidget):
 
     @pyqtSlot()
     def update_text(self):
-        history = self.__game_engine.game_history
+        history = self.__game_engine.get_game_history()
 
         self.__text_area.setText(str(history))

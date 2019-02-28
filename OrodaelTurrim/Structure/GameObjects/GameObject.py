@@ -65,7 +65,7 @@ class GameObject:
 
     @property
     def enemies_in_range(self):
-        attack_range = int(self.get_attribute(AttributeType.RANGE))
+        attack_range = int(self.get_attribute(AttributeType.ATTACK_RANGE))
         return [position for position, distance in self.__visible_enemies.items() if distance <= attack_range]
 
 
@@ -104,7 +104,10 @@ class GameObject:
 
 
     def on_enemy_disappear(self, position: Position) -> None:
-        self.__visible_enemies.pop(position)
+        try:
+            self.__visible_enemies.pop(position)
+        except KeyError:
+            pass
 
 
     def register_attack_filter(self, attack_filter: AttackFilter) -> None:
@@ -178,6 +181,11 @@ class GameObject:
     @property
     def visible_enemies(self) -> Dict[Position, int]:
         return self.__visible_enemies
+
+
+    @property
+    def description(self) -> str:
+        return self.__prototype.description.format(self.__current_hit_points)
 
 
 class SpawnInformation:

@@ -30,12 +30,16 @@ class GameHistory:
         self.__turns.append([])
         self.start_next_player_turn()
 
+        Connector().functor('history_action')()
+
 
     def start_next_player_turn(self) -> None:
         self.__current_player += 1
         self.__current_action = -1
 
         self.__turns[self.__current_turn].append([])
+
+        Connector().functor('history_action')()
 
 
     def delete_player_turn(self) -> None:
@@ -86,6 +90,8 @@ class GameHistory:
 
         self.__current_turn += 1
 
+        Connector().functor('history_action')()
+
 
     def move_to_previous(self) -> None:
         if self.at_start:
@@ -102,6 +108,8 @@ class GameHistory:
             self.__current_turn -= 1
 
         self.__current_action = self.last_action_index
+
+        Connector().functor('history_action')()
 
 
     @property
@@ -165,6 +173,8 @@ class GameHistory:
         else:
             self.start_next_player_turn()
 
+        Connector().functor('history_action')()
+
 
     def undo_player_turn(self) -> None:
         if not self.in_preset:
@@ -183,6 +193,8 @@ class GameHistory:
         self.undo_player_actions()
         self.clear_player_turn()
 
+        Connector().functor('history_action')()
+
 
     def move_action_back(self) -> None:
         if not self.before_first_action:
@@ -190,11 +202,15 @@ class GameHistory:
 
         self.move_to_previous()
 
+        Connector().functor('history_action')()
+
 
     def move_action_forth(self) -> None:
         self.move_to_next()
         if not self.before_first_action:
             self.current_action.execute()
+
+        Connector().functor('history_action')()
 
 
     def move_turn_back(self) -> None:
@@ -203,6 +219,7 @@ class GameHistory:
                 return
             self.move_to_previous()
         self.undo_player_actions()
+        Connector().functor('history_action')()
 
 
     def move_turn_forth(self) -> None:
@@ -212,6 +229,7 @@ class GameHistory:
             self.move_to_next()
 
         self.redo_player_actions()
+        Connector().functor('history_action')()
 
 
     @property
@@ -237,6 +255,16 @@ class GameHistory:
     @property
     def at_start(self) -> bool:
         return self.__current_turn == 0 and self.on_first_player and self.before_first_action
+
+
+    @property
+    def current_player(self) -> int:
+        return self.__current_player
+
+
+    @property
+    def current_turn(self) -> int:
+        return self.__current_turn
 
 
     def __str__(self):

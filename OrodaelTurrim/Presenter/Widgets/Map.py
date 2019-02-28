@@ -15,7 +15,7 @@ from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
-from OrodaelTurrim.Structure.Enums import TerrainType
+from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position, Point
@@ -247,7 +247,9 @@ class ObjectGraphicsItem(QGraphicsItem):
         :param widget: parent widget
         """
 
-        # Get image
+        if self.__game_engine.get_object_type(self.__position) == GameObjectType.NONE:
+            return
+            # Get image
         image_path = AssetsEncoder[self.__game_engine.get_object_type(self.__position)]
         pixmap = QPixmap(str(image_path))
 
@@ -278,10 +280,11 @@ class MapWidget(QWidget):
 
         self.scene = QGraphicsScene()
 
-        game_map = self.__game_engine.game_map
+        game_map = self.__game_engine.get_game_map()
 
         for position in game_map.tiles:
             self.scene.addItem(MapTileGraphicsItem(self, game_map, position, self.transformation))
+            self.scene.addItem(ObjectGraphicsItem(self, self.__game_engine, position, self.transformation))
 
         view = QGraphicsView(self.scene)
         view.setRenderHint(QPainter.Antialiasing)
@@ -294,8 +297,7 @@ class MapWidget(QWidget):
 
         self.map_tile_selected.connect(lambda x: Connector().connector('map_tile_select', x))
 
-        Connector().subscribe('register_game_object', self.register_game_object)
-        Connector().subscribe('unregister_game_object', self.unregister_game_object)
+        Connector().subscribe('redraw_map', self.redraw_map)
 
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
@@ -306,7 +308,7 @@ class MapWidget(QWidget):
     def click_on_map(self, event: QGraphicsSceneMouseEvent, transformation: float):
         position = Position.from_pixel(event.scenePos(), transformation).offset
 
-        if self.__game_engine.game_map.position_on_map(position):
+        if self.__game_engine.get_game_map().position_on_map(position):
             self.borders.clear()
 
             self.borders[position] = Border.full(3, QColor(255, 0, 0))
@@ -316,11 +318,5 @@ class MapWidget(QWidget):
 
 
     @pyqtSlot()
-    def register_game_object(self, position: Position) -> None:
-        self.scene.addItem(ObjectGraphicsItem(self, self.__game_engine, position, self.transformation))
+    def redraw_map(self) -> None:
         self.scene.update()
-
-
-    @pyqtSlot()
-    def unregister_game_object(self):
-        pass

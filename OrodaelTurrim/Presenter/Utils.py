@@ -45,4 +45,5 @@ class AssetsEncoder(metaclass=GetMeta):
         'river_2-3': IMAGES_ROOT / 'Terrain' / 'river_2-4.png',
         'river_0-5': IMAGES_ROOT / 'Terrain' / 'river_0-3.png',
         'river_3-4': IMAGES_ROOT / 'Terrain' / 'river_3-5.png',
+        'river_0-1': IMAGES_ROOT / 'Terrain' / 'river_0-2.png',
     }

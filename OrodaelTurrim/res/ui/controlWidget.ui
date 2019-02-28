@@ -17,18 +17,17 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="mapTab">
       <attribute name="title">
        <string>Map info</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="gameTab">
+     <widget class="QWidget" name="roundTab">
       <attribute name="title">
-       <string>Game control</string>
+       <string>Rounds control</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout"/>
      </widget>
      <widget class="QWidget" name="logTab">
       <attribute name="title">

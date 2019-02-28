@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget
 
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Widgets.Control import ControlWidget
 from OrodaelTurrim.Presenter.Widgets.Map import MapWidget
 
@@ -17,6 +18,7 @@ class MainWidget(QWidget):
         self.__game_engine = game_engine
 
         self.init_ui()
+
 
     def init_ui(self):
         hbox = QHBoxLayout(self)
@@ -64,8 +66,10 @@ class MainWindow:
         layout.addWidget(main_widget)
         central.setLayout(layout)
 
+
     def execute(self):
         self.window.show()
         self.window.showMaximized()
+        Connector().functor('history_action')()
 
         return self.app.exec()

@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Set
 
 from OrodaelTurrim.Structure.GameObjects.Attributes import AttributeBundle
-from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType, EffectType
+from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType, EffectType, AttributeType
 from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototype
 
 
@@ -16,13 +16,13 @@ class Archer(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BLIND]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BLIND}
 
 
 class Base(GameObjectPrototype):
@@ -36,13 +36,13 @@ class Base(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BLIND]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BLIND}
 
 
 class Druid(GameObjectPrototype):
@@ -56,13 +56,13 @@ class Druid(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.FREEZE]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.FREEZE}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return []
+    def resistances(self) -> Set[EffectType]:
+        return set()
 
 
 class Ent(GameObjectPrototype):
@@ -76,13 +76,13 @@ class Ent(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.ROOT]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.ROOT}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.FREEZE]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.FREEZE}
 
 
 class Knight(GameObjectPrototype):
@@ -96,13 +96,13 @@ class Knight(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.BLIND]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.BLIND}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.ROOT]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.ROOT}
 
 
 class Magician(GameObjectPrototype):
@@ -116,10 +116,10 @@ class Magician(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.BURN}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BURN}
