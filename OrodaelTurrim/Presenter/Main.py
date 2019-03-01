@@ -2,8 +2,10 @@ from pathlib import Path
 
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget
 
+from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Widgets.Control import ControlWidget
@@ -70,6 +72,12 @@ class MainWindow:
     def execute(self):
         self.window.show()
         self.window.showMaximized()
+
+        self.window.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
+        self.window.setWindowTitle('Orodael Turrim')
+
+        self.app.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
+
         Connector().functor('history_action')()
 
         return self.app.exec()

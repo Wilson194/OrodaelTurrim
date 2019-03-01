@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="mapTab">
       <attribute name="title">
@@ -27,6 +27,11 @@
      <widget class="QWidget" name="roundTab">
       <attribute name="title">
        <string>Rounds control</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="gameTab">
+      <attribute name="title">
+       <string>Game control</string>
       </attribute>
      </widget>
      <widget class="QWidget" name="logTab">

@@ -58,7 +58,10 @@ class GameHistory:
 
         while self.__current_action <= self.last_action_index:
             player_actions[self.__current_action].execute()
+
             self.__current_action += 1
+
+        self.__current_action = self.last_action_index
 
 
     def undo_player_actions(self) -> None:
@@ -220,6 +223,7 @@ class GameHistory:
             self.move_to_previous()
         self.undo_player_actions()
         Connector().functor('history_action')()
+        Connector().emit('redraw_map')
 
 
     def move_turn_forth(self) -> None:
@@ -229,7 +233,16 @@ class GameHistory:
             self.move_to_next()
 
         self.redo_player_actions()
+
+        self.move_to_next()
+
         Connector().functor('history_action')()
+        Connector().emit('redraw_map')
+
+
+    def move_to_present(self) -> None:
+        while not self.in_preset:
+            self.move_turn_forth()
 
 
     @property
@@ -267,14 +280,30 @@ class GameHistory:
         return self.__current_turn
 
 
+    def is_history_log(self, turn: int, player: int, action: int) -> bool:
+        if turn < self.current_turn:
+            return True
+
+        if turn == self.current_turn:
+            if player < self.current_player:
+                return True
+
+            if player == self.current_player:
+                if action <= self.__current_action:
+                    return True
+
+        return False
+
+
     def __str__(self):
         result = '<ul>'
         for turn in range(self.turns_count):
             player_turn = self.__turns[turn]
             for p_turn in range(len(player_turn)):
                 actions = player_turn[p_turn]
-                for action in actions:
-                    result += '<li>Turn {} 		- Player {} 			- {}</li>'.format(turn, p_turn, action)
+                for i, action in enumerate(actions):
+                    color = 'black' if self.is_history_log(turn, p_turn, i) else 'red'
+                    result += '<li style="color: {}">Turn {} - Player {}- {}</li>'.format(color, turn, p_turn, action)
         result += '</ul'
 
         return result

@@ -52,7 +52,7 @@ class MoveAction(GameAction):
 
 
     def undo(self) -> None:
-        self._game_engine.move(self.__game_object, self.__to)
+        self._game_engine.move(self.__game_object, self.__from)
 
 
     @property

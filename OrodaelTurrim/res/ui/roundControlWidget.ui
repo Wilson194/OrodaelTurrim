@@ -187,15 +187,8 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1" colspan="2">
-    <widget class="QSlider" name="horizontalSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
    <item row="8" column="1" colspan="2">
-    <widget class="QSpinBox" name="spinBox"/>
+    <widget class="QSpinBox" name="roundsBox"/>
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="label_4">
@@ -226,7 +219,7 @@
    <item row="9" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Game speed</string>
+      <string>Display process</string>
      </property>
     </widget>
    </item>
@@ -262,6 +255,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="9" column="1">
+    <widget class="QCheckBox" name="displayProcessCheck">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

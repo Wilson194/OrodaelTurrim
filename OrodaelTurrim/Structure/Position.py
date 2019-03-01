@@ -55,9 +55,6 @@ class Position(ABC):
     CORRECTION_Z = -3e-6
 
 
-    def __init__(self):
-        pass
-
 
     @property
     @abstractmethod
@@ -158,8 +155,6 @@ class CubicPosition(Position):
 
 
     def __init__(self, x_position, y_position, z_position):
-        super().__init__()
-
         self.__x_position = x_position
         self.__y_position = y_position
         self.__z_position = z_position

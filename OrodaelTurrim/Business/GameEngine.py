@@ -38,7 +38,7 @@ class GameEngine:
         self.__player_units = {}  # type: Dict[IPlayer, List[GameObject]]
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
 
-        self.__game_object_positions = TwoWayDict()  # type: Dict[Position,GameObject]
+        self.__game_object_positions = {}  # type: Dict[Position,GameObject]
 
         self.__game_history = None  # type: GameHistory
 

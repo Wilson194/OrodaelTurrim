@@ -1,7 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -24,6 +24,15 @@ class RoundControlWidget(QWidget):
 
         self.findChild(QPushButton, 'endOfRoundButton').clicked.connect(self.end_of_round_slot)
         self.findChild(QPushButton, 'runInferenceButton').clicked.connect(self.run_inference_slot)
+
+        self.findChild(QPushButton, 'playButton').clicked.connect(self.simulate_game_slot)
+
+        self.findChild(QPushButton, 'previousTurnButton').clicked.connect(self.previous_turn_slot)
+        self.findChild(QPushButton, 'nextTurnButton').clicked.connect(self.next_turn_slot)
+        self.findChild(QPushButton, 'lastTurnButton').clicked.connect(self.last_turn_slot)
+
+        self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
+        self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
 
         Connector().subscribe('history_action', self.history_state_change_slot)
 
@@ -60,3 +69,49 @@ class RoundControlWidget(QWidget):
                 inference_button.setDisabled(True)
             else:
                 inference_button.setDisabled(False)
+
+
+    @pyqtSlot()
+    def simulate_game_slot(self):
+        rounds_box = self.findChild(QSpinBox, 'roundsBox')  # type: QSpinBox
+        rounds = rounds_box.value()
+
+        check_box = self.findChild(QCheckBox, 'displayProcessCheck')  # type: QCheckBox
+        display = check_box.isChecked()
+
+        print(display)
+
+        game_history = self.__game_engine.get_game_history()
+        while rounds > 0:
+            game_history.active_player.act()
+            self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
+
+            if display:
+                Connector().emit('redraw_map')
+
+            if game_history.on_first_player:
+                rounds -= 1
+
+        Connector().emit('redraw_map')
+
+
+    @pyqtSlot()
+    def previous_turn_slot(self):
+        self.__game_engine.get_game_history().move_turn_back()
+
+        self.findChild(QPushButton, 'nextTurnButton').setDisabled(False)
+        self.findChild(QPushButton, 'lastTurnButton').setDisabled(False)
+
+
+    @pyqtSlot()
+    def next_turn_slot(self):
+        self.__game_engine.get_game_history().move_turn_forth()
+
+        if self.__game_engine.get_game_history().in_preset:
+            self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
+            self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
+
+
+    @pyqtSlot()
+    def last_turn_slot(self):
+        self.__game_engine.get_game_history().move_to_present()
