@@ -1,12 +1,16 @@
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import GameObjectType
+from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
+from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototypePool
+from OrodaelTurrim.Structure.Position import Position
 
 
 class UnitWidget(QWidget):
@@ -15,6 +19,7 @@ class UnitWidget(QWidget):
 
         self.__game_engine = game_engine
         self.__object_type = object_type
+        self.__selected_position = None
 
         self.init_ui()
 
@@ -28,7 +33,51 @@ class UnitWidget(QWidget):
         img_label = self.findChild(QLabel, 'imageLabel')  # type: QLabel
         name_label = self.findChild(QLabel, 'nameLabel')  # type: QLabel
 
-        img_label.setPixmap(QPixmap(str(img)).scaled(100, 100, Qt.KeepAspectRatio))
-        # img_label.setScaledContents(True)
+        img_label.setScaledContents(True)
+        img_label.setPixmap(QPixmap(str(img)))
 
-        name_label.setText(self.__object_type.name.capitalize())
+        name_label.setText(
+            '{} ({})'.format(self.__object_type.name.capitalize(), GameObjectPrototypePool[self.__object_type].cost))
+
+        button = self.findChild(QPushButton, 'placeButton')  # type: QPushButton
+        button.setDisabled(True)
+
+        Connector().subscribe('map_tile_select', self.map_tile_select_slot)
+
+        self.findChild(QPushButton, 'placeButton').clicked.connect(self.place_unit_slot)
+
+
+    @pyqtSlot()
+    def map_tile_select_slot(self, position: Position):
+        self.__selected_position = position
+        state = True
+
+        # Position occupation
+        state = state and not self.__game_engine.is_position_occupied(position)
+
+        # Enough money
+        player_resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
+        state = state and GameObjectPrototypePool[self.__object_type].cost <= player_resources
+
+        # Not have a base yet
+        base_condition = self.__object_type == GameObjectType.BASE and self.__game_engine.have_already_base(
+            self.__game_engine.get_game_history().active_player)
+        state = state and not base_condition
+
+        self.findChild(QPushButton, 'placeButton').setDisabled(not state)
+
+
+
+
+
+    @pyqtSlot()
+    def place_unit_slot(self):
+        player = self.__game_engine.get_game_history().active_player
+        unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, [], [])
+        self.__game_engine.spawn_unit(unit_info)
+
+        # Redraw control
+        Connector().emit('map_tile_select', self.__selected_position)
+
+        # Redraw map
+        Connector().emit('redraw_map')

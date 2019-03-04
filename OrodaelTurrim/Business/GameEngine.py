@@ -264,10 +264,12 @@ class GameEngine:
 
     def earn(self, player: IPlayer, amount: int) -> None:
         self.__player_resources[player].add_resources(amount)
+        Connector().emit('redraw_ui')
 
 
     def spend(self, player: IPlayer, amount: int) -> None:
         self.__player_resources[player].remove_resources(amount)
+        Connector().emit('redraw_ui')
 
 
     def create_move_action(self, game_object: GameObject, position: Position) -> None:
@@ -457,3 +459,7 @@ class GameEngine:
 
     def get_game_history(self) -> GameHistory:
         return self.__game_history
+
+
+    def have_already_base(self, player: IPlayer) -> bool:
+        return player in self.__defender_bases

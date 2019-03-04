@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>646</width>
+    <width>461</width>
     <height>527</height>
    </rect>
   </property>
@@ -45,16 +45,19 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QScrollArea" name="unitsArea">
+    <widget class="QScrollArea" name="QScrollArea">
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
+     <widget class="QWidget" name="unitsArea">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>620</width>
+        <width>435</width>
         <height>443</height>
        </rect>
       </property>

@@ -25,6 +25,7 @@ class Nudge(Enum):
     POSITIVE = 1
     NEGATIVE = -1
 
+
     def nudge(self, value: float) -> float:
         return self.value * value
 
@@ -59,6 +60,7 @@ class GameRole(AutoNumber):
     DEFENDER = ()
     NEUTRAL = ()
 
+
     def is_enemy(self, role: "GameRole"):
         if self == role or self == GameRole.NEUTRAL or role == GameRole.NEUTRAL:
             return False
@@ -83,3 +85,8 @@ class GameObjectType(Enum):
     NECROMANCER = (GameRole.ATTACKER, 50)
     ORC = (GameRole.ATTACKER, 8)
     SKELETON = (GameRole.ATTACKER, 5)
+
+
+    @staticmethod
+    def defenders():
+        return [x for x in list(GameObjectType) if x.value[0] == GameRole.DEFENDER]

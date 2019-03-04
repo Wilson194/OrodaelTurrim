@@ -26,7 +26,7 @@ def main():
 
     # Register defender
     defender = Player()
-    game_engine.register_player(defender, PlayerResources(100, 10), [])
+    game_engine.register_player(defender, PlayerResources(20, 10), [])
 
     # Register attacker
     player2 = AIPlayer()

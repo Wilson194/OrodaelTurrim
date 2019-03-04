@@ -69,16 +69,16 @@ class GameObjectPrototype(ABC):
         Attack range: {}<br>
         Sight: {} <br>
         Hit points: {} / {{}}'''.format(self.get_attribute_value(AttributeType.ACTIONS),
-                                      self.get_attribute_value(AttributeType.ATTACK),
-                                      self.get_attribute_value(AttributeType.DEFENSE),
-                                      self.get_attribute_value(AttributeType.ATTACK_RANGE),
-                                      self.get_attribute_value(AttributeType.SIGHT),
-                                      self.get_attribute_value(AttributeType.HIT_POINTS),
-                                      )
+                                        self.get_attribute_value(AttributeType.ATTACK),
+                                        self.get_attribute_value(AttributeType.DEFENSE),
+                                        self.get_attribute_value(AttributeType.ATTACK_RANGE),
+                                        self.get_attribute_value(AttributeType.SIGHT),
+                                        self.get_attribute_value(AttributeType.HIT_POINTS),
+                                        )
 
 
 class GetMeta(type):
-    def __getitem__(self, item):
+    def __getitem__(self, item: GameObjectType):
         return GameObjectPrototypePool.prototypes[item]
 
 
