@@ -21,6 +21,9 @@ class UnitWidget(QWidget):
         self.__object_type = object_type
         self.__selected_position = None
 
+        Connector().subscribe('map_position_change', self.map_tile_select_slot)
+        Connector().subscribe('redraw_ui', self.redraw_ui)
+
         self.init_ui()
 
 
@@ -42,18 +45,21 @@ class UnitWidget(QWidget):
         button = self.findChild(QPushButton, 'placeButton')  # type: QPushButton
         button.setDisabled(True)
 
-        Connector().subscribe('map_tile_select', self.map_tile_select_slot)
-
         self.findChild(QPushButton, 'placeButton').clicked.connect(self.place_unit_slot)
 
 
     @pyqtSlot()
     def map_tile_select_slot(self, position: Position):
         self.__selected_position = position
+        self.redraw_ui()
+
+
+    @pyqtSlot()
+    def redraw_ui(self):
         state = True
 
         # Position occupation
-        state = state and not self.__game_engine.is_position_occupied(position)
+        state = state and not self.__game_engine.is_position_occupied(self.__selected_position)
 
         # Enough money
         player_resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
@@ -67,17 +73,11 @@ class UnitWidget(QWidget):
         self.findChild(QPushButton, 'placeButton').setDisabled(not state)
 
 
-
-
-
     @pyqtSlot()
     def place_unit_slot(self):
         player = self.__game_engine.get_game_history().active_player
         unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, [], [])
         self.__game_engine.spawn_unit(unit_info)
 
-        # Redraw control
-        Connector().emit('map_tile_select', self.__selected_position)
-
-        # Redraw map
         Connector().emit('redraw_map')
+        Connector().emit('redraw_ui')

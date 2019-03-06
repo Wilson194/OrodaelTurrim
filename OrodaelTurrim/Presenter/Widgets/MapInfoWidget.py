@@ -7,8 +7,6 @@ from OrodaelTurrim import UI_ROOT, IMAGES_ROOT, ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
-from OrodaelTurrim.Structure.Enums import TerrainType
-from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position
 
 
@@ -21,14 +19,15 @@ class MapInfoWidget(QWidget):
         self.__selected_tile = None
         self.label = None
 
+        Connector().subscribe('map_position_change', self.map_tile_select_slot)
+        Connector().subscribe('redraw_ui', self.redraw_ui_slot)
+
         self.init_ui()
 
 
     def init_ui(self):
         with open(str(UI_ROOT / 'mapInfoWidget.ui')) as f:
             uic.loadUi(f, self)
-
-        Connector().subscribe('map_tile_select', self.map_tile_select_slot)
 
         self.findChild(QLabel, 'tileLabel').setVisible(False)
         self.findChild(QLabel, 'characterLabel').setVisible(False)
@@ -122,7 +121,13 @@ class MapInfoWidget(QWidget):
         axial_icon.setText(position.axial.string)
 
 
+    def redraw_ui_slot(self):
+        if self.__selected_tile:
+            self.draw_tile_info(self.__selected_tile)
+            self.draw_character_info(self.__selected_tile)
+            self.draw_position_info(self.__selected_tile)
+
+
     def map_tile_select_slot(self, position: Position) -> None:
-        self.draw_tile_info(position)
-        self.draw_character_info(position)
-        self.draw_position_info(position)
+        self.__selected_tile = position
+        self.redraw_ui_slot()

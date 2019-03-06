@@ -55,7 +55,6 @@ class Position(ABC):
     CORRECTION_Z = -3e-6
 
 
-
     @property
     @abstractmethod
     def cubic(self) -> 'CubicPosition':
@@ -96,13 +95,11 @@ class Position(ABC):
         return start + (finish - start) * progress
 
 
-    def interpolate_to(self, position: 'Position', progress: float, nudge: 'Nudge') -> 'Position':
-        x = self.interpolate(self.cubic.x + nudge.nudge(Position.CORRECTION_X),
-                             position.cubic.x + nudge.nudge(Position.CORRECTION_X), progress)
-        y = self.interpolate(self.cubic.y + nudge.nudge(Position.CORRECTION_Y),
-                             position.cubic.y + nudge.nudge(Position.CORRECTION_Y), progress)
-        z = self.interpolate(self.cubic.z + nudge.nudge(Position.CORRECTION_Z),
-                             position.cubic.z + nudge.nudge(Position.CORRECTION_Z), progress)
+    def interpolate_to(self, start: list, finish: list, progress: float) -> 'Position':
+        x = start[0] + (finish[0] - start[0]) * progress
+        y = start[1] + (finish[1] - start[1]) * progress
+        z = start[2] + (finish[2] - start[2]) * progress
+
         return CubicPosition(x, y, z)
 
 
@@ -131,15 +128,22 @@ class Position(ABC):
         step = 1.0 / max(distance, 1)
         line = list()
 
+        start_x = self.cubic.x + nudge.nudge(Position.CORRECTION_X)
+        finish_x = position.cubic.x + nudge.nudge(Position.CORRECTION_X)
+        start_y = self.cubic.y + nudge.nudge(Position.CORRECTION_Y)
+        finish_y = position.cubic.y + nudge.nudge(Position.CORRECTION_Y)
+        start_z = self.cubic.z + nudge.nudge(Position.CORRECTION_Z)
+        finish_z = position.cubic.z + nudge.nudge(Position.CORRECTION_Z)
+
         for i in range(distance + 1):
-            line.append(self.interpolate_to(position, step * i, nudge))
+            line.append(self.interpolate_to([start_x, start_y, start_z], [finish_x, finish_y, finish_z], step * i))
 
         return line
 
 
     @staticmethod
     def from_pixel(point: Union[QPoint, Point, QPointF], transformation: float) -> "AxialPosition":
-        from OrodaelTurrim.Presenter.Widgets.Map import HEXAGON_SIZE
+        from OrodaelTurrim.Presenter.Widgets.MapWidget import HEXAGON_SIZE
 
         x_size = (HEXAGON_SIZE.x * transformation / 2)
         y_size = (HEXAGON_SIZE.y * transformation / math.sqrt(3))
@@ -198,6 +202,14 @@ class CubicPosition(Position):
 
     def __hash__(self):
         return hash((self.offset.q, self.offset.r))
+
+
+    def __sub__(self, other: 'Position') -> 'Position':
+        return CubicPosition(self.x - other.cubic.x, self.y - other.cubic.y, self.z - other.cubic.z)
+
+
+    def __add__(self, other: 'Position') -> 'Position':
+        return CubicPosition(self.x + other.cubic.x, self.y + other.cubic.y, self.z + other.cubic.z)
 
 
     def __lt__(self, other):
@@ -287,6 +299,14 @@ class AxialPosition(Position):
         return '<Axial> {}, {}'.format(self.q, self.r)
 
 
+    def __add__(self, other: Position):
+        return AxialPosition(self.q + other.axial.q, self.r + other.axial.r)
+
+
+    def __sub__(self, other: Position):
+        return AxialPosition(self.q - other.axial.q, self.r - other.axial.r)
+
+
     @property
     def string(self):
         return '{} {}'.format(self.q, self.r)
@@ -343,6 +363,14 @@ class OffsetPosition(Position):
             return self.r < other.q
 
         return self.q < other.q
+
+
+    def __add__(self, other: Position):
+        return OffsetPosition(self.q + other.offset.q, self.r + other.offset.r)
+
+
+    def __sub__(self, other: Position):
+        return OffsetPosition(self.q - other.offset.q, self.r - other.offset.r)
 
 
     @property

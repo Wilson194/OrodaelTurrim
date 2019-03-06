@@ -7,10 +7,10 @@ from PyQt5.QtCore import Qt, QRectF, QRect, pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QPixmap, QPen, QColor
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
-    QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent
+    QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent, QPushButton
 from qtpy import QtGui
-
-from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG
+from PyQt5 import QtCore
+from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG, ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Presenter.Connector import Connector
@@ -43,14 +43,30 @@ class MapTileGraphicsItem(QGraphicsItem):
         self.parent = parent
         self.__position = position
         self.__map_object = map_object
-        self.__image_size = Point(IMAGE_SIZE.x * transformation, IMAGE_SIZE.y * transformation)
         self.__transformation = transformation
-        self.__size = HEXAGON_SIZE.x * self.__transformation / 2
         self.__border = None
+
+        self.__calculate_sizes()
+
+        Connector().subscribe('zoom', self.transformation_change_slot)
+
+        # self.setAcceptHoverEvents(True)
+
+
+    def transformation_change_slot(self, transformation: float):
+        self.__transformation = transformation
+        self.__calculate_sizes()
+        self.update()
+        self.parent.scene.update()
+
+
+    def __calculate_sizes(self):
+        self.__image_size = Point(IMAGE_SIZE.x * self.__transformation, IMAGE_SIZE.y * self.__transformation)
+        self.__transformation = self.__transformation
+        self.__size = HEXAGON_SIZE.x * self.__transformation / 2
 
         self.__size_w = HEXAGON_SIZE.x * self.__transformation / 2
         self.__size_h = HEXAGON_SIZE.y * self.__transformation / math.sqrt(3)
-        # self.setAcceptHoverEvents(True)
 
 
     def __get_center(self) -> Point:
@@ -121,7 +137,6 @@ class MapTileGraphicsItem(QGraphicsItem):
         hexagon_width = HEXAGON_SIZE.y * self.__transformation
 
         left_top = Point(center.x - self.__size, center.y - hexagon_width / 2 - image_hexagon_diff)
-
         return QRectF(left_top.x,
                       left_top.y,
                       (IMAGE_SIZE.x * self.__transformation),
@@ -203,14 +218,29 @@ class ObjectGraphicsItem(QGraphicsItem):
         self.parent = parent
         self.__position = position
         self.__game_engine = game_engine
-        self.__image_size = Point(IMAGE_SIZE.x * transformation, IMAGE_SIZE.y * transformation)
         self.__transformation = transformation
+
+        Connector().subscribe('zoom', self.transformation_change_slot)
+
+        self.__compute_sizes()
+        # self.setAcceptHoverEvents(True)
+
+
+    def transformation_change_slot(self, transformation: float):
+        self.__transformation = transformation
+        self.__compute_sizes()
+        self.update()
+        self.parent.scene.update()
+
+
+    def __compute_sizes(self):
+        self.__image_size = Point(IMAGE_SIZE.x * self.__transformation, IMAGE_SIZE.y * self.__transformation)
+        self.__transformation = self.__transformation
         self.__size = HEXAGON_SIZE.x * self.__transformation / 2
         self.__border = None
 
         self.__size_w = HEXAGON_SIZE.x * self.__transformation / 2
         self.__size_h = HEXAGON_SIZE.y * self.__transformation / math.sqrt(3)
-        # self.setAcceptHoverEvents(True)
 
 
     def __get_center(self) -> Point:
@@ -257,8 +287,6 @@ class ObjectGraphicsItem(QGraphicsItem):
 
 
 class MapWidget(QWidget):
-    map_tile_selected = pyqtSignal(Position)
-
 
     def __init__(self, parent=None, game_engine: GameEngine = None):
         super().__init__(parent)
@@ -268,6 +296,8 @@ class MapWidget(QWidget):
 
         self.transformation = 0.4
 
+        Connector().subscribe('redraw_map', self.redraw_map)
+
         self.init_ui()
 
 
@@ -275,10 +305,10 @@ class MapWidget(QWidget):
         with open(str(UI_ROOT / 'mapWidget.ui')) as f:
             uic.loadUi(f, self)
 
-        scroll_area = self.findChild(QScrollArea, 'scrollArea')
+        self.scroll_area = self.findChild(QScrollArea, 'scrollArea')  # type:QScrollArea
         scroll_layout = QHBoxLayout()
 
-        self.scene = QGraphicsScene()
+        self.scene = QGraphicsScene(self.scroll_area)
 
         game_map = self.__game_engine.get_game_map()
 
@@ -286,22 +316,29 @@ class MapWidget(QWidget):
             self.scene.addItem(MapTileGraphicsItem(self, game_map, position, self.transformation))
             self.scene.addItem(ObjectGraphicsItem(self, self.__game_engine, position, self.transformation))
 
-        view = QGraphicsView(self.scene)
-        view.setRenderHint(QPainter.Antialiasing)
-        view.setCacheMode(QGraphicsView.CacheBackground)
-        view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
+        self.view = QGraphicsView(self.scene)
+        self.view.setRenderHint(QPainter.Antialiasing)
+        self.view.setCacheMode(QGraphicsView.CacheBackground)
+        self.view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
         # view.setDragMode(QGraphicsView.ScrollHandDrag)
 
-        scroll_layout.addWidget(view)
-        scroll_area.setLayout(scroll_layout)
+        scroll_layout.addWidget(self.view)
+        self.scroll_area.setLayout(scroll_layout)
 
-        self.map_tile_selected.connect(Connector().functor('map_tile_select'))
+        zoom_in_button = self.findChild(QPushButton, 'zoomInButton')  # type: QPushButton
+        zoom_out_button = self.findChild(QPushButton, 'zoomOutButton')  # type: QPushButton
 
-        Connector().subscribe('redraw_map', self.redraw_map)
+        zoom_in_button.clicked.connect(self.zoom_in_slot)
+        zoom_out_button.clicked.connect(self.zoom_out_slot)
+
+        zoom_out_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_out.png')))
+        zoom_in_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_in.png')))
+        zoom_out_button.setIconSize(QtCore.QSize(15, 15))
+        zoom_in_button.setIconSize(QtCore.QSize(15, 15))
 
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
-        view.show()
+        self.view.show()
 
 
     @pyqtSlot()
@@ -312,7 +349,7 @@ class MapWidget(QWidget):
             self.borders.clear()
 
             self.borders[position] = Border.full(3, QColor(255, 0, 0))
-            self.map_tile_selected.emit(position)
+            Connector().emit('map_position_change', position)
 
         self.scene.update()
 
@@ -321,4 +358,32 @@ class MapWidget(QWidget):
     def redraw_map(self) -> None:
         print('Redrawing')
         self.scene.update()
-        self.update()
+        self.view.update()
+
+
+    @pyqtSlot()
+    def zoom_in_slot(self):
+        pass
+        # self.transformation += 0.1
+        # Connector().emit('zoom', self.transformation)
+        # self.scene.update()
+        # del self.view
+        #
+        # self.view = QGraphicsView(self.scene)
+        # self.view.show()
+
+
+    @pyqtSlot()
+    def zoom_out_slot(self):
+        pass
+        # self.transformation -= 0.1
+        # Connector().emit('zoom', self.transformation)
+        #
+        # self.scene.update()
+        #
+        # del self.view
+        #
+        # self.view = QGraphicsView(self.scene)
+        # self.view.show()
+
+        # self.view.setSceneRect(self.view.contentsRect())

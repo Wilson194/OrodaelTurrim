@@ -5,7 +5,7 @@ from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Widgets.GameControlWidget import GameControlWidget
 from OrodaelTurrim.Presenter.Widgets.LogWidget import LogWidget
-from OrodaelTurrim.Presenter.Widgets.MapInfo import MapInfoWidget
+from OrodaelTurrim.Presenter.Widgets.MapInfoWidget import MapInfoWidget
 from OrodaelTurrim.Presenter.Widgets.RoundControlWidget import RoundControlWidget
 
 

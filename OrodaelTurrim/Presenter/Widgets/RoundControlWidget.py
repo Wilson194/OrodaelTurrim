@@ -79,8 +79,6 @@ class RoundControlWidget(QWidget):
         check_box = self.findChild(QCheckBox, 'displayProcessCheck')  # type: QCheckBox
         display = check_box.isChecked()
 
-        print(display)
-
         game_history = self.__game_engine.get_game_history()
         while rounds > 0:
             game_history.active_player.act()

@@ -8,8 +8,8 @@ from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
-from OrodaelTurrim.Presenter.Widgets.Control import ControlWidget
-from OrodaelTurrim.Presenter.Widgets.Map import MapWidget
+from OrodaelTurrim.Presenter.Widgets.ControlWidget import ControlWidget
+from OrodaelTurrim.Presenter.Widgets.MapWidget import MapWidget
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 
