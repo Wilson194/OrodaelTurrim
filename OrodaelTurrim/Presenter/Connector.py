@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Any
 
 from OrodaelTurrim.Structure.Utils import Singleton
 
@@ -6,6 +6,7 @@ from OrodaelTurrim.Structure.Utils import Singleton
 class Connector(metaclass=Singleton):
     def __init__(self):
         self._database = {}
+        self._variables = {}
 
 
     def subscribe(self, name: str, target: Callable):
@@ -15,13 +16,21 @@ class Connector(metaclass=Singleton):
             self._database[name] = [target]
 
 
-    def emit(self, name, *args, **kwargs):
+    def emit(self, name: str, *args, **kwargs) -> None:
         for target in self._database.get(name, []):
             target(*args, **kwargs)
 
 
-    def functor(self, name):
+    def functor(self, name) -> "Caller":
         return Caller(name)
+
+
+    def set_variable(self, name: str, value: Any) -> None:
+        self._variables[name] = value
+
+
+    def get_variable(self, name: str) -> Any:
+        return self._variables.get(name, None)
 
 
 class Caller:

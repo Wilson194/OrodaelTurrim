@@ -25,8 +25,7 @@ class LogWidget(QWidget):
         with open(str(UI_ROOT / 'logWidget.ui')) as f:
             uic.loadUi(f, self)
 
-        Connector().subscribe('update_log', self.update_text)
-        Connector().subscribe('history_action', self.update_text)
+        Connector().subscribe('redraw_ui', self.update_text)
 
 
     @pyqtSlot()

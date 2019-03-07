@@ -58,8 +58,8 @@ class UnitWidget(QWidget):
     def redraw_ui(self):
         state = True
 
-        # Position occupation
-        state = state and not self.__game_engine.is_position_occupied(self.__selected_position)
+        # Browsing mode
+        state = state and self.__game_engine.get_game_history().in_preset
 
         # Enough money
         player_resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
@@ -69,6 +69,9 @@ class UnitWidget(QWidget):
         base_condition = self.__object_type == GameObjectType.BASE and self.__game_engine.have_already_base(
             self.__game_engine.get_game_history().active_player)
         state = state and not base_condition
+
+        # Position occupation
+        state = state and not self.__game_engine.is_position_occupied(self.__selected_position)
 
         self.findChild(QPushButton, 'placeButton').setDisabled(not state)
 

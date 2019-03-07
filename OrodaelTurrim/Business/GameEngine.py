@@ -209,7 +209,7 @@ class GameEngine:
 
     def damage(self, game_object: GameObject, damage: float):
         game_object.take_damage(damage)
-        if game_object.is_dead():
+        if game_object.is_dead() and self.__game_history.in_preset:
             self.execute_action(DieAction(self, game_object))
 
 
@@ -428,7 +428,6 @@ class GameEngine:
             raise IllegalActionException('Tile is already occupied!')
 
         if information.owner.role != prototype.role:
-            print(information.owner.role, prototype.role)
             raise IllegalActionException('Attempt to spawn unit of different role!')
 
         self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))

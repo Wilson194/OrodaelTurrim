@@ -17,6 +17,8 @@ class RoundControlWidget(QWidget):
 
         self.init_ui()
 
+        Connector().subscribe('redraw_ui', self.redraw_ui)
+
 
     def init_ui(self):
         with open(str(UI_ROOT / 'roundControlWidget.ui')) as f:
@@ -33,8 +35,6 @@ class RoundControlWidget(QWidget):
 
         self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
         self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
-
-        Connector().subscribe('history_action', self.history_state_change_slot)
 
 
     @pyqtSlot()
@@ -58,17 +58,27 @@ class RoundControlWidget(QWidget):
 
 
     @pyqtSlot()
-    def history_state_change_slot(self):
+    def redraw_ui(self):
         if self.__game_engine.get_game_history():
             self.findChild(QLabel, 'currentRoundLabel').setText(str(self.__game_engine.get_game_history().current_turn))
             self.findChild(QLabel, 'currentPlayerLabel').setText(
                 self.__game_engine.get_game_history().active_player.name)
 
             inference_button = self.findChild(QPushButton, 'runInferenceButton')  # type: QPushButton
-            if not self.__game_engine.get_game_history().on_first_player:
-                inference_button.setDisabled(True)
+            end_of_round_button = self.findChild(QPushButton, 'endOfRoundButton')  # type: QPushButton
+            play_button = self.findChild(QPushButton, 'playButton')  # type: QPushButton
+
+            if not self.__game_engine.get_game_history().in_preset:
+                end_of_round_button.setDisabled(True)
+                play_button.setDisabled(True)
             else:
+                end_of_round_button.setDisabled(False)
+                play_button.setDisabled(False)
+
+            if self.__game_engine.get_game_history().on_first_player and self.__game_engine.get_game_history().in_preset:
                 inference_button.setDisabled(False)
+            else:
+                inference_button.setDisabled(True)
 
 
     @pyqtSlot()
