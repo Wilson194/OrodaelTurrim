@@ -1,6 +1,7 @@
+import os
 import random
 import sys
-from typing import List
+from typing import List, Set
 
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import TerrainType
@@ -29,12 +30,14 @@ class MapGenerator:
 
         self.__game_map = GameMap(width, height)
 
+        self.__border_tiles = self.__game_map.border_tiles
+
         if not seed:
-            seed = random.randrange(sys.maxsize)
+            seed = int.from_bytes(os.urandom(50), 'big')
 
         random.seed(seed)
 
-        print(seed)
+        print('Map random seed: ', seed)
 
         self.__base_random_list = self.create_base_random_list()
 
@@ -103,45 +106,32 @@ class MapGenerator:
 
 
         if random.random() < RIVER_ON_MAP:
-            SIDES = ['T', 'R', 'B', 'L']
-            side = random.randint(0, 3)
-
-            if SIDES[side] == 'T':
-                position = random.randint(-self.__horizontal_radius + 1, self.__horizontal_radius - 1)
-                start = OffsetPosition(position, -self.__vertical_radius)
-                self.__game_map.set_tile(start, River())
-
-            elif SIDES[side] == 'R':
-                position = random.randint(-self.__vertical_radius + 1, self.__vertical_radius - 1)
-                start = OffsetPosition(self.__horizontal_radius, position)
-                self.__game_map.set_tile(start, River())
-
-            elif SIDES[side] == 'B':
-                position = random.randint(-self.__horizontal_radius + 1, self.__horizontal_radius - 1)
-                start = OffsetPosition(position, self.__vertical_radius)
-                self.__game_map.set_tile(start, River())
-
-            elif SIDES[side] == 'L':
-                position = random.randint(-self.__vertical_radius + 1, self.__vertical_radius - 1)
-                start = OffsetPosition(-self.__horizontal_radius, position)
-                self.__game_map.set_tile(start, River())
-
-            current = start
+            current = self.__river_start_position()
+            river_length = 1
+            self.__game_map.set_tile(current, River())
 
             while True:
                 # Filter neighbours on map
-                neighbours = self.__game_map.filter_positions_on_map(current.get_all_neighbours())
+                neighbours = self.__game_map.filter_positions_on_map(current.cubic.get_all_neighbours())
                 # Filter neighbours which are not RIVER
                 neighbours = [x for x in neighbours if self.__game_map[x].terrain_type != TerrainType.RIVER]
                 # Filter neighbours which are have not river as neighbour
                 neighbours = [x for x in neighbours if filter_river_neighbour(x, current)]
+                # Filter border tiles under size factor
+                if river_length < 3:
+                    neighbours = [x for x in neighbours if not self.__game_map.position_on_edge(x)]
 
                 neighbours.sort(key=lambda x: (x.length() + 1 if self.__game_map.position_on_edge(x) else 0))
                 if neighbours:
                     for i in range(6):
                         neighbours.append(neighbours[0])
 
+                # If cannot continue generate new river
                 if not neighbours:
+                    for i in range(-self.__vertical_radius, self.__vertical_radius + 1):
+                        for j in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
+                            self.__game_map.set_tile(OffsetPosition(i, j), Field())
+                    self.__generate_river()
                     break
 
                 neighbour = random.choice(neighbours)
@@ -150,3 +140,22 @@ class MapGenerator:
                     break
                 else:
                     current = neighbour
+                    river_length += 1
+
+
+    def __river_start_position(self):
+
+        left_bottom_corner = OffsetPosition(-self.__horizontal_radius, self.__vertical_radius)
+        right_bottom_corner = OffsetPosition(self.__horizontal_radius, self.__vertical_radius)
+
+        while True:
+            starting_position = self.__pick_random_position(self.__border_tiles)
+
+            if starting_position != left_bottom_corner and starting_position != right_bottom_corner:
+                break
+
+        return starting_position
+
+
+    def __pick_random_position(self, positions: Set[Position]) -> Position:
+        return random.choice(tuple(positions))

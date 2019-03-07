@@ -4,7 +4,10 @@ from OrodaelTurrim.Structure.Enums import GameObjectType, TerrainType
 
 class GetMeta(type):
     def __getitem__(self, item):
-        return AssetsEncoder.assets[item]
+        try:
+            return AssetsEncoder.assets[item]
+        except KeyError:
+            return ''
 
 
 class AssetsEncoder(metaclass=GetMeta):

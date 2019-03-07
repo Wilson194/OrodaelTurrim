@@ -358,7 +358,7 @@ class MapWidget(QWidget):
     def redraw_map(self) -> None:
         print('Redrawing')
         self.scene.update()
-        self.view.update()
+        # self.view.update()
 
 
     @pyqtSlot()

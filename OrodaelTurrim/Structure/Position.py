@@ -112,7 +112,7 @@ class Position(ABC):
 
 
     def neighbour(self, direction: 'HexDirection') -> 'Position':
-        return (self + CubicPosition(direction.value.cubic.x, direction.value.cubic.y, direction.value.cubic.z)).offset
+        return self + direction.value
 
 
     def get_all_neighbours(self) -> List['Position']:
@@ -200,20 +200,12 @@ class CubicPosition(Position):
         return self.x == other.cubic.x and self.y == other.cubic.y and self.z == other.cubic.z
 
 
-    def __hash__(self):
-        return hash((self.offset.q, self.offset.r))
-
-
-    def __sub__(self, other: 'Position') -> 'Position':
-        return CubicPosition(self.x - other.cubic.x, self.y - other.cubic.y, self.z - other.cubic.z)
-
-
-    def __add__(self, other: 'Position') -> 'Position':
-        return CubicPosition(self.x + other.cubic.x, self.y + other.cubic.y, self.z + other.cubic.z)
-
-
     def __lt__(self, other):
         return self.x < other.cubic.x if self.x != other.cubic.x else self.y < other.cubic.y if self.y != other.cubic.y else self.z < other.z
+
+
+    def __hash__(self):
+        return hash((self.offset.q, self.offset.r))
 
 
     @property
@@ -250,8 +242,6 @@ class AxialPosition(Position):
 
 
     def __init__(self, q: Union[int, float], r: Union[int, float]):
-        super().__init__()
-
         self.__q = q
         self.__r = r
 
@@ -299,14 +289,6 @@ class AxialPosition(Position):
         return '<Axial> {}, {}'.format(self.q, self.r)
 
 
-    def __add__(self, other: Position):
-        return AxialPosition(self.q + other.axial.q, self.r + other.axial.r)
-
-
-    def __sub__(self, other: Position):
-        return AxialPosition(self.q - other.axial.q, self.r - other.axial.r)
-
-
     @property
     def string(self):
         return '{} {}'.format(self.q, self.r)
@@ -317,7 +299,6 @@ class OffsetPosition(Position):
 
 
     def __init__(self, q: int, r: int):
-        super().__init__()
         self.__q = q
         self.__r = r
 
@@ -363,14 +344,6 @@ class OffsetPosition(Position):
             return self.r < other.q
 
         return self.q < other.q
-
-
-    def __add__(self, other: Position):
-        return OffsetPosition(self.q + other.offset.q, self.r + other.offset.r)
-
-
-    def __sub__(self, other: Position):
-        return OffsetPosition(self.q - other.offset.q, self.r - other.offset.r)
 
 
     @property
