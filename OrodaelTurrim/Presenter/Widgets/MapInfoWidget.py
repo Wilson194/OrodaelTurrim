@@ -101,6 +101,17 @@ class MapInfoWidget(QWidget):
             self.findChild(QTextEdit, 'characterInfoWidget').setText('')
 
 
+    def draw_character_effects(self):
+        text_edit = self.findChild(QTextEdit, 'characterEffectsText')  # type: QTextEdit
+        text = ''
+        if self.__game_engine.is_position_occupied(self.__selected_tile):
+            effects = self.__game_engine.get_game_object(self.__selected_tile).active_effects
+            for effect in effects:
+                text += '<p>{} ({})</p>'.format(effect.effect_type.name.capitalize(), effect.remaining_duration)
+
+        text_edit.setText(text)
+
+
     def draw_position_info(self, position: Position) -> None:
         offset_icon = self.findChild(QLabel, 'offsetPositionLabel')  # type: QLabel
         cubic_icon = self.findChild(QLabel, 'cubicPositionLabel')  # type: QLabel
@@ -126,6 +137,7 @@ class MapInfoWidget(QWidget):
             self.draw_tile_info(self.__selected_tile)
             self.draw_character_info(self.__selected_tile)
             self.draw_position_info(self.__selected_tile)
+            self.draw_character_effects()
 
 
     def map_tile_select_slot(self, position: Position) -> None:
