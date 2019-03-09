@@ -2,7 +2,7 @@ from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
-from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
 from OrodaelTurrim.Presenter.Main import MainWindow
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Filter.MoveFilter import MoveToNearestEnemyFilter, MoveToBaseFilter
@@ -23,24 +23,25 @@ def main():
 
     map_proxy = MapProxy(game_engine)
     game_object_proxy = GameObjectProxy(game_engine)
+    game_control_proxy = GameControlProxy(game_engine)
 
     # Register defender
-    defender = Player()
+    defender = Player(map_proxy, game_object_proxy, game_control_proxy)
     game_engine.register_player(defender, PlayerResources(20, 10), [])
 
     # Register attacker
-    player2 = AIPlayer()
+    player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy)
     game_engine.register_player(player2, PlayerResources(100, 10), [])
 
     game_engine.start(500)
-    game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.BASE, OffsetPosition(0, 0), [], []))
-    game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(1, 0), [], []))
-    game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(2, 0), [], []))
-
-    game_engine.spawn_unit(
-        SpawnInformation(player2, GameObjectType.DEMON, OffsetPosition(3, 0), [],
-                         [MoveToNearestEnemyFilter(map_proxy, game_object_proxy),
-                          MoveToBaseFilter(map_proxy, game_object_proxy)]))
+    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.BASE, OffsetPosition(0, 0), [], []))
+    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(1, 0), [], []))
+    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(2, 0), [], []))
+    #
+    # game_engine.spawn_unit(
+    #     SpawnInformation(player2, GameObjectType.DEMON, OffsetPosition(3, 0), [],
+    #                      [MoveToNearestEnemyFilter(map_proxy, game_object_proxy),
+    #                       MoveToBaseFilter(map_proxy, game_object_proxy)]))
 
     main_window.execute()
 

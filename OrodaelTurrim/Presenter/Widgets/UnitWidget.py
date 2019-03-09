@@ -66,7 +66,7 @@ class UnitWidget(QWidget):
         state = state and GameObjectPrototypePool[self.__object_type].cost <= player_resources
 
         # Not have a base yet
-        base_condition = self.__object_type == GameObjectType.BASE and self.__game_engine.have_already_base(
+        base_condition = self.__object_type == GameObjectType.BASE and self.__game_engine.player_have_base(
             self.__game_engine.get_game_history().active_player)
         state = state and not base_condition
 

@@ -8,6 +8,7 @@ class MapProxy:
     def __init__(self, game_engine: "GameEngine"):
         self.get_bases_positions = game_engine.get_bases_positions
         self.get_terrain_type = game_engine.get_terrain_type
+        self.player_have_base = game_engine.player_have_base
         del game_engine
 
 
@@ -19,4 +20,10 @@ class GameObjectProxy:
         self.get_attribute = game_engine.get_attribute
         self.get_attack_effects = game_engine.get_attack_effect
         self.get_resistances = game_engine.get_resistances
+        del game_engine
+
+
+class GameControlProxy:
+    def __init__(self, game_engine: "GameEngine"):
+        self.spawn_unit = game_engine.spawn_unit
         del game_engine

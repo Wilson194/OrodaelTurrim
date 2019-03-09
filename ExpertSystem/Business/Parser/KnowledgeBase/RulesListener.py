@@ -17,55 +17,68 @@ class RulesListener(ParseTreeListener):
         self.expression = None
         self.context = None
 
+
     # Enter a parse tree produced by RulesParser#rules_set.
     def enterRules_set(self, ctx: RulesParser.Rules_setContext):
         self.rules = []
+
 
     # Exit a parse tree produced by RulesParser#rules_set.
     def exitRules_set(self, ctx: RulesParser.Rules_setContext):
         pass
 
+
     # Enter a parse tree produced by RulesParser#single_rule.
     def enterSingle_rule(self, ctx: RulesParser.Single_ruleContext):
         self.rule = Rule()
 
+
     # Exit a parse tree produced by RulesParser#single_rule.
     def exitSingle_rule(self, ctx: RulesParser.Single_ruleContext):
         self.rules.append(self.rule)
+
 
     # Enter a parse tree produced by RulesParser#condition.
     def enterCondition(self, ctx: RulesParser.ConditionContext):
         self.context = ExpressionNode()
         self.rule.condition = self.context
 
+
     # Exit a parse tree produced by RulesParser#condition.
     def exitCondition(self, ctx: RulesParser.ConditionContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#conclusion.
     def enterConclusion(self, ctx: RulesParser.ConclusionContext):
         self.context = ExpressionNode()
         self.rule.conclusion = self.context
 
+
     # Exit a parse tree produced by RulesParser#conclusion.
     def exitConclusion(self, ctx: RulesParser.ConclusionContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#ComparisonExpression.
     def enterComparisonExpression(self, ctx: RulesParser.ComparisonExpressionContext):
         pass
 
+
     # Exit a parse tree produced by RulesParser#ComparisonExpression.
     def exitComparisonExpression(self, ctx: RulesParser.ComparisonExpressionContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#LogicalExpressionInParen.
     def enterLogicalExpressionInParen(self, ctx: RulesParser.LogicalExpressionInParenContext):
         self.context.parentheses = True
 
+
     # Exit a parse tree produced by RulesParser#LogicalExpressionInParen.
     def exitLogicalExpressionInParen(self, ctx: RulesParser.LogicalExpressionInParenContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#LogicalExpressionAnd.
     def enterLogicalExpressionAnd(self, ctx: RulesParser.LogicalExpressionAndContext):
@@ -74,12 +87,14 @@ class RulesListener(ParseTreeListener):
         self.context.left.parent = self.context
         self.context = self.context.left
 
+
     # Exit a parse tree produced by RulesParser#LogicalExpressionAnd.
     def exitLogicalExpressionAnd(self, ctx: RulesParser.LogicalExpressionAndContext):
         if self.context.parent.parent:
             self.context.parent.parent.right = ExpressionNode()
             self.context.parent.parent.right.parent = self.context.parent.parent
             self.context = self.context.parent.parent.right
+
 
     # Enter a parse tree produced by RulesParser#LogicalExpressionOr.
     def enterLogicalExpressionOr(self, ctx: RulesParser.LogicalExpressionOrContext):
@@ -88,12 +103,14 @@ class RulesListener(ParseTreeListener):
         self.context.left.parent = self.context
         self.context = self.context.left
 
+
     # Exit a parse tree produced by RulesParser#LogicalExpressionOr.
     def exitLogicalExpressionOr(self, ctx: RulesParser.LogicalExpressionOrContext):
         if self.context.parent.parent:
             self.context.parent.parent.right = ExpressionNode()
             self.context.parent.parent.right.parent = self.context.parent.parent
             self.context = self.context.parent.parent.right
+
 
     # Enter a parse tree produced by RulesParser#function_expr.
     def enterFunction_expr(self, ctx: RulesParser.Function_exprContext):
@@ -115,6 +132,7 @@ class RulesListener(ParseTreeListener):
 
         self.context.value = expression
 
+
     # Exit a parse tree produced by RulesParser#function_expr.
     def exitFunction_expr(self, ctx: RulesParser.Function_exprContext):
         if self.context.parent and self.context.parent.right is None:
@@ -122,37 +140,46 @@ class RulesListener(ParseTreeListener):
             self.context.parent.right.parent = self.context.parent
             self.context = self.context.parent.right
 
+
     # Enter a parse tree produced by RulesParser#args.
     def enterArgs(self, ctx: RulesParser.ArgsContext):
         pass
+
 
     # Exit a parse tree produced by RulesParser#args.
     def exitArgs(self, ctx: RulesParser.ArgsContext):
         pass
 
+
     # Enter a parse tree produced by RulesParser#arg.
     def enterArg(self, ctx: RulesParser.ArgContext):
         pass
+
 
     # Exit a parse tree produced by RulesParser#arg.
     def exitArg(self, ctx: RulesParser.ArgContext):
         pass
 
+
     # Enter a parse tree produced by RulesParser#comp_operator.
     def enterComp_operator(self, ctx: RulesParser.Comp_operatorContext):
         pass
+
 
     # Exit a parse tree produced by RulesParser#comp_operator.
     def exitComp_operator(self, ctx: RulesParser.Comp_operatorContext):
         pass
 
+
     # Enter a parse tree produced by RulesParser#RLogicalExpression.
     def enterRLogicalExpression(self, ctx: RulesParser.RLogicalExpressionContext):
         pass
 
+
     # Exit a parse tree produced by RulesParser#RLogicalExpression.
     def exitRLogicalExpression(self, ctx: RulesParser.RLogicalExpressionContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#RLogicalExpressionAnd.
     def enterRLogicalExpressionAnd(self, ctx: RulesParser.RLogicalExpressionAndContext):
@@ -161,6 +188,7 @@ class RulesListener(ParseTreeListener):
         self.context.left.parent = self.context
         self.context = self.context.left
 
+
     # Exit a parse tree produced by RulesParser#RLogicalExpressionAnd.
     def exitRLogicalExpressionAnd(self, ctx: RulesParser.RLogicalExpressionAndContext):
         if self.context.parent.parent:
@@ -168,13 +196,16 @@ class RulesListener(ParseTreeListener):
             self.context.parent.parent.right.parent = self.context.parent.parent
             self.context = self.context.parent.parent.right
 
+
     # Enter a parse tree produced by RulesParser#RLogicalExpressionInParen.
     def enterRLogicalExpressionInParen(self, ctx: RulesParser.RLogicalExpressionInParenContext):
         self.context.parentheses = True
 
+
     # Exit a parse tree produced by RulesParser#RLogicalExpressionInParen.
     def exitRLogicalExpressionInParen(self, ctx: RulesParser.RLogicalExpressionInParenContext):
         pass
+
 
     # Enter a parse tree produced by RulesParser#r_function_expr.
     def enterR_function_expr(self, ctx: RulesParser.R_function_exprContext):
@@ -186,6 +217,7 @@ class RulesListener(ParseTreeListener):
             expression.args = [x.getText() for x in ctx.args().getChildren()]
 
         self.context.value = expression
+
 
     # Exit a parse tree produced by RulesParser#r_function_expr.
     def exitR_function_expr(self, ctx: RulesParser.R_function_exprContext):

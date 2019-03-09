@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
 from OrodaelTurrim.Structure.Enums import GameRole
 
 
@@ -7,6 +8,12 @@ class IPlayer(ABC):
     """
     Provides methods for accessing and/or notifying players
     """
+
+
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
+        self.map_proxy = map_proxy
+        self.game_object_proxy = game_object_proxy
+        self.game_control_proxy = game_control_proxy
 
 
     @abstractmethod

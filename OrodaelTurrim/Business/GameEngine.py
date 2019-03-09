@@ -460,5 +460,5 @@ class GameEngine:
         return self.__game_history
 
 
-    def have_already_base(self, player: IPlayer) -> bool:
+    def player_have_base(self, player: IPlayer) -> bool:
         return player in self.__defender_bases

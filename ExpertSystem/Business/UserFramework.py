@@ -1,18 +1,21 @@
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Any, Set
 
 from ExpertSystem.Structure.RuleBase import Rule
+from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
 
 if TYPE_CHECKING:
     from User.ActionBase import ActionBase
-    from OrodaelTurrim.Structure.ExpertSystem import Fact
-    from ExpertSystem.Business.Proxy import ActionProxy, DataProxy
 
 
 class IKnowledgeBase(ABC):
-    def __init__(self, proxy: "DataProxy"):
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, player: IPlayer):
         self.fact_base = []
-        self.proxy = proxy
+        self.map_proxy = map_proxy
+        self.game_object_proxy = game_object_proxy
+        self.player = player
+
 
     @abstractmethod
     def create_knowledge_base(self):
@@ -21,10 +24,11 @@ class IKnowledgeBase(ABC):
 
 class IInterference(ABC):
     @abstractmethod
-    def interfere(self, fact_base: List["Fact"], rules: List[Rule], action_base: "ActionBase"):
+    def interfere(self, fact_base: Set[Any], rules: List[Rule], action_base: "ActionBase"):
         pass
 
 
 class IActionBase(ABC):
-    def __init__(self, proxy: "ActionProxy"):
-        self.proxy = proxy
+    def __init__(self, game_control_proxy: GameControlProxy, player: IPlayer):
+        self.game_control_proxy = game_control_proxy
+        self.player = player
