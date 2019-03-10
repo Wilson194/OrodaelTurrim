@@ -5,10 +5,10 @@ from ExpertSystem.Structure.RuleBase import Fact
 
 
 class KnowledgeBase(IKnowledgeBase):
-    def create_knowledge_base(self) -> Set[Fact]:
-        facts = set()
+    def create_knowledge_base(self) -> List[Fact]:
+        facts = list()
 
         if not self.map_proxy.player_have_base(self.player):
-            facts.add(Fact('player_dont_have_base'))
+            facts.append(Fact('player_dont_have_base'))
 
         return facts

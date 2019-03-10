@@ -1,6 +1,7 @@
 # Generated from Rules.g4 by ANTLR 4.7.1
 from antlr4 import *
 
+from ExpertSystem.Structure.Enums import LogicalOperator
 from ExpertSystem.Structure.RuleBase import Rule, Expression, ExpressionNode
 
 if __name__ is not None and "." in __name__:
@@ -82,7 +83,7 @@ class RulesListener(ParseTreeListener):
 
     # Enter a parse tree produced by RulesParser#LogicalExpressionAnd.
     def enterLogicalExpressionAnd(self, ctx: RulesParser.LogicalExpressionAndContext):
-        self.context.value = 'AND'
+        self.context.value = LogicalOperator.AND
         self.context.left = ExpressionNode()
         self.context.left.parent = self.context
         self.context = self.context.left
@@ -90,15 +91,18 @@ class RulesListener(ParseTreeListener):
 
     # Exit a parse tree produced by RulesParser#LogicalExpressionAnd.
     def exitLogicalExpressionAnd(self, ctx: RulesParser.LogicalExpressionAndContext):
-        if self.context.parent.parent:
-            self.context.parent.parent.right = ExpressionNode()
-            self.context.parent.parent.right.parent = self.context.parent.parent
-            self.context = self.context.parent.parent.right
+        if self.context.parent:
+            if self.context.parent.right is None:
+                self.context.parent.right = ExpressionNode()
+                self.context.parent.right.parent = self.context.parent
+                self.context = self.context.parent.right
+            else:
+                self.context = self.context.parent
 
 
     # Enter a parse tree produced by RulesParser#LogicalExpressionOr.
     def enterLogicalExpressionOr(self, ctx: RulesParser.LogicalExpressionOrContext):
-        self.context.value = 'OR'
+        self.context.value = LogicalOperator.OR
         self.context.left = ExpressionNode()
         self.context.left.parent = self.context
         self.context = self.context.left
@@ -106,10 +110,13 @@ class RulesListener(ParseTreeListener):
 
     # Exit a parse tree produced by RulesParser#LogicalExpressionOr.
     def exitLogicalExpressionOr(self, ctx: RulesParser.LogicalExpressionOrContext):
-        if self.context.parent.parent:
-            self.context.parent.parent.right = ExpressionNode()
-            self.context.parent.parent.right.parent = self.context.parent.parent
-            self.context = self.context.parent.parent.right
+        if self.context.parent:
+            if self.context.parent.right is None:
+                self.context.parent.right = ExpressionNode()
+                self.context.parent.right.parent = self.context.parent
+                self.context = self.context.parent.right
+            else:
+                self.context = self.context.parent
 
 
     # Enter a parse tree produced by RulesParser#function_expr.
@@ -117,7 +124,7 @@ class RulesListener(ParseTreeListener):
         expression = Expression()
 
         if ctx.IDENTIFIER():
-            expression.name = ctx.IDENTIFIER()
+            expression.name = str(ctx.IDENTIFIER())
         else:
             expression.name = 'TRUE' if ctx.TRUE() else 'FALSE'
 
@@ -135,10 +142,13 @@ class RulesListener(ParseTreeListener):
 
     # Exit a parse tree produced by RulesParser#function_expr.
     def exitFunction_expr(self, ctx: RulesParser.Function_exprContext):
-        if self.context.parent and self.context.parent.right is None:
-            self.context.parent.right = ExpressionNode()
-            self.context.parent.right.parent = self.context.parent
-            self.context = self.context.parent.right
+        if self.context.parent:
+            if self.context.parent.right is None:
+                self.context.parent.right = ExpressionNode()
+                self.context.parent.right.parent = self.context.parent
+                self.context = self.context.parent.right
+            else:
+                self.context = self.context.parent
 
 
     # Enter a parse tree produced by RulesParser#args.
@@ -211,7 +221,7 @@ class RulesListener(ParseTreeListener):
     def enterR_function_expr(self, ctx: RulesParser.R_function_exprContext):
         expression = Expression()
 
-        expression.name = ctx.IDENTIFIER()
+        expression.name = str(ctx.IDENTIFIER())
 
         if ctx.args():
             expression.args = [x.getText() for x in ctx.args().getChildren()]

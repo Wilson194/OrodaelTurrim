@@ -44,8 +44,6 @@ class GameEngine:
 
         self.__visibility_map = VisibilityMap()
 
-        self.unit_spawn_signal = Connector().functor('register_game_object')
-
 
     def start(self, turn_limit: int) -> None:
         self.__game_history = GameHistory(turn_limit, self.__players)
@@ -433,7 +431,7 @@ class GameEngine:
         self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))
         self.execute_action(SpawnAction(self, self.create_unit(information)))
 
-        self.unit_spawn_signal(information.position)
+        self.unit_spawn_signal()
 
 
     def get_resources(self, player: IPlayer) -> int:
@@ -462,3 +460,8 @@ class GameEngine:
 
     def player_have_base(self, player: IPlayer) -> bool:
         return player in self.__defender_bases
+
+
+    def unit_spawn_signal(self):
+        Connector().emit('redraw_map')
+        Connector().emit('redraw_ui')

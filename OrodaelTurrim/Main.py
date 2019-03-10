@@ -18,9 +18,6 @@ def main():
     # Initialize game engine
     game_engine = GameEngine(game_map)
 
-    # Inicialize main widget
-    main_window = MainWindow(game_engine)
-
     map_proxy = MapProxy(game_engine)
     game_object_proxy = GameObjectProxy(game_engine)
     game_control_proxy = GameControlProxy(game_engine)
@@ -34,14 +31,9 @@ def main():
     game_engine.register_player(player2, PlayerResources(100, 10), [])
 
     game_engine.start(500)
-    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.BASE, OffsetPosition(0, 0), [], []))
-    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(1, 0), [], []))
-    # game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(2, 0), [], []))
-    #
-    # game_engine.spawn_unit(
-    #     SpawnInformation(player2, GameObjectType.DEMON, OffsetPosition(3, 0), [],
-    #                      [MoveToNearestEnemyFilter(map_proxy, game_object_proxy),
-    #                       MoveToBaseFilter(map_proxy, game_object_proxy)]))
+
+    # Inicialize main widget
+    main_window = MainWindow(game_engine)
 
     main_window.execute()
 

@@ -1,8 +1,9 @@
 from typing import List, Set
 
+from ExpertSystem.Structure.Enums import LogicalOperator
 from User import ActionBase
 from ExpertSystem.Business.UserFramework import IInterference
-from ExpertSystem.Structure.RuleBase import Rule, Fact
+from ExpertSystem.Structure.RuleBase import Rule, Fact, ExpressionNode, Expression
 
 expressions = {
     'A': True,
@@ -13,26 +14,34 @@ expressions = {
 
 
 class Interference(IInterference):
-    def interfere(self, knowledge_base: Set[Fact], rules: List[Rule], action_base: ActionBase):
-        print('User inference running')
-
-        print(rules[0])
-        print(rules[0].condition.left)
-        print(type(rules[0].condition.right.right))
-        # for rule in rules:
-        #     print(self.eval_rule(rule.condition))
+    def __init__(self):
+        self.knowledge_base = None
+        self.action_base = None
 
 
-    def eval_rule(self, rule):
-        if rule.value is None:
-            return True
+    def interfere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase):
+        self.knowledge_base = knowledge_base
+        self.action_base = action_base
 
-        if rule.value == 'AND':
-            return self.eval_rule(rule.left) and self.eval_rule(rule.right)
+        for rule in rules:
+            condition = self.rule_evaluation(rule.condition)
 
-        if rule.value == 'OR':
-            return self.eval_rule(rule.left) or self.eval_rule(rule.right)
+            if condition and rule.conclusion.value in self.action_base:
+                _ = self.action_base[rule.conclusion.value]
 
-        print(type(rule.value))
-        print('---->', rule.value)
-        return expressions[str(rule.value.name)]
+
+    def rule_evaluation(self, root_node: ExpressionNode):
+        if root_node.value == LogicalOperator.AND:
+            return self.rule_evaluation(root_node.left) and self.rule_evaluation(root_node.right)
+
+        elif root_node.value == LogicalOperator.OR:
+            return self.rule_evaluation(root_node.left) or self.rule_evaluation(root_node.right)
+
+        elif isinstance(root_node.value, Expression):
+            try:
+                return self.knowledge_base[self.knowledge_base.index(root_node.value.name)](*root_node.value.args)
+            except ValueError:
+                return False
+
+        else:
+            return bool(root_node.value)

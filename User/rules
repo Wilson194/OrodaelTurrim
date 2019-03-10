@@ -1,1 +1,1 @@
-IF A OR (E AND B AND C) THEN build_base 0 0;
+IF player_dont_have_base THEN build_base 0 0;

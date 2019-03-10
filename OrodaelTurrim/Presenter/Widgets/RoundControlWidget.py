@@ -36,6 +36,8 @@ class RoundControlWidget(QWidget):
         self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
         self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
 
+        self.redraw_ui()
+
 
     @pyqtSlot()
     def end_of_round_slot(self):
