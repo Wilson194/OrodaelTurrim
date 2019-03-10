@@ -202,6 +202,10 @@ class GameEngine:
         income = self.__player_resources[player].income
         self.execute_action(EarnResourcesAction(self, player, income))
 
+        # Check base
+        if player.role == GameRole.DEFENDER and self.__game_history.in_preset and not self.player_have_base(player):
+            Connector().emit('game_over')
+
         self.__game_history.end_turn()
 
 
@@ -251,8 +255,14 @@ class GameEngine:
 
     def remove(self, game_object: GameObject) -> None:
         if game_object.object_type == GameObjectType.BASE:
-            print('Game Over!')
-            exit(0)
+            for player, game_object in self.__defender_bases.items():
+                if game_object == game_object:
+                    del self.__defender_bases[player]
+
+                    if self.__game_history.in_preset:
+                        Connector().emit('game_over')
+                    break
+
         self.delete_game_object(game_object)
 
 

@@ -1,6 +1,7 @@
 from typing import List, TYPE_CHECKING
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Structure.Enums import GameRole
 from OrodaelTurrim.Structure.Exceptions import IllegalHistoryOperation
 
 if TYPE_CHECKING:
