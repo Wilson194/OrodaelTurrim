@@ -82,6 +82,11 @@ class RoundControlWidget(QWidget):
             else:
                 inference_button.setDisabled(True)
 
+            if Connector().get_variable('game_over'):
+                play_button.setDisabled(True)
+                end_of_round_button.setDisabled(True)
+                inference_button.setDisabled(True)
+
 
     @pyqtSlot()
     def simulate_game_slot(self):
@@ -125,3 +130,8 @@ class RoundControlWidget(QWidget):
     @pyqtSlot()
     def last_turn_slot(self):
         self.__game_engine.get_game_history().move_to_present()
+
+
+    @pyqtSlot()
+    def game_over_slot(self):
+        self.redraw_ui()

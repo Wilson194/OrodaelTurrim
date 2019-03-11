@@ -36,6 +36,8 @@ class GameControlWidget(QWidget):
 
         Connector().subscribe('redraw_ui', self.redraw_available_money_slot)
 
+        self.redraw_available_money_slot()
+
 
     @pyqtSlot()
     def redraw_available_money_slot(self, position: Position = None):

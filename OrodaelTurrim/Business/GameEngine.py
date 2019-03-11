@@ -42,11 +42,30 @@ class GameEngine:
 
         self.__game_history = None  # type: GameHistory
 
+        self.__turn_limit = None  # type: int
+        self.__initial_resources = {}  # type: Dict[IPlayer, PlayerResources]
+
         self.__visibility_map = VisibilityMap()
 
 
     def start(self, turn_limit: int) -> None:
+        self.__turn_limit = turn_limit
         self.__game_history = GameHistory(turn_limit, self.__players)
+
+
+    def restart(self):
+        self.__game_history = GameHistory(self.__turn_limit + self.__game_history.turns_count, self.__players)
+        self.__player_resources = {key: value for key, value in self.__initial_resources.items()}
+
+        for player in self.__player_units.keys():
+            self.__player_units[player] = []
+        self.__defender_bases = {}
+        self.__game_object_positions = {}
+
+        self.__visibility_map.clear()
+
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
 
 
     def register_player(self, player: IPlayer, resources: PlayerResources,
@@ -54,6 +73,8 @@ class GameEngine:
         self.__players.append(player)
         self.__player_resources[player] = resources
         self.__player_units[player] = []
+
+        self.__initial_resources[player] = copy.deepcopy(resources)
 
         self.__visibility_map.register_player(player)
 
@@ -205,6 +226,7 @@ class GameEngine:
         # Check base
         if player.role == GameRole.DEFENDER and self.__game_history.in_preset and not self.player_have_base(player):
             Connector().emit('game_over')
+            return
 
         self.__game_history.end_turn()
 

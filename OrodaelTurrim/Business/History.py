@@ -31,7 +31,7 @@ class GameHistory:
         self.__turns.append([])
         self.start_next_player_turn()
 
-        Connector().functor('history_action')()
+        Connector().functor('redraw_ui')()
 
 
     def start_next_player_turn(self) -> None:
@@ -40,7 +40,7 @@ class GameHistory:
 
         self.__turns[self.__current_turn].append([])
 
-        Connector().functor('history_action')()
+        Connector().functor('redraw_ui')()
 
 
     def delete_player_turn(self) -> None:
@@ -94,7 +94,7 @@ class GameHistory:
 
         self.__current_turn += 1
 
-        Connector().functor('history_action')()
+        Connector().functor('redraw_ui')()
 
 
     def move_to_previous(self) -> None:
@@ -113,7 +113,7 @@ class GameHistory:
 
         self.__current_action = self.last_action_index
 
-        Connector().functor('history_action')()
+        Connector().functor('redraw_ui')()
 
 
     @property

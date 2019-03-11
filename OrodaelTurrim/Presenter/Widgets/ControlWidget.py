@@ -1,12 +1,16 @@
 from PyQt5 import uic
+from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Presenter.Dialogs.GameOverDialog import GameOverDialog
 from OrodaelTurrim.Presenter.Widgets.GameControlWidget import GameControlWidget
 from OrodaelTurrim.Presenter.Widgets.LogWidget import LogWidget
 from OrodaelTurrim.Presenter.Widgets.MapInfoWidget import MapInfoWidget
 from OrodaelTurrim.Presenter.Widgets.RoundControlWidget import RoundControlWidget
+from OrodaelTurrim.Structure.Enums import GameOverStates
 
 
 class ControlWidget(QWidget):
@@ -16,6 +20,8 @@ class ControlWidget(QWidget):
         self.__game_engine = game_engine
 
         self.map_info_widget = None
+
+        Connector().subscribe('game_over', self.game_over_slot)
 
         self.init_ui()
 
@@ -54,3 +60,18 @@ class ControlWidget(QWidget):
 
         game_tab_widget = GameControlWidget(game_tab, self.__game_engine)
         game_tab_layout.addWidget(game_tab_widget)
+
+
+    @pyqtSlot()
+    def game_over_slot(self):
+        result = GameOverDialog.execute_()
+
+        if result == GameOverStates.LET_HIM_DIE.value:
+            exit(0)
+
+        if result == GameOverStates.FIND_REASON.value:
+            Connector().set_variable('game_over', True)
+
+        if result == GameOverStates.TRY_AGAIN.value:
+            self.__game_engine.restart()
+

@@ -90,3 +90,9 @@ class GameObjectType(Enum):
     @staticmethod
     def defenders():
         return [x for x in list(GameObjectType) if x.value[0] == GameRole.DEFENDER]
+
+
+class GameOverStates(AutoNumber):
+    FIND_REASON = ()
+    TRY_AGAIN = ()
+    LET_HIM_DIE = ()

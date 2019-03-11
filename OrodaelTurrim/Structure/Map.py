@@ -90,3 +90,8 @@ class VisibilityMap:
                     watching_enemies.update(player_visibility[position])
 
         return list(watching_enemies)
+
+
+    def clear(self):
+        for player in self.__visibility_map.keys():
+            self.__visibility_map[player] = {}

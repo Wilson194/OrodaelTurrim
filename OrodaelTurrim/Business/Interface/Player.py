@@ -41,3 +41,12 @@ class IPlayer(ABC):
         Retrieves name of this player, which should be displayed in UI
         """
         pass
+
+
+    def __eq__(self, other: "IPlayer"):
+        return self.name == other.name and self.role == other.role
+
+
+    def __hash__(self):
+        print('Hash use')
+        return hash((self.name, self.role))

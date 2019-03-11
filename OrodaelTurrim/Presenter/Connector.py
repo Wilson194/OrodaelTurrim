@@ -17,7 +17,6 @@ class Connector(metaclass=Singleton):
 
 
     def emit(self, name: str, *args, **kwargs) -> None:
-        print(name)
         for target in self._database.get(name, []):
             target(*args, **kwargs)
 

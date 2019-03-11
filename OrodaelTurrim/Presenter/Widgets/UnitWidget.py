@@ -23,6 +23,7 @@ class UnitWidget(QWidget):
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui)
+        Connector().subscribe('game_over', self.game_over_slot)
 
         self.init_ui()
 
@@ -73,6 +74,9 @@ class UnitWidget(QWidget):
         # Position occupation
         state = state and not self.__game_engine.is_position_occupied(self.__selected_position)
 
+        # Game over
+        state = state and not Connector().get_variable('game_over')
+
         self.findChild(QPushButton, 'placeButton').setDisabled(not state)
 
 
@@ -84,3 +88,8 @@ class UnitWidget(QWidget):
 
         Connector().emit('redraw_map')
         Connector().emit('redraw_ui')
+
+
+    @pyqtSlot()
+    def game_over_slot(self):
+        self.redraw_ui()
