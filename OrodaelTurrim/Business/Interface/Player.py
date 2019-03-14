@@ -48,5 +48,4 @@ class IPlayer(ABC):
 
 
     def __hash__(self):
-        print('Hash use')
         return hash((self.name, self.role))

@@ -16,13 +16,13 @@ class Cyclops(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BURN}
 
 
 class Demon(GameObjectPrototype):
@@ -56,13 +56,13 @@ class Elemental(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def attack_effects(self) -> Set[EffectType]:
+        return {EffectType.BURN}
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BURN]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BURN}
 
 
 class Gargoyle(GameObjectPrototype):
@@ -76,13 +76,13 @@ class Gargoyle(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.FREEZE]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.FREEZE}
 
 
 class Minotaur(GameObjectPrototype):
@@ -96,13 +96,13 @@ class Minotaur(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.ROOT]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.ROOT}
 
 
 class Necromancer(GameObjectPrototype):
@@ -116,13 +116,13 @@ class Necromancer(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.ROOT]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.ROOT}
 
 
 class Orc(GameObjectPrototype):
@@ -136,13 +136,13 @@ class Orc(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.ROOT]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.ROOT}
 
 
 class Skeleton(GameObjectPrototype):
@@ -156,10 +156,10 @@ class Skeleton(GameObjectPrototype):
 
 
     @property
-    def attack_effects(self) -> List[EffectType]:
-        return []
+    def attack_effects(self) -> Set[EffectType]:
+        return set()
 
 
     @property
-    def resistances(self) -> List[EffectType]:
-        return [EffectType.BLIND]
+    def resistances(self) -> Set[EffectType]:
+        return {EffectType.BLIND}

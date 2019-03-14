@@ -187,8 +187,9 @@ class Rule:
 
 
 class Fact:
-    def __init__(self, name: str, eval_function: Callable = None):
+    def __init__(self, name: str, eval_function: Callable = None, probability: float = 1):
         self.name = name
+        self.probability = probability
         if eval_function:
             self.evaluate = eval_function
 
