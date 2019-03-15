@@ -105,6 +105,8 @@ class GameMap:
         line = start.plot_line(end, nudge)
 
         for tile in line[1:-1]:
+            if not self.position_on_map(tile.int_coord):
+                return False
             sight = self[tile.int_coord].get_remaining_sigh(sight)
 
         return sight > 0
@@ -123,6 +125,9 @@ class GameMap:
 
             if current not in visited:
                 visited.add(current)
+
+            if not self.position_on_map(current):
+                continue
 
             if current not in visible and (
                     self.can_been_seen(position, current, sight, Nudge.NEGATIVE) or self.can_been_seen(position,

@@ -1,7 +1,11 @@
 from abc import ABC, abstractmethod
+from random import Random
+from typing import List, TYPE_CHECKING
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
 from OrodaelTurrim.Structure.Enums import GameRole
+if TYPE_CHECKING:
+    from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 
 
 class IPlayer(ABC):
@@ -49,3 +53,36 @@ class IPlayer(ABC):
 
     def __hash__(self):
         return hash((self.name, self.role))
+
+
+class IAttacker(IPlayer, ABC):
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
+        super().__init__(map_proxy, game_object_proxy, game_control_proxy)
+
+        self.spawn_random = Random()  # TODO: Add global seed
+
+
+    @property
+    def role(self) -> GameRole:
+        return GameRole.ATTACKER
+
+
+    @property
+    @abstractmethod
+    def spawn_information_list(self) -> List[List["SpawnInformation"]]:
+        """
+        Return list of of spawn information for next 3 rounds
+        0 first round
+            0 unit 1
+            1 Unit 2
+            ...
+        1 second round
+            0 unit 1
+            1 Unit 2
+            ...
+        2 third round
+            0 unit 1
+            1 Unit 2
+            ...
+        """
+        pass

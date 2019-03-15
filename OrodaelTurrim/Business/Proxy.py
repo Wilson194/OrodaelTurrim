@@ -9,6 +9,11 @@ class MapProxy:
         self.get_bases_positions = game_engine.get_bases_positions
         self.get_terrain_type = game_engine.get_terrain_type
         self.player_have_base = game_engine.player_have_base
+
+        self.get_resources = game_engine.get_resources
+        self.get_income = game_engine.get_income
+
+        self.border_tiles = game_engine.get_game_map().border_tiles
         del game_engine
 
 

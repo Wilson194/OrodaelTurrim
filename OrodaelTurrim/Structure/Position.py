@@ -177,7 +177,7 @@ class CubicPosition(Position):
     @property
     def offset(self) -> 'OffsetPosition':
         col = self.__x_position
-        row = self.__z_position + (self.__x_position - (abs(self.__x_position) % 2)) // 2
+        row = self.__z_position + (self.__x_position - (self.__x_position & 1)) // 2
         return OffsetPosition(col, row)
 
 

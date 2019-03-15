@@ -470,6 +470,10 @@ class GameEngine:
         return self.__player_resources[player].resources
 
 
+    def get_income(self, player: IPlayer) -> int:
+        return self.__player_resources[player].income
+
+
     def get_game_map(self):
         return self.__game_map
 

@@ -7,7 +7,7 @@ from OrodaelTurrim.Structure.Position import Position
 
 class AttackBaseFilter(AttackFilter):
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
-        return [x for x in tiles if self.game_object_proxy.get_type(position) == GameObjectType.BASE]
+        return [x for x in tiles if self.game_object_proxy.get_object_type(position) == GameObjectType.BASE]
 
 
 class AttackLeastVisibleFilter(AttackFilter):

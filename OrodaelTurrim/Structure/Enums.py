@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List
 
 from OrodaelTurrim.Structure.Position import Position, CubicPosition
 from OrodaelTurrim.Structure.Terrain import Field, Forest, Hill, Mountain, River, Village
@@ -88,8 +89,23 @@ class GameObjectType(Enum):
 
 
     @staticmethod
-    def defenders():
+    def defenders() -> List["GameObjectType"]:
         return [x for x in list(GameObjectType) if x.value[0] == GameRole.DEFENDER]
+
+
+    @staticmethod
+    def attackers() -> List["GameObjectType"]:
+        return [x for x in list(GameObjectType) if x.value[0] == GameRole.ATTACKER]
+
+
+    @property
+    def price(self) -> int:
+        return self.value[1]
+
+
+    @property
+    def role(self) -> GameRole:
+        return self.value[0]
 
 
 class GameOverStates(AutoNumber):
