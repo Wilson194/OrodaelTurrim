@@ -7,6 +7,7 @@ from antlr4 import *
 from OrodaelTurrim.Business.Factory import EffectFactory
 from OrodaelTurrim.Business.History import GameHistory
 from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Uncertainty import SpawnUncertainty
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
@@ -46,6 +47,8 @@ class GameEngine:
         self.__initial_resources = {}  # type: Dict[IPlayer, PlayerResources]
 
         self.__visibility_map = VisibilityMap()
+
+        self.__spawn_uncertainty = SpawnUncertainty(self)
 
 
     def start(self, turn_limit: int) -> None:
@@ -514,3 +517,7 @@ class GameEngine:
     def unit_spawn_signal(self):
         Connector().emit('redraw_map')
         Connector().emit('redraw_ui')
+
+
+    def spawn_information(self):
+        return self.__spawn_uncertainty.spawn_information

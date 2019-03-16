@@ -3,7 +3,9 @@ from typing import List, TYPE_CHECKING, Dict, Union, Set
 from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
 from OrodaelTurrim.Structure.Position import Position, OffsetPosition
 from collections import deque
-from OrodaelTurrim.Structure.Enums import Nudge
+from OrodaelTurrim.Structure.Enums import Nudge, HexDirection
+from OrodaelTurrim.Structure.TypeStrucutre import DoubleLinkedList
+from OrodaelTurrim.Structure.Utils import Singleton
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Enums import Nudge, TerrainType
@@ -69,6 +71,26 @@ class GameMap:
     @property
     def size(self):
         return self.__width, self.__height
+
+
+    @property
+    def width(self) -> int:
+        return self.__width
+
+
+    @property
+    def height(self) -> int:
+        return self.__height
+
+
+    @property
+    def vertical_radius(self) -> int:
+        return self.__vertical_radius
+
+
+    @property
+    def horizontal_radius(self) -> int:
+        return self.__horizontal_radius
 
 
     def position_on_map(self, position: Position) -> bool:
@@ -170,11 +192,11 @@ class GameMap:
     @property
     def border_tiles(self) -> Set[Position]:
         border_tiles = set()
-        for x in range(-self.__horizontal_radius + 1, self.__horizontal_radius):
+        for x in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
             border_tiles.add(OffsetPosition(x, -self.__vertical_radius))
             border_tiles.add(OffsetPosition(x, self.__vertical_radius))
 
-        for y in range(-self.__vertical_radius + 1, self.__vertical_radius):
+        for y in range(-self.__vertical_radius, self.__vertical_radius + 1):
             border_tiles.add(OffsetPosition(-self.__horizontal_radius, y))
             border_tiles.add(OffsetPosition(self.__horizontal_radius, y))
 
@@ -193,3 +215,62 @@ class GameMap:
             map_repr += '\n'
 
         return map_repr
+
+
+class BorderTiles(metaclass=Singleton):
+    def __init__(self, game_map: GameMap):
+        self.__game_map = game_map
+
+        self.__border_tiles = DoubleLinkedList()
+        self.__create_linked_list()
+
+
+    def get_position(self, starting_position: Position, shift: int):
+        self.__border_tiles.pointer = self.__border_tiles.head
+
+        while self.__border_tiles.value != starting_position:
+            self.__border_tiles.next()
+
+        for i in range(abs(shift)):
+            if shift < 0:
+                self.__border_tiles.previous()
+            else:
+                self.__border_tiles.next()
+
+        return self.__border_tiles.value
+
+
+    def __create_linked_list(self):
+        PRECEDENCE = {OffsetPosition(self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
+                      OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius)}
+
+
+        def neighbours(position) -> Set[Position]:
+            return {(position + x.value).offset for x in
+                    [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
+                     HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER]}
+
+
+        first = OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius)
+        second = OffsetPosition(-self.__game_map.horizontal_radius + 1, -self.__game_map.vertical_radius)
+        self.__border_tiles.push_back(first)
+        self.__border_tiles.push_back(second)
+
+        tiles = self.__game_map.border_tiles
+        tiles.remove(first)
+        tiles.remove(second)
+
+        current = self.__border_tiles.head.value
+        while tiles:
+            _next_set = neighbours(current).intersection(tiles)
+            if len(_next_set) > 1:
+                _next_set = _next_set.intersection(PRECEDENCE)
+
+            _next = _next_set.pop()
+
+            current = _next
+            self.__border_tiles.push_back(_next)
+            tiles.remove(_next)
+
+        self.__border_tiles.head.next = self.__border_tiles.tail
+        self.__border_tiles.tail.previous = self.__border_tiles.head

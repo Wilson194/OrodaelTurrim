@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from random import Random
 from typing import List, TYPE_CHECKING
 
-from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Structure.Enums import GameRole
+
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 
@@ -14,10 +15,12 @@ class IPlayer(ABC):
     """
 
 
-    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
+                 game_uncertainty_proxy: GameUncertaintyProxy):
         self.map_proxy = map_proxy
         self.game_object_proxy = game_object_proxy
         self.game_control_proxy = game_control_proxy
+        self.game_uncertainty_proxy = game_uncertainty_proxy
 
 
     @abstractmethod
@@ -56,8 +59,9 @@ class IPlayer(ABC):
 
 
 class IAttacker(IPlayer, ABC):
-    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
-        super().__init__(map_proxy, game_object_proxy, game_control_proxy)
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
+                 game_uncertainty_proxy: GameUncertaintyProxy):
+        super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
         self.spawn_random = Random(25)  # TODO: Add global seed
 

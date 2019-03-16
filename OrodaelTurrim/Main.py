@@ -2,7 +2,7 @@ from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
-from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Main import MainWindow
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Filter.MoveFilter import MoveToNearestEnemyFilter, MoveToBaseFilter
@@ -21,13 +21,14 @@ def main():
     map_proxy = MapProxy(game_engine)
     game_object_proxy = GameObjectProxy(game_engine)
     game_control_proxy = GameControlProxy(game_engine)
+    game_uncertainty_proxy = GameUncertaintyProxy(game_engine)
 
     # Register defender
-    defender = Player(map_proxy, game_object_proxy, game_control_proxy)
+    defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
     game_engine.register_player(defender, PlayerResources(20, 10), [])
 
     # Register attacker
-    player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy)
+    player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
     game_engine.register_player(player2, PlayerResources(100, 10), [])
 
     game_engine.start(500)

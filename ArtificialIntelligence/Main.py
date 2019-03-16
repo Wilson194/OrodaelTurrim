@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple
 
 from OrodaelTurrim.Business.Interface.Player import IAttacker
-from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 from OrodaelTurrim.Structure.Filter.AttackFilter import AttackBaseFilter, AttackMostVulnerableFilter, \
@@ -13,8 +13,9 @@ from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 
 
 class AIPlayer(IAttacker):
-    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
-        super().__init__(map_proxy, game_object_proxy, game_control_proxy)
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
+                 game_uncertainty_proxy: GameUncertaintyProxy):
+        super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
         self.__spawn_information = None  # type : List[List[SpawnInformation]
         self.__resources_left = None
