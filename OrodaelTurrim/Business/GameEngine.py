@@ -175,6 +175,13 @@ class GameEngine:
             return
 
         new_visibility = game_object.visible_tiles
+
+        # Update visibility map
+        vision_lost = old_visibility - new_visibility
+        vision_gain = new_visibility - old_visibility
+        self.__visibility_map.remove_vision(game_object, vision_lost)
+        self.__visibility_map.add_vision(game_object, vision_gain)
+
         self.handle_self_vision_loss(game_object, old_visibility, new_visibility)
         self.handle_self_vision_gain(game_object, old_visibility, new_visibility)
 
@@ -250,6 +257,12 @@ class GameEngine:
         old_visibility = game_object.visible_tiles
         game_object.position = to
         new_visibility = game_object.visible_tiles
+
+        # Update visibility map
+        vision_lost = old_visibility - new_visibility
+        vision_gain = new_visibility - old_visibility
+        self.__visibility_map.remove_vision(game_object, vision_lost)
+        self.__visibility_map.add_vision(game_object, vision_gain)
 
         self.handle_self_vision_loss(game_object, old_visibility, new_visibility)
         self.handle_self_vision_gain(game_object, old_visibility, new_visibility)

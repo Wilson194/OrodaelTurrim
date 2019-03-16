@@ -22,9 +22,6 @@ class Player(IPlayer):
 
 
     def act(self) -> None:
-        for pos in self.map_proxy.border_tiles:
-            print(pos)
-            self.map_proxy.get_terrain_type(pos)
         knowledge = self.knowledge_base.create_knowledge_base()
         self.interference.interfere(knowledge, self.__parse_rules(), self.action_base)
 

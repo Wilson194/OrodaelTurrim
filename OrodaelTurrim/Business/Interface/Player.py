@@ -59,7 +59,7 @@ class IAttacker(IPlayer, ABC):
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy)
 
-        self.spawn_random = Random()  # TODO: Add global seed
+        self.spawn_random = Random(25)  # TODO: Add global seed
 
 
     @property
