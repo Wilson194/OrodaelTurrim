@@ -23,7 +23,7 @@ class Player(IPlayer):
 
 
     def act(self) -> None:
-        print(self.game_uncertainty_proxy.spawn_information)
+        print(self.game_uncertainty_proxy.spawn_information())
         knowledge = self.knowledge_base.create_knowledge_base()
         self.interference.interfere(knowledge, self.__parse_rules(), self.action_base)
 

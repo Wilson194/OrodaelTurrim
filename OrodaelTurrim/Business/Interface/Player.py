@@ -63,7 +63,7 @@ class IAttacker(IPlayer, ABC):
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
-        self.spawn_random = Random(25)  # TODO: Add global seed
+        self.spawn_random = Random(128)  # TODO: Add global seed
 
 
     @property
@@ -89,4 +89,9 @@ class IAttacker(IPlayer, ABC):
             1 Unit 2
             ...
         """
+        pass
+
+
+    @abstractmethod
+    def initialize(self):
         pass

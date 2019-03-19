@@ -36,5 +36,5 @@ class GameControlProxy:
 
 class GameUncertaintyProxy:
     def __init__(self, game_engine: "GameEngine"):
-        self.spawn_information = game_engine.spawn_information()
+        self.spawn_information = game_engine.spawn_information
         del game_engine

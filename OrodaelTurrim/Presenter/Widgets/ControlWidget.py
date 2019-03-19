@@ -10,6 +10,7 @@ from OrodaelTurrim.Presenter.Widgets.GameControlWidget import GameControlWidget
 from OrodaelTurrim.Presenter.Widgets.LogWidget import LogWidget
 from OrodaelTurrim.Presenter.Widgets.MapInfoWidget import MapInfoWidget
 from OrodaelTurrim.Presenter.Widgets.RoundControlWidget import RoundControlWidget
+from OrodaelTurrim.Presenter.Widgets.SpawnInfoWidget import SpawnInfoWidget
 from OrodaelTurrim.Structure.Enums import GameOverStates
 
 
@@ -59,6 +60,14 @@ class ControlWidget(QWidget):
         game_tab_layout = QVBoxLayout(game_tab)
 
         game_tab_widget = GameControlWidget(game_tab, self.__game_engine)
+        game_tab_layout.addWidget(game_tab_widget)
+
+        # Tab for spawn info
+        game_tab = self.findChild(QWidget, 'spawnInfoTab')  # type: QWidget
+
+        game_tab_layout = QVBoxLayout(game_tab)
+
+        game_tab_widget = SpawnInfoWidget(game_tab, self.__game_engine)
         game_tab_layout.addWidget(game_tab_widget)
 
 

@@ -69,23 +69,23 @@ class GameRole(AutoNumber):
 
 
 class GameObjectType(Enum):
-    NONE = (GameRole.NEUTRAL, 0)
-    BASE = (GameRole.DEFENDER, 0)
+    NONE = (GameRole.NEUTRAL, 0, 1)
+    BASE = (GameRole.DEFENDER, 0, 2)
 
-    ARCHER = (GameRole.DEFENDER, 5)
-    DRUID = (GameRole.DEFENDER, 25)
-    ENT = (GameRole.DEFENDER, 50)
-    KNIGHT = (GameRole.DEFENDER, 10)
-    MAGICIAN = (GameRole.DEFENDER, 30)
+    ARCHER = (GameRole.DEFENDER, 5, 3)
+    DRUID = (GameRole.DEFENDER, 25, 4)
+    ENT = (GameRole.DEFENDER, 50, 5)
+    KNIGHT = (GameRole.DEFENDER, 10, 6)
+    MAGICIAN = (GameRole.DEFENDER, 30, 7)
 
-    CYCLOPS = (GameRole.ATTACKER, 60)
-    DEMON = (GameRole.ATTACKER, 80)
-    ELEMENTAL = (GameRole.ATTACKER, 35)
-    GARGOYLE = (GameRole.ATTACKER, 30)
-    MINOTAUR = (GameRole.ATTACKER, 50)
-    NECROMANCER = (GameRole.ATTACKER, 50)
-    ORC = (GameRole.ATTACKER, 8)
-    SKELETON = (GameRole.ATTACKER, 5)
+    CYCLOPS = (GameRole.ATTACKER, 60, 8)
+    DEMON = (GameRole.ATTACKER, 80, 9)
+    ELEMENTAL = (GameRole.ATTACKER, 35, 10)
+    GARGOYLE = (GameRole.ATTACKER, 30, 11)
+    MINOTAUR = (GameRole.ATTACKER, 50, 12)
+    NECROMANCER = (GameRole.ATTACKER, 50, 13)
+    ORC = (GameRole.ATTACKER, 8, 14)
+    SKELETON = (GameRole.ATTACKER, 5, 15)
 
 
     @staticmethod

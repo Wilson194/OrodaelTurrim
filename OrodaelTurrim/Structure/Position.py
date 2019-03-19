@@ -117,7 +117,7 @@ class Position(ABC):
 
     def get_all_neighbours(self) -> List['Position']:
         from OrodaelTurrim.Structure.Enums import HexDirection
-        return [self.neighbour(x) for x in
+        return [self.neighbour(x).offset for x in
                 [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
                  HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER] if self.neighbour(x)]
 

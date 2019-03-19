@@ -23,7 +23,7 @@ from OrodaelTurrim.Structure.Map import VisibilityMap
 from OrodaelTurrim.Structure.Resources import PlayerResources
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, TerrainType, EffectType, GameRole
-from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject, SpawnInformation
+from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject, SpawnInformation, UncertaintySpawn
 from OrodaelTurrim.Structure.Position import Position
 from OrodaelTurrim.Structure.TypeStrucutre import TwoWayDict
 
@@ -37,6 +37,7 @@ class GameEngine:
         self.__players = []  # type: List[IPlayer]
         self.__player_resources = {}  # type: Dict[IPlayer, PlayerResources]
         self.__player_units = {}  # type: Dict[IPlayer, List[GameObject]]
+
         self.__defender_bases = {}  # type: Dict[IPlayer, GameObject]
 
         self.__game_object_positions = {}  # type: Dict[Position,GameObject]
@@ -80,6 +81,8 @@ class GameEngine:
         self.__initial_resources[player] = copy.deepcopy(resources)
 
         self.__visibility_map.register_player(player)
+        if player.role == GameRole.ATTACKER:
+            self.__spawn_uncertainty.register_attacker(player)
 
         for spawn_information in unit_spawn_info:
             game_object = GameObject(spawn_information.owner, spawn_information.position, spawn_information.object_type,
@@ -519,5 +522,5 @@ class GameEngine:
         Connector().emit('redraw_ui')
 
 
-    def spawn_information(self):
+    def spawn_information(self) -> List[List[UncertaintySpawn]]:
         return self.__spawn_uncertainty.spawn_information

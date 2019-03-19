@@ -196,3 +196,12 @@ class SpawnInformation:
         self.position = position
         self.attack_filters = attack_filters
         self.move_filters = move_filters
+
+
+class UncertaintySpawn:
+    def __init__(self, position: Position, position_uncertainty: float, game_object_type: GameObjectType,
+                 object_uncertainty: float):
+        self.position = position
+        self.position_uncertainty = position_uncertainty
+        self.game_object_type = game_object_type
+        self.object_uncertainty = object_uncertainty

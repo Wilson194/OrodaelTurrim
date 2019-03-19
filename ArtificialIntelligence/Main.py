@@ -19,14 +19,14 @@ class AIPlayer(IAttacker):
 
         self.__spawn_information = None  # type : List[List[SpawnInformation]
         self.__resources_left = None
-        self.most_expensive_unit = None
-        self.border_tiles = None
+        self.__attackers = None
+        self.__most_expensive_unit = None
+        self.__cheapest_unit = None
+        self.__border_tiles = None
 
 
     def act(self) -> None:
         print('Rigor Mortis doing his stuff')
-        if self.__spawn_information is None:
-            self.__initialize()
 
         for spawn in self.spawn_information_list[0]:
             try:
@@ -47,22 +47,22 @@ class AIPlayer(IAttacker):
         return 'Rigor Mortis'
 
 
-    def __initialize(self):
+    def initialize(self):
         self.__spawn_information = [[] for _ in range(3)]  # type : List[List[SpawnInformation]
 
         # List of GameObject for attackers
-        self.attackers = GameObjectType.attackers()
+        self.__attackers = GameObjectType.attackers()
 
         # Most expensive unit
-        max_price = max([x.price for x in self.attackers])
-        self.most_expensive_unit = [x for x in self.attackers if x.price == max_price][0]
+        max_price = max([x.price for x in self.__attackers])
+        self.__most_expensive_unit = [x for x in self.__attackers if x.price == max_price][0]
 
         # Cheapest unit
-        min_price = min([x.price for x in self.attackers])
-        self.cheapest_unit = [x for x in self.attackers if x.price == min_price][0]
+        min_price = min([x.price for x in self.__attackers])
+        self.__cheapest_unit = [x for x in self.__attackers if x.price == min_price][0]
 
         # Border tiles
-        self.border_tiles = self.map_proxy.border_tiles
+        self.__border_tiles = self.map_proxy.border_tiles
 
         self.__prepare_units_filters()
 
@@ -134,10 +134,10 @@ class AIPlayer(IAttacker):
 
     def __create_spawn_info(self, resources: int) -> SpawnInformation:
 
-        attackers = [attacker for attacker in self.attackers if attacker.price <= resources]
+        attackers = [attacker for attacker in self.__attackers if attacker.price <= resources]
         game_object = self.spawn_random.choice(attackers)
 
-        free_border_tiles = [tile for tile in self.border_tiles if
+        free_border_tiles = [tile for tile in self.__border_tiles if
                              self.game_object_proxy.get_object_type(tile) == GameObjectType.NONE]
 
         position = self.spawn_random.choice(tuple(free_border_tiles))
@@ -147,10 +147,10 @@ class AIPlayer(IAttacker):
 
     def __spawn_unit(self, maximum_resources: int, remaining_resources: int) -> bool:
         """ Determinate if spawn new unit or not"""
-        if remaining_resources > self.most_expensive_unit.price:
+        if remaining_resources > self.__most_expensive_unit.price:
             return True
 
-        if remaining_resources < self.cheapest_unit.price:
+        if remaining_resources < self.__cheapest_unit.price:
             return False
 
         bound = maximum_resources / remaining_resources
