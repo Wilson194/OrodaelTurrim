@@ -330,14 +330,18 @@ class MapWidget(QWidget):
 
         zoom_in_button = self.findChild(QPushButton, 'zoomInButton')  # type: QPushButton
         zoom_out_button = self.findChild(QPushButton, 'zoomOutButton')  # type: QPushButton
+        zoom_reset_button = self.findChild(QPushButton, 'zoomResetButton')  # type: QPushButton
 
         zoom_in_button.clicked.connect(self.zoom_in_slot)
         zoom_out_button.clicked.connect(self.zoom_out_slot)
+        zoom_reset_button.clicked.connect(self.zoom_reset_slot)
 
         zoom_out_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_out.png')))
         zoom_in_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_in.png')))
+        zoom_reset_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_reset.png')))
         zoom_out_button.setIconSize(QtCore.QSize(15, 15))
         zoom_in_button.setIconSize(QtCore.QSize(15, 15))
+        zoom_reset_button.setIconSize(QtCore.QSize(15, 15))
 
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
@@ -366,27 +370,24 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def zoom_in_slot(self):
-        pass
-        # self.transformation += 0.1
-        # Connector().emit('zoom', self.transformation)
-        # self.scene.update()
-        # del self.view
-        #
-        # self.view = QGraphicsView(self.scene)
-        # self.view.show()
+        self.view.scale(1.25, 1.25)
 
 
     @pyqtSlot()
     def zoom_out_slot(self):
-        pass
-        # self.transformation -= 0.1
-        # Connector().emit('zoom', self.transformation)
-        #
-        # self.scene.update()
-        #
-        # del self.view
-        #
-        # self.view = QGraphicsView(self.scene)
-        # self.view.show()
+        self.view.scale(0.80, 0.80)
 
-        # self.view.setSceneRect(self.view.contentsRect())
+
+    @pyqtSlot()
+    def zoom_reset_slot(self):
+        rect = QtCore.QRectF(self.scene.sceneRect())
+        if not rect.isNull():
+            self.view.setSceneRect(rect)
+
+            unity = self.view.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
+            self.view.scale(1 / unity.width(), 1 / unity.height())
+            view_rect = self.view.viewport().rect()
+            scene_rect = self.view.transform().mapRect(rect)
+            factor = min(view_rect.width() / scene_rect.width(),
+                         view_rect.height() / scene_rect.height())
+            self.view.scale(factor, factor)
