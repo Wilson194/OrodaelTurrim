@@ -7,6 +7,7 @@ from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.Position import AxialPosition, OffsetPosition, Position
 from OrodaelTurrim.Structure.Terrain import River, Field, Terrain
+from OrodaelTurrim.config import Config
 
 RIVER_ON_MAP = 0.9
 
@@ -31,6 +32,9 @@ class MapGenerator:
         self.__game_map = GameMap(width, height)
 
         self.__border_tiles = self.__game_map.border_tiles
+
+        if not seed:
+            seed = Config.MAP_RANDOM_SEED
 
         if not seed:
             seed = int.from_bytes(os.urandom(50), 'big')

@@ -1,9 +1,11 @@
+import os
 from abc import ABC, abstractmethod
 from random import Random
 from typing import List, TYPE_CHECKING
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Structure.Enums import GameRole
+from OrodaelTurrim.config import Config
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
@@ -63,7 +65,13 @@ class IAttacker(IPlayer, ABC):
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
-        self.spawn_random = Random(128)  # TODO: Add global seed
+        # Load seed from config file
+        seed = Config.AI_RANDOM_SEED
+        if not seed:
+            seed = int.from_bytes(os.urandom(50), 'big')
+
+        print('AI random seed: {}'.format(seed))
+        self.spawn_random = Random(seed)
 
 
     @property
