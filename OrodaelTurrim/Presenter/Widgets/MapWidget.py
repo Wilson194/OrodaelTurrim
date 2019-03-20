@@ -8,8 +8,7 @@ from PyQt5.QtGui import QPixmap, QPen, QColor, QBrush
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
     QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent, QPushButton
-from qtpy import QtGui
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG, ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector

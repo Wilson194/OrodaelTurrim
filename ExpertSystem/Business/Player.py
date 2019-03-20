@@ -1,7 +1,7 @@
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
-from ExpertSystem.Business.Parser.KnowledgeBase.RulesListener import RulesListener
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim import USER_ROOT
 from OrodaelTurrim.Business.Interface.Player import IPlayer
@@ -23,7 +23,6 @@ class Player(IPlayer):
 
 
     def act(self) -> None:
-        print(self.game_uncertainty_proxy.spawn_information())
         knowledge = self.knowledge_base.create_knowledge_base()
         self.interference.interfere(knowledge, self.__parse_rules(), self.action_base)
 
@@ -46,7 +45,7 @@ class Player(IPlayer):
         parser = RulesParser(stream)
         tree = parser.rules_set()
 
-        rules_listener = RulesListener()
+        rules_listener = RulesListenerImplementation()
         walker = ParseTreeWalker()
         walker.walk(rules_listener, tree)
 

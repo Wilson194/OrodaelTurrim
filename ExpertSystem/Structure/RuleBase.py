@@ -10,6 +10,7 @@ class Expression:
         self.__args = []
         self.__comparator = None
         self.__value = None
+        self.__uncertainty = None
 
 
     @property
@@ -56,15 +57,29 @@ class Expression:
         self.__value = value
 
 
+    @property
+    def uncertainty(self):
+        return self.__uncertainty
+
+
+    @uncertainty.setter
+    def uncertainty(self, value):
+        self.__uncertainty = value
+
+
     def evaluate(self):
         pass
 
 
     def __repr__(self):
-        if self.comparator is None:
-            return '{} {}'.format(self.name, ' '.join(self.args))
-        else:
-            return '{} {} {} {}'.format(self.name, ' '.join(self.args), self.comparator, self.value)
+        text = ''
+        text += '{} {}'.format(self.name, ' '.join(self.args))
+        if self.comparator:
+            text += '{} {}'.format(self.comparator, self.value)
+
+        if self.uncertainty:
+            text += '[{}]'.format(self.uncertainty)
+        return text
 
 
 class ExpressionNode:
@@ -158,6 +173,7 @@ class Rule:
     def __init__(self):
         self.__condition = None
         self.__conclusion = None
+        self.__uncertainty = None
 
 
     @property
@@ -182,8 +198,21 @@ class Rule:
         self.__conclusion = value
 
 
+    @property
+    def uncertainty(self):
+        return self.__uncertainty
+
+
+    @uncertainty.setter
+    def uncertainty(self, value):
+        self.__uncertainty = value
+
+
     def __repr__(self):
-        return 'IF {} THEN {}'.format(self.condition.__repr__(), self.conclusion.__repr__())
+        if self.uncertainty:
+            return 'IF {} THEN {} WITH {}'.format(self.condition.__repr__(), self.conclusion.__repr__(), self.uncertainty)
+        else:
+            return 'IF {} THEN {}'.format(self.condition.__repr__(), self.conclusion.__repr__())
 
 
 class Fact:

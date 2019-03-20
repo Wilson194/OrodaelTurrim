@@ -1,1 +1,15 @@
-IF player_dont_have_base THEN build_base 0 0;
+IF player_dont_have_base [0.5] THEN build_base 0 0 WITH 0.50;
+
+
+#IF jednotka_vlevo_je == hodne then build_base 0 0;
+
+
+#IF player_dont_have_base THEN build_base 0 0 WITH [0,5]; Pravdepodobnost pravidla
+#[0,5] IF player_dont_have_base THEN build_base 0 0; Pravdepodobnost pravidla
+
+
+#if clovek < 5 [0.5] AND clovek_penize > 50 [0.4] THEN   Pravdepodobnost jedtolivych termu
+
+
+
+
