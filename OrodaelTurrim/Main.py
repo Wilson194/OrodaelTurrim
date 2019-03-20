@@ -3,6 +3,7 @@ from ExpertSystem.Business.Player import Player
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
+from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Main import MainWindow
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Filter.MoveFilter import MoveToNearestEnemyFilter, MoveToBaseFilter
@@ -37,6 +38,7 @@ def main():
     # Inicialize main widget
     main_window = MainWindow(game_engine)
 
+    Connector().emit('redraw_ui')
     main_window.execute()
 
 

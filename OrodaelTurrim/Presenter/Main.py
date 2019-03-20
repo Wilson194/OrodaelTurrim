@@ -2,14 +2,15 @@ from pathlib import Path
 
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget
+from PyQt5.QtGui import QIcon, QWindow
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMainWindow
 
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Widgets.ControlWidget import ControlWidget
 from OrodaelTurrim.Presenter.Widgets.MapWidget import MapWidget
+from OrodaelTurrim.Structure.Position import Position
 
 PATH_RES = Path(__file__).parent.parent / 'res'
 
@@ -68,6 +69,9 @@ class MainWindow:
         layout.addWidget(main_widget)
         central.setLayout(layout)
 
+        Connector().subscribe('status_message', self.status_info)
+        Connector().subscribe('map_position_change', self.tile_selected)
+
 
     def execute(self):
         self.window.show()
@@ -81,3 +85,13 @@ class MainWindow:
         Connector().functor('history_action')()
 
         return self.app.exec()
+
+
+    def tile_selected(self, position: Position):
+        text = '     Offset: {}, Cubic: {}, Axial: {}'.format(position.offset.string, position.cubic.string,
+                                                         position.axial.string)
+        self.status_info(text)
+
+
+    def status_info(self, text: str):
+        self.window.statusBar().showMessage(text)
