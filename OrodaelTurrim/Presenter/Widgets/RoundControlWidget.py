@@ -48,7 +48,7 @@ class RoundControlWidget(QWidget):
         self.__game_engine.simulate_rest_of_player_turn(current_player)
         Connector().functor('redraw_map')()
 
-        while not game_history.on_first_player:
+        while not game_history.on_first_player and not Connector().get_variable('game_over'):
             game_history.active_player.act()
             self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
 
@@ -97,7 +97,7 @@ class RoundControlWidget(QWidget):
         display = check_box.isChecked()
 
         game_history = self.__game_engine.get_game_history()
-        while rounds > 0:
+        while rounds > 0 and not Connector().get_variable('game_over'):
             game_history.active_player.act()
             self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
 

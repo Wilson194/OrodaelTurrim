@@ -210,9 +210,9 @@ class CubicPosition(Position):
 
     @property
     def int_coord(self):
-        rx = int(round(self.__x_position))
-        ry = int(round(self.__y_position))
-        rz = int(round(self.__z_position))
+        rx = round(self.__x_position)
+        ry = round(self.__y_position)
+        rz = round(self.__z_position)
 
         x_diff = abs(rx - self.__x_position)
         y_diff = abs(ry - self.__y_position)
@@ -225,6 +225,9 @@ class CubicPosition(Position):
         else:
             rz = -rx - ry
 
+        self.__x_position = rx
+        self.__y_position = ry
+        self.__z_position = rz
         return CubicPosition(rx, ry, rz)
 
 

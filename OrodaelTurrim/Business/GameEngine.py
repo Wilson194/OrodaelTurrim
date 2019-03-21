@@ -231,6 +231,8 @@ class GameEngine:
         units = self.__player_units[player]
 
         for unit in units:
+            if Connector().get_variable('game_over'):
+                return
             self.execute_unit_turn(unit)
 
         income = self.__player_resources[player].income
@@ -296,11 +298,12 @@ class GameEngine:
 
     def remove(self, game_object: GameObject) -> None:
         if game_object.object_type == GameObjectType.BASE:
-            for player, game_object in self.__defender_bases.items():
-                if game_object == game_object:
+            for player, _game_object in self.__defender_bases.items():
+                if game_object == _game_object:
                     del self.__defender_bases[player]
 
                     if self.__game_history.in_preset:
+                        Connector().set_variable('game_over', True)
                         Connector().emit('game_over')
                     break
 

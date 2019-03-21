@@ -30,7 +30,7 @@ setup(
         'Topic :: Games/Entertainment',
         'Topic :: Games/Entertainment :: Arcade',
     ],
-    install_requires=['pyqt5', 'antlr4-python3-runtime'],
+    install_requires=['pyqt5', 'antlr4-python3-runtime', 'click'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     test_suite="tests",
