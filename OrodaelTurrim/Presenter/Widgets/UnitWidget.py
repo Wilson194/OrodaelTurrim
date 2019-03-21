@@ -57,27 +57,49 @@ class UnitWidget(QWidget):
 
     @pyqtSlot()
     def redraw_ui(self):
-        state = True
+        place_button = self.findChild(QPushButton, 'placeButton')  # type: QPushButton
+
+        # Position not selected
+        if self.__selected_position is None:
+            place_button.setDisabled(True)
+            place_button.setToolTip('No position on map selected')
+            return
 
         # Browsing mode
-        state = state and self.__game_engine.get_game_history().in_preset
+        if not self.__game_engine.get_game_history().in_preset:
+            place_button.setDisabled(True)
+            place_button.setToolTip('Cannot spawn units in browsing history mode')
+            return
 
         # Enough money
         player_resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
-        state = state and GameObjectPrototypePool[self.__object_type].cost <= player_resources
+        if GameObjectPrototypePool[self.__object_type].cost > player_resources:
+            place_button.setDisabled(True)
+            place_button.setToolTip('Not enough money for this unit')
+            return
 
         # Not have a base yet
         base_condition = self.__object_type == GameObjectType.BASE and self.__game_engine.player_have_base(
             self.__game_engine.get_game_history().active_player)
-        state = state and not base_condition
+        if base_condition:
+            place_button.setDisabled(True)
+            place_button.setToolTip('You can have only 1 base')
+            return
 
         # Position occupation
-        state = state and not self.__game_engine.is_position_occupied(self.__selected_position)
+        if self.__game_engine.is_position_occupied(self.__selected_position):
+            place_button.setDisabled(True)
+            place_button.setToolTip('Selected position already occupied')
+            return
 
         # Game over
-        state = state and not Connector().get_variable('game_over')
+        if Connector().get_variable('game_over'):
+            place_button.setDisabled(True)
+            place_button.setToolTip('Game is over')
+            return
 
-        self.findChild(QPushButton, 'placeButton').setDisabled(not state)
+        place_button.setDisabled(False)
+        place_button.setToolTip('Place this unit to selected tile')
 
 
     @pyqtSlot()

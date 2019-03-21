@@ -108,6 +108,12 @@
           <height>70</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Place this unit to selected tile</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
         <property name="text">
          <string>Place unit</string>
         </property>

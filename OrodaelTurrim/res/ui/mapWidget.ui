@@ -22,6 +22,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string>Map zoom in</string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -29,6 +32,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QPushButton" name="zoomOutButton">
+     <property name="toolTip">
+      <string>Map zoom out</string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -78,6 +84,9 @@
    </item>
    <item row="1" column="2">
     <widget class="QPushButton" name="zoomResetButton">
+     <property name="toolTip">
+      <string>Map fit in space</string>
+     </property>
      <property name="text">
       <string/>
      </property>

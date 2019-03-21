@@ -63,6 +63,9 @@
    </item>
    <item row="15" column="2">
     <widget class="QPushButton" name="lastTurnButton">
+     <property name="toolTip">
+      <string>End history browse and go to present</string>
+     </property>
      <property name="text">
       <string>Last turn</string>
      </property>
@@ -70,6 +73,9 @@
    </item>
    <item row="15" column="1">
     <widget class="QPushButton" name="nextTurnButton">
+     <property name="toolTip">
+      <string>Move  to next player.</string>
+     </property>
      <property name="text">
       <string>Next turn</string>
      </property>
@@ -77,6 +83,9 @@
    </item>
    <item row="15" column="0">
     <widget class="QPushButton" name="previousTurnButton">
+     <property name="toolTip">
+      <string>Move back to previous player.</string>
+     </property>
      <property name="text">
       <string>Previous turn</string>
      </property>
@@ -110,6 +119,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string>Simulate number of rounds specified above.</string>
+     </property>
      <property name="text">
       <string>Play</string>
      </property>
@@ -136,6 +148,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string>Run one round of current user inference.</string>
+     </property>
      <property name="text">
       <string>Run inference</string>
      </property>
@@ -148,6 +163,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Finish user round and execute all enemies round.</string>
      </property>
      <property name="text">
       <string>End of round</string>
