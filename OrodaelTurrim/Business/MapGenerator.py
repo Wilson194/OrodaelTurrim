@@ -116,7 +116,7 @@ class MapGenerator:
 
             while True:
                 # Filter neighbours on map
-                neighbours = self.__game_map.filter_positions_on_map(current.cubic.get_all_neighbours())
+                neighbours = self.__game_map.filter_positions_on_map(current.get_all_neighbours())
                 # Filter neighbours which are not RIVER
                 neighbours = [x for x in neighbours if self.__game_map[x].terrain_type != TerrainType.RIVER]
                 # Filter neighbours which are have not river as neighbour

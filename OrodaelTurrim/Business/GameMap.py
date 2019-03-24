@@ -42,7 +42,8 @@ class GameMap:
 
 
     def __getitem__(self, position: Position) -> Union['Terrain', None]:
-        return self.__tiles[position.offset.q + self.__horizontal_radius][position.offset.r + self.__vertical_radius]
+        position_offset = position.offset
+        return self.__tiles[position_offset.q + self.__horizontal_radius][position_offset.r + self.__vertical_radius]
 
 
     def set_tile(self, position: Position, terrain: 'Terrain') -> None:
@@ -127,7 +128,7 @@ class GameMap:
         line = start.plot_line(end, nudge)
 
         for tile in line[1:-1]:
-            int_tile = tile.int_coord
+            int_tile = tile.int_coord.offset
             if not self.position_on_map(int_tile):
                 return False
             sight = self[int_tile].get_remaining_sigh(sight)
@@ -244,13 +245,6 @@ class BorderTiles(metaclass=Singleton):
         PRECEDENCE = {OffsetPosition(self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
                       OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius)}
 
-
-        def neighbours(position) -> Set[Position]:
-            return {(position + x.value).offset for x in
-                    [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
-                     HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER]}
-
-
         first = OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius)
         second = OffsetPosition(-self.__game_map.horizontal_radius + 1, -self.__game_map.vertical_radius)
         self.__border_tiles.push_back(first)
@@ -262,7 +256,7 @@ class BorderTiles(metaclass=Singleton):
 
         current = self.__border_tiles.head.value
         while tiles:
-            _next_set = neighbours(current).intersection(tiles)
+            _next_set = set(current.get_all_neighbours()).intersection(tiles)
             if len(_next_set) > 1:
                 _next_set = _next_set.intersection(PRECEDENCE)
 

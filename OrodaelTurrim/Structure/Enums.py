@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from OrodaelTurrim.Structure.Position import Position, CubicPosition
+from OrodaelTurrim.Structure.Position import Position, CubicPosition, AxialPosition, OffsetPosition
 from OrodaelTurrim.Structure.Terrain import Field, Forest, Hill, Mountain, River, Village
 
 
@@ -38,6 +38,33 @@ class HexDirection(Enum):
     LOWER = CubicPosition(0, -1, 1)
     LEFT_LOWER = CubicPosition(-1, 0, 1)
     LEFT_UPPER = CubicPosition(-1, 1, 0)
+
+
+class AxialDirection(Enum):
+    UPPER = AxialPosition(0, -1)
+    RIGHT_UPPER = AxialPosition(+1, -1)
+    RIGHT_LOWER = AxialPosition(+1, 0)
+    LOWER = AxialPosition(0, 1)
+    LEFT_LOWER = AxialPosition(-1, 1)
+    LEFT_UPPER = AxialPosition(-1, 0)
+
+
+class OddOffsetDirection(Enum):
+    UPPER = OffsetPosition(0, -1)
+    RIGHT_UPPER = OffsetPosition(+1, -1)
+    RIGHT_LOWER = OffsetPosition(+1, 0)
+    LOWER = OffsetPosition(0, 1)
+    LEFT_LOWER = OffsetPosition(-1, 0)
+    LEFT_UPPER = OffsetPosition(-1, -1)
+
+
+class EvenOffsetDirection(Enum):
+    UPPER = OffsetPosition(0, -1)
+    RIGHT_UPPER = OffsetPosition(+1, 0)
+    RIGHT_LOWER = OffsetPosition(+1, +1)
+    LOWER = OffsetPosition(0, 1)
+    LEFT_LOWER = OffsetPosition(-1, 0)
+    LEFT_UPPER = OffsetPosition(-1, 0)
 
 
 class EffectType(AutoNumber):

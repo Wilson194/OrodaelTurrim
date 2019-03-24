@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import List, TYPE_CHECKING, Union, Set
 import math
 
@@ -6,7 +7,8 @@ from PyQt5.QtCore import QPointF, QPoint
 from PyQt5.QtGui import QColor
 
 if TYPE_CHECKING:
-    from OrodaelTurrim.Structure.Enums import Nudge, HexDirection
+    from OrodaelTurrim.Structure.Enums import Nudge, AxialDirection, OddOffsetDirection, EvenOffsetDirection, \
+        HexDirection
 
 
 class Point(QPointF):
@@ -79,12 +81,14 @@ class Position(ABC):
         pass
 
 
+    @abstractmethod
     def __sub__(self, other: 'Position') -> 'Position':
-        return CubicPosition(self.cubic.x - other.cubic.x, self.cubic.y - other.cubic.y, self.cubic.z - other.cubic.z)
+        pass
 
 
+    @abstractmethod
     def __add__(self, other: 'Position') -> 'Position':
-        return CubicPosition(self.cubic.x + other.cubic.x, self.cubic.y + other.cubic.y, self.cubic.z + other.cubic.z)
+        pass
 
 
     def length(self):
@@ -111,15 +115,14 @@ class Position(ABC):
         return min([self.distance_from(x) for x in positions])
 
 
-    def neighbour(self, direction: 'HexDirection') -> 'Position':
-        return self + direction.value
+    @abstractmethod
+    def neighbour(self, direction) -> 'Position':
+        pass
 
 
+    @abstractmethod
     def get_all_neighbours(self) -> List['Position']:
-        from OrodaelTurrim.Structure.Enums import HexDirection
-        return [self.neighbour(x).offset for x in
-                [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
-                 HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER] if self.neighbour(x)]
+        pass
 
 
     def plot_line(self, position: 'Position', nudge: 'Nudge') -> List['Position']:
@@ -196,6 +199,21 @@ class CubicPosition(Position):
         return self.__z_position
 
 
+    def neighbour(self, direction: 'HexDirection') -> 'CubicPosition':
+        return self + direction.value
+
+
+    def get_all_neighbours(self) -> List['CubicPosition']:
+        return [
+            CubicPosition(self.x + 0, self.y - 1, self.z + 1),  # UPPER
+            CubicPosition(self.x + 1, self.y - 1, self.z + 0),  # RIGHT_UPPER
+            CubicPosition(self.x + 1, self.y + 0, self.z - 1),  # RIGHT_LOWER
+            CubicPosition(self.x + 0, self.y + 1, self.z - 1),  # LOWER
+            CubicPosition(self.x - 1, self.y + 1, self.z - 0),  # LEFT_LOWER
+            CubicPosition(self.x - 1, self.y + 0, self.z + 1),  # LEFT_UPPER
+        ]
+
+
     def __eq__(self, other: 'CubicPosition'):
         return self.x == other.cubic.x and self.y == other.cubic.y and self.z == other.cubic.z
 
@@ -206,6 +224,14 @@ class CubicPosition(Position):
 
     def __hash__(self):
         return hash((self.offset.q, self.offset.r))
+
+
+    def __add__(self, other: Position):
+        return CubicPosition(self.cubic.x + other.cubic.x, self.cubic.y + other.cubic.y, self.cubic.z + other.cubic.z)
+
+
+    def __sub__(self, other: Position):
+        return CubicPosition(self.x - other.cubic.x, self.y - other.cubic.y, self.z - other.cubic.z)
 
 
     @property
@@ -280,6 +306,21 @@ class AxialPosition(Position):
         return AxialPosition(p.q, p.r)
 
 
+    def neighbour(self, direction: 'AxialDirection') -> 'AxialPosition':
+        return self + direction.value
+
+
+    def get_all_neighbours(self) -> List['AxialPosition']:
+        return [
+            AxialPosition(self.q + 0, self.r - 1),  # UPPER
+            AxialPosition(self.q + 1, self.r - 1),  # RIGHT_UPPER
+            AxialPosition(self.q + 1, self.r + 0),  # RIGHT_LOWER
+            AxialPosition(self.q + 0, self.r + 1),  # RIGHT_LOWER
+            AxialPosition(self.q - 1, self.r + 1),  # LEFT_LOWER
+            AxialPosition(self.q - 1, self.r + 0),  # LEFT_UPPER
+        ]
+
+
     def __eq__(self, other: 'AxialPosition') -> bool:
         return self.q == other.q and self.r == other.r
 
@@ -290,6 +331,14 @@ class AxialPosition(Position):
 
     def __repr__(self):
         return '<Axial> {}, {}'.format(self.q, self.r)
+
+
+    def __add__(self, other: Position):
+        return AxialPosition(self.q + other.axial.q, self.r + other.axial.r)
+
+
+    def __sub__(self, other: Position):
+        return AxialPosition(self.q - other.axial.q, self.r - other.axial.r)
 
 
     @property
@@ -334,6 +383,31 @@ class OffsetPosition(Position):
         return self.__r
 
 
+    def neighbour(self, direction: Union['OddOffsetDirection', 'EvenOffsetDirection']) -> 'OffsetPosition':
+        return self + direction.value
+
+
+    def get_all_neighbours(self) -> List['OffsetPosition']:
+        if self.q & 1 == 1:
+            return [
+                OffsetPosition(self.q + 0, self.r - 1),  # UPPER
+                OffsetPosition(self.q + 1, self.r + 0),  # RIGHT_UPPER
+                OffsetPosition(self.q + 1, self.r + 1),  # RIGHT_LOWER
+                OffsetPosition(self.q + 0, self.r + 1),  # LOWER
+                OffsetPosition(self.q - 1, self.r + 1),  # LEFT_LOWER
+                OffsetPosition(self.q - 1, self.r + 0),  # LEFT_UPPER
+            ]
+        else:
+            return [
+                OffsetPosition(self.q + 0, self.r - 1),  # UPPER
+                OffsetPosition(self.q + 1, self.r - 1),  # RIGHT_UPPER
+                OffsetPosition(self.q + 1, self.r + 0),  # RIGHT_LOWER
+                OffsetPosition(self.q + 0, self.r + 1),  # LOWER
+                OffsetPosition(self.q - 1, self.r + 0),  # LEFT_LOWER
+                OffsetPosition(self.q - 1, self.r - 1),  # LEFT_UPPER
+            ]
+
+
     def __eq__(self, other: 'OffsetPosition'):
         return self.q == other.offset.q and self.r == other.offset.r
 
@@ -349,6 +423,14 @@ class OffsetPosition(Position):
         return self.q < other.q
 
 
+    def __add__(self, other: Position):
+        return OffsetPosition(self.q + other.offset.q, self.r + other.offset.r)
+
+
+    def __sub__(self, other: Position):
+        return OffsetPosition(self.q - other.offset.q, self.r - other.offset.r)
+
+
     @property
     def int_coord(self):
         p = self.cubic.int_coord.offset
@@ -362,3 +444,10 @@ class OffsetPosition(Position):
     @property
     def string(self):
         return '{} {}'.format(self.q, self.r)
+
+
+    @staticmethod
+    def from_cubic(x, y, z):
+        col = x
+        row = z + (x - (x & 1)) // 2
+        return OffsetPosition(col, row)

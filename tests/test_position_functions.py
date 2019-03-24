@@ -12,7 +12,10 @@ from OrodaelTurrim.Structure.Position import OffsetPosition
                              OffsetPosition(-5, 4), OffsetPosition(-5, 3)]),
     (OffsetPosition(-5, 5), [OffsetPosition(-5, 4), OffsetPosition(-4, 5),
                              OffsetPosition(-4, 6), OffsetPosition(-5, 6),
-                             OffsetPosition(-6, 6), OffsetPosition(-6, 5)])
+                             OffsetPosition(-6, 6), OffsetPosition(-6, 5)]),
+    (OffsetPosition(3, 2), [OffsetPosition(3, 1), OffsetPosition(4, 2),
+                             OffsetPosition(4, 3), OffsetPosition(3, 3),
+                             OffsetPosition(2, 3), OffsetPosition(2, 2)])
 ])
 def test_neighbour_offset(position, result):
     assert position.get_all_neighbours() == result
