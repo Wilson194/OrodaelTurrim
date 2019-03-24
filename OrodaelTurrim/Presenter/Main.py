@@ -88,9 +88,12 @@ class MainWindow:
 
 
     def tile_selected(self, position: Position):
-        text = '     Offset: {}, Cubic: {}, Axial: {}'.format(position.offset.string, position.cubic.string,
-                                                         position.axial.string)
-        self.status_info(text)
+        if position:
+            text = '     Offset: {}, Cubic: {}, Axial: {}'.format(position.offset.string, position.cubic.string,
+                                                                  position.axial.string)
+            self.status_info(text)
+        else:
+            self.status_info('No tile selected')
 
 
     def status_info(self, text: str):

@@ -48,9 +48,13 @@ class RoundControlWidget(QWidget):
         self.__game_engine.simulate_rest_of_player_turn(current_player)
         Connector().functor('redraw_map')()
 
+        Connector().set_variable('redraw_disable', True)
         while not game_history.on_first_player and not Connector().get_variable('game_over'):
             game_history.active_player.act()
             self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
+        Connector().set_variable('redraw_disable', False)
+        Connector().emit('redraw_map')
+        Connector().emit('redraw_ui')
 
 
     @pyqtSlot()

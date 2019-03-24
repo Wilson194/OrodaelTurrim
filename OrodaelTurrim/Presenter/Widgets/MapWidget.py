@@ -295,6 +295,7 @@ class MapWidget(QWidget):
         self.transformation = 0.4
 
         Connector().subscribe('redraw_map', self.redraw_map)
+        Connector().subscribe('display_border', self.display_borders)
 
         self.init_ui()
 
@@ -330,21 +331,27 @@ class MapWidget(QWidget):
         zoom_in_button = self.findChild(QPushButton, 'zoomInButton')  # type: QPushButton
         zoom_out_button = self.findChild(QPushButton, 'zoomOutButton')  # type: QPushButton
         zoom_reset_button = self.findChild(QPushButton, 'zoomResetButton')  # type: QPushButton
+        clear_view_button = self.findChild(QPushButton, 'clearViewButton')  # type: QPushButton
 
         zoom_in_button.clicked.connect(self.zoom_in_slot)
         zoom_out_button.clicked.connect(self.zoom_out_slot)
         zoom_reset_button.clicked.connect(self.zoom_reset_slot)
+        clear_view_button.clicked.connect(self.clear_view_slot)
 
         zoom_out_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_out.png')))
         zoom_in_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_in.png')))
         zoom_reset_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_reset.png')))
-        zoom_out_button.setIconSize(QtCore.QSize(15, 15))
-        zoom_in_button.setIconSize(QtCore.QSize(15, 15))
-        zoom_reset_button.setIconSize(QtCore.QSize(15, 15))
+        clear_view_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'eye_cross.png')))
 
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
         self.view.show()
+
+
+    def clear_border_color(self, color: QColor):
+        for k in list(self.borders):
+            if self.borders[k].color[0] == color:
+                del self.borders[k]
 
 
     @pyqtSlot()
@@ -362,9 +369,9 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def redraw_map(self) -> None:
-        print('Redrawing')
-        self.scene.update()
-        # self.view.update()
+        if not Connector().get_variable('redraw_disable'):
+            print('Redrawing')
+            self.scene.update()
 
 
     @pyqtSlot()
@@ -390,3 +397,23 @@ class MapWidget(QWidget):
             factor = min(view_rect.width() / scene_rect.width(),
                          view_rect.height() / scene_rect.height())
             self.view.scale(factor, factor)
+
+
+    @pyqtSlot()
+    def display_borders(self, border_info: Dict[Position, Border], clear_colors: List[QColor] = None):
+        if clear_colors:
+            if type(clear_colors) is not list:
+                clear_colors = [clear_colors]
+
+            for color in clear_colors:
+                self.clear_border_color(color)
+
+        self.borders.update(border_info)
+        self.redraw_map()
+
+
+    @pyqtSlot()
+    def clear_view_slot(self):
+        Connector().emit('map_position_change', None)
+        self.borders.clear()
+        self.redraw_map()

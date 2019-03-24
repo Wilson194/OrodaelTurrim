@@ -1,4 +1,5 @@
-from typing import List, TYPE_CHECKING, Dict, Set
+from dataclasses import dataclass
+from typing import List, TYPE_CHECKING, Dict, Set, Tuple
 
 from OrodaelTurrim.Business.Interface import Player
 from OrodaelTurrim.Business.Interface.Player import IPlayer
@@ -188,6 +189,7 @@ class GameObject:
         return self.__prototype.description.format(self.__current_hit_points)
 
 
+# TODO: Move to structure
 class SpawnInformation:
     def __init__(self, owner: IPlayer, object_type: GameObjectType, position: Position,
                  attack_filters: List[TileFilter], move_filters: List[TileFilter]):
@@ -198,10 +200,13 @@ class SpawnInformation:
         self.move_filters = move_filters
 
 
+@dataclass(frozen=True)
+class UncertaintyPosition(object):
+    position: Position
+    uncertainty: float
+
+
 class UncertaintySpawn:
-    def __init__(self, position: Position, position_uncertainty: float, game_object_type: GameObjectType,
-                 object_uncertainty: float):
-        self.position = position
-        self.position_uncertainty = position_uncertainty
+    def __init__(self, game_object_type: GameObjectType, positions: List[UncertaintyPosition]):
+        self.positions = positions
         self.game_object_type = game_object_type
-        self.object_uncertainty = object_uncertainty

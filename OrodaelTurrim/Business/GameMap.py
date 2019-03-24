@@ -219,14 +219,14 @@ class GameMap:
 
 
 class BorderTiles(metaclass=Singleton):
-    def __init__(self, game_map: GameMap):
+    def __init__(self, game_map: GameMap = None):
         self.__game_map = game_map
 
         self.__border_tiles = DoubleLinkedList()
         self.__create_linked_list()
 
 
-    def get_position(self, starting_position: Position, shift: int):
+    def get_position(self, starting_position: Position, shift: int) -> Position:
         self.__border_tiles.pointer = self.__border_tiles.head
 
         while self.__border_tiles.value != starting_position:
@@ -239,6 +239,20 @@ class BorderTiles(metaclass=Singleton):
                 self.__border_tiles.next()
 
         return self.__border_tiles.value
+
+
+    def get_position_list(self, starting_position: Position, length: int) -> List[Position]:
+        self.__border_tiles.pointer = self.__border_tiles.head
+
+        while self.__border_tiles.value != starting_position:
+            self.__border_tiles.next()
+
+        result_list = []
+        for i in range(length):
+            result_list.append(self.__border_tiles.value)
+            self.__border_tiles.next()
+
+        return result_list
 
 
     def __create_linked_list(self):
