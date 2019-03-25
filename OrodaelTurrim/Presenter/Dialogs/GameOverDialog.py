@@ -13,7 +13,6 @@ class GameOverDialog(QDialog):
         self.init_ui()
 
         self.findChild(QPushButton, 'findReasonButton').clicked.connect(self.find_reason_slot)
-        self.findChild(QPushButton, 'tryAgainButton').clicked.connect(self.try_again_slot)
         self.findChild(QPushButton, 'letHimDieButton').clicked.connect(self.let_him_die_slot)
 
 
@@ -25,11 +24,6 @@ class GameOverDialog(QDialog):
     @pyqtSlot()
     def find_reason_slot(self):
         self.done(GameOverStates.FIND_REASON.value)
-
-
-    @pyqtSlot()
-    def try_again_slot(self):
-        self.done(GameOverStates.TRY_AGAIN.value)
 
 
     @pyqtSlot()

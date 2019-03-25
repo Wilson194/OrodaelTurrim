@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEventLoop
 from PyQt5.QtGui import QIcon, QWindow
 from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMainWindow
 

@@ -1,4 +1,7 @@
-from PyQt5 import uic
+import os
+import sys
+
+from PyQt5 import uic, QtGui
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
@@ -79,8 +82,4 @@ class ControlWidget(QWidget):
             exit(0)
 
         if result == GameOverStates.FIND_REASON.value:
-            Connector().set_variable('game_over', True)
-
-        if result == GameOverStates.TRY_AGAIN.value:
-            self.__game_engine.restart()
-
+            Connector().set_variable('find_reason', True)

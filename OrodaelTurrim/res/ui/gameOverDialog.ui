@@ -22,31 +22,28 @@
    <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
-    <widget class="QPushButton" name="findReasonButton">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>26</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Find reason</string>
+      <string>Game over</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QPushButton" name="tryAgainButton">
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Try again</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
     <widget class="QPushButton" name="letHimDieButton">
      <property name="font">
       <font>
@@ -58,7 +55,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3">
+   <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
      <property name="font">
       <font>
@@ -77,24 +74,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="findReasonButton">
      <property name="font">
       <font>
-       <pointsize>26</pointsize>
+       <pointsize>11</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Game over</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <string>Find reason</string>
      </property>
     </widget>
    </item>

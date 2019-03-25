@@ -57,6 +57,13 @@ class SpawnUncertainty:
         self.__attackers.append(attacker)
 
 
+    def clear(self):
+        self.__spawn_uncertainty = {}
+        self.__best_scout_uncertainty = {}
+        self.__last_generated_turn = -1
+        self.__scout_uncertainties = {}
+
+
     def __compute_uncertainty(self, _round: int):
         current_turn = self.__game_engine.get_game_history().current_turn
 
@@ -66,7 +73,7 @@ class SpawnUncertainty:
             self.__spawn_uncertainty[_round] = []
             for spawn in spawns:
                 scout_success = self.__scout_uncertainties[current_turn]
-                scout_success_unit = self.__random.uniform(scout_success - 0.10, scout_success + 0.10)
+                scout_success_unit = self.__random.uniform(max(scout_success - 0.10, 0), min(scout_success + 0.10, 1))
                 mistake_range = scout_success_rate(scout_success_unit)
                 deviation = self.__random.randint(0, mistake_range)
 

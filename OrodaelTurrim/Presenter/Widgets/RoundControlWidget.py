@@ -53,6 +53,7 @@ class RoundControlWidget(QWidget):
             game_history.active_player.act()
             self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
         Connector().set_variable('redraw_disable', False)
+
         Connector().emit('redraw_map')
         Connector().emit('redraw_ui')
 
@@ -112,6 +113,7 @@ class RoundControlWidget(QWidget):
                 rounds -= 1
 
         Connector().emit('redraw_map')
+        Connector().emit('redraw_ui')
 
 
     @pyqtSlot()

@@ -41,6 +41,7 @@ def main(gui, rounds):
 
         Connector().emit('redraw_ui')
         main_window.execute()
+
     else:
         current_round = 0
         game_history = game_engine.get_game_history()

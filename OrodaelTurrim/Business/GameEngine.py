@@ -68,6 +68,10 @@ class GameEngine:
 
         self.__visibility_map.clear()
 
+        self.__spawn_uncertainty.clear()
+
+        print(self.__player_resources)
+
         Connector().emit('redraw_ui')
         Connector().emit('redraw_map')
 
@@ -193,8 +197,9 @@ class GameEngine:
 
 
     def execute_action(self, action: GameAction) -> None:
+        if self.__game_history.in_preset:
+            self.__game_history.add_action(action)
         action.execute()
-        self.__game_history.add_action(action)
 
 
     def execute_terrain_turn(self, game_object: GameObject) -> None:
@@ -248,7 +253,7 @@ class GameEngine:
 
     def damage(self, game_object: GameObject, damage: float):
         game_object.take_damage(damage)
-        if game_object.is_dead() and self.__game_history.in_preset:
+        if game_object.is_dead() and self.get_game_history().in_preset:
             self.execute_action(DieAction(self, game_object))
 
 
@@ -302,7 +307,7 @@ class GameEngine:
                 if game_object == _game_object:
                     del self.__defender_bases[player]
 
-                    if self.__game_history.in_preset:
+                    if self.__game_history.in_preset and not Connector().get_variable('game_over'):
                         Connector().set_variable('game_over', True)
                         Connector().emit('game_over')
                     break
