@@ -133,7 +133,6 @@ class AIPlayer(IAttacker):
 
 
     def __create_spawn_info(self, resources: int) -> SpawnInformation:
-
         attackers = [attacker for attacker in self.__attackers if attacker.price <= resources]
         game_object = self.spawn_random.choice(attackers)
 

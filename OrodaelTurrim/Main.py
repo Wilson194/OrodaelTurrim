@@ -12,7 +12,8 @@ import click
 @click.command()
 @click.option('--gui/--nogui', '/gui;/nogui', 'gui', default=True, help='Disable or enable gui')
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
-def main(gui, rounds):
+@click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
+def main(gui, rounds, log_output):
     # Generate the map
     game_map = MapGenerator(11, 11).generate()
 
@@ -53,6 +54,11 @@ def main(gui, rounds):
                 current_round += 1
 
         print('User survive {} rounds'.format(current_round))
+
+    if log_output:
+        text = game_engine.get_game_history()
+        with open(log_output, 'w') as f:
+            f.write(str(text))
 
 
 if __name__ == '__main__':

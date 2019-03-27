@@ -1,3 +1,4 @@
+import copy
 import random
 from typing import List, TYPE_CHECKING, Dict, Union, Set
 from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
@@ -23,6 +24,8 @@ class GameMap:
 
         self.__vertical_radius = (height - 1) // 2
         self.__horizontal_radius = (width - 1) // 2
+
+        self.__visible_tiles_cache = {}
 
         self.__tiles = []  # type: List[List[Union[Terrain,None]]]
         for i in range(height):
@@ -139,6 +142,10 @@ class GameMap:
     def get_visible_tiles(self, position: Position, sight: int) -> Set[Position]:
         if not self.position_on_map(position):
             return set()
+
+        if position in self.__visible_tiles_cache and sight in self.__visible_tiles_cache[position]:
+            return self.__visible_tiles_cache[position][sight]
+
         visited = set()
         visible = set()
         pool = set()
@@ -161,6 +168,11 @@ class GameMap:
             for tile in current.get_all_neighbours():
                 if self.position_on_map(tile) and tile not in visited:
                     pool.add(tile)
+
+        if position not in self.__visible_tiles_cache:
+            self.__visible_tiles_cache[position] = {}
+        if sight not in self.__visible_tiles_cache[position]:
+            self.__visible_tiles_cache[position][sight] = copy.deepcopy(visible)
 
         return visible
 
