@@ -40,6 +40,12 @@ class HexDirection(Enum):
     LEFT_UPPER = CubicPosition(-1, 1, 0)
 
 
+    @staticmethod
+    def direction_list():
+        return [HexDirection.UPPER, HexDirection.RIGHT_UPPER, HexDirection.RIGHT_LOWER, HexDirection.LOWER,
+                HexDirection.LEFT_LOWER, HexDirection.LEFT_UPPER]
+
+
 class AxialDirection(Enum):
     UPPER = AxialPosition(0, -1)
     RIGHT_UPPER = AxialPosition(+1, -1)

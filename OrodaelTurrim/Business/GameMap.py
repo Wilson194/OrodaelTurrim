@@ -144,7 +144,7 @@ class GameMap:
             return set()
 
         if position in self.__visible_tiles_cache and sight in self.__visible_tiles_cache[position]:
-            return self.__visible_tiles_cache[position][sight]
+            return copy.deepcopy(self.__visible_tiles_cache[position][sight])
 
         visited = set()
         visible = set()

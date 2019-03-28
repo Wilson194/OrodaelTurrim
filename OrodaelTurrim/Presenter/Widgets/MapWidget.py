@@ -359,7 +359,7 @@ class MapWidget(QWidget):
         position = Position.from_pixel(event.scenePos(), transformation).offset
 
         if self.__game_engine.get_game_map().position_on_map(position):
-            self.clear_border_color(QColor(255, 0, 0))
+            self.borders.clear()
 
             self.borders[position] = Border.full(3, QColor(255, 0, 0))
             Connector().emit('map_position_change', position)

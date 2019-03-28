@@ -108,7 +108,7 @@ class Position(ABC):
 
 
     def distance_from(self, position: 'Position') -> int:
-        return (self - position).length()
+        return (self.cubic - position.cubic).length()
 
 
     def distance_to_nearest(self, positions: List['Position']) -> int:

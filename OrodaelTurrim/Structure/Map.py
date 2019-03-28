@@ -30,7 +30,7 @@ class Border:
 
     @property
     def order(self):
-        return [self.right_lower, self.lower, self.left_lower, self.left_upper, self.upper, self.right_upper]
+        return [self.right_upper, self.right_lower, self.lower, self.left_lower, self.left_upper, self.upper]
 
 
     @property
@@ -44,6 +44,13 @@ class Border:
     @color.setter
     def color(self, value: [List[QColor], QColor]):
         self.__color = value
+
+
+    def __str__(self):
+        return '<BORDER> U: {}, RU: {}, RL: {}, L: {}, LL: {}, LU: {}'.format(self.upper, self.right_upper,
+                                                                              self.right_lower,
+                                                                              self.lower, self.left_lower,
+                                                                              self.left_upper)
 
 
 class VisibilityMap:

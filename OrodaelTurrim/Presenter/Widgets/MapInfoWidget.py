@@ -1,12 +1,15 @@
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot, QEvent, Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QResizeEvent, QColor
-from PyQt5.QtWidgets import QWidget, QGraphicsSceneMouseEvent, QLabel, QTextEdit
+from PyQt5.QtGui import QPixmap, QResizeEvent, QColor, QIcon
+from PyQt5.QtWidgets import QWidget, QGraphicsSceneMouseEvent, QLabel, QTextEdit, QPushButton
 
 from OrodaelTurrim import UI_ROOT, IMAGES_ROOT, ICONS_ROOT
+from OrodaelTurrim.Business.Factory import BorderFactory
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
+from OrodaelTurrim.Structure.Enums import AttributeType
+from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position
 
 
@@ -42,6 +45,22 @@ class MapInfoWidget(QWidget):
         offset_icon = self.findChild(QLabel, 'offsetIconLabel')  # type: QLabel
         cubic_icon = self.findChild(QLabel, 'cubicIconLabel')  # type: QLabel
         axial_icon = self.findChild(QLabel, 'axialIconLabel')  # type: QLabel
+
+        visibility_button = self.findChild(QPushButton, 'visibilityButton')  # type: QPushButton
+        attack_button = self.findChild(QPushButton, 'attackButton')  # type: QPushButton
+        move_button = self.findChild(QPushButton, 'moveButton')  # type: QPushButton
+
+        visibility_button.setIcon(QIcon(str(ICONS_ROOT / 'eye.png')))
+        visibility_button.clicked.connect(self.show_visibility_slot)
+        visibility_button.setVisible(False)
+
+        attack_button.setIcon(QIcon(str(ICONS_ROOT / 'sword.png')))
+        attack_button.clicked.connect(self.show_attack_range_slot)
+        attack_button.setVisible(False)
+
+        move_button.setIcon(QIcon(str(ICONS_ROOT / 'foot.png')))
+        move_button.clicked.connect(self.show_accessible_tiles_slot)
+        move_button.setVisible(False)
 
         offset_icon.setScaledContents(True)
         offset_icon.setVisible(False)
@@ -102,10 +121,17 @@ class MapInfoWidget(QWidget):
             self.findChild(QTextEdit, 'characterInfoWidget').setText(
                 self.__game_engine.get_game_object(position).description)
 
+            self.findChild(QPushButton, 'visibilityButton').setVisible(True)
+            self.findChild(QPushButton, 'attackButton').setVisible(True)
+            self.findChild(QPushButton, 'moveButton').setVisible(True)
+
         else:
             self.findChild(QLabel, 'characterLabel').setVisible(False)
             self.findChild(QLabel, 'characterImageLabel').setVisible(False)
             self.findChild(QTextEdit, 'characterInfoWidget').setText('')
+            self.findChild(QPushButton, 'visibilityButton').setVisible(False)
+            self.findChild(QPushButton, 'attackButton').setVisible(False)
+            self.findChild(QPushButton, 'moveButton').setVisible(False)
 
 
     def draw_character_effects(self):
@@ -158,3 +184,33 @@ class MapInfoWidget(QWidget):
     def map_tile_select_slot(self, position: Position) -> None:
         self.__selected_tile = position
         self.redraw_ui_slot()
+
+
+    @pyqtSlot()
+    def show_visibility_slot(self):
+        tiles = self.__game_engine.get_game_object(self.__selected_tile).visible_tiles
+
+        border_dict = BorderFactory.create(3, QColor(0, 0, 255), tiles)
+
+        Connector().emit('display_border', border_dict, [QColor(0, 0, 255)])
+
+
+    @pyqtSlot()
+    def show_attack_range_slot(self):
+        attack_range = self.__game_engine.get_game_object(self.__selected_tile).get_attribute(
+            AttributeType.ATTACK_RANGE)
+
+        tiles = self.__game_engine.get_game_map().get_visible_tiles(self.__selected_tile, attack_range)
+
+        border_dict = BorderFactory.create(3, QColor(0, 0, 255), tiles)
+
+        Connector().emit('display_border', border_dict, [QColor(0, 0, 255)])
+
+
+    @pyqtSlot()
+    def show_accessible_tiles_slot(self):
+        tiles = self.__game_engine.get_game_object(self.__selected_tile).accessible_tiles
+
+        border_dict = BorderFactory.create(3, QColor(0, 0, 255), tiles)
+
+        Connector().emit('display_border', border_dict, [QColor(0, 0, 255)])

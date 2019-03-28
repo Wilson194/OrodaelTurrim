@@ -70,8 +70,6 @@ class GameEngine:
 
         self.__spawn_uncertainty.clear()
 
-        print(self.__player_resources)
-
         Connector().emit('redraw_ui')
         Connector().emit('redraw_map')
 
@@ -149,9 +147,10 @@ class GameEngine:
     def handle_self_vision_gain(self, game_object: GameObject, old_vision: Set[Position],
                                 new_vision: Set[Position]) -> None:
 
-        new_vision.difference_update(old_vision)
+        gain_vision = copy.deepcopy(new_vision)
+        gain_vision.difference_update(old_vision)
 
-        for position in new_vision:
+        for position in gain_vision:
             if self.is_position_occupied(position) and game_object.role.is_enemy(
                     self.__game_object_positions[position].role):
                 game_object.on_enemy_appear(position)

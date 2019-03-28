@@ -1,5 +1,6 @@
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
+from OrodaelTurrim import DEBUG
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
@@ -35,6 +36,7 @@ def main(gui, rounds, log_output):
     player2.initialize()
 
     game_engine.start(500)
+
 
     if gui:
         # Inicialize main widget

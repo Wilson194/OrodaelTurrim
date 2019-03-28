@@ -32,7 +32,7 @@ class GameObject:
         self.__current_hit_points = self.__prototype.get_attribute_value(AttributeType.HIT_POINTS)
 
         self.__visible_tiles = set()  # type: Set[Position]
-        self.__accessible_tiles = []  # type: List[Position]
+        self.__accessible_tiles = set()  # type: Set[Position]
 
         self.__position = None
         self.position = position
@@ -60,8 +60,9 @@ class GameObject:
         self.__visible_tiles = self.__game_engine.get_object_visible_tiles(self.position,
                                                                            int(self.get_attribute(AttributeType.SIGHT)))
 
-        self.__accessible_tiles = self.__game_engine.get_accessible_tiles(self.position, int(
-            self.get_attribute(AttributeType.ACTIONS))).keys()
+        self.__accessible_tiles = set(self.__game_engine.get_accessible_tiles(self.position, int(
+            self.get_attribute(AttributeType.ACTIONS))).keys())
+
 
 
     @property
@@ -177,6 +178,11 @@ class GameObject:
     @property
     def visible_tiles(self) -> Set[Position]:
         return self.__visible_tiles
+
+
+    @property
+    def accessible_tiles(self) -> Set[Position]:
+        return self.__accessible_tiles
 
 
     @property
