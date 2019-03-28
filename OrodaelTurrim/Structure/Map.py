@@ -78,7 +78,10 @@ class VisibilityMap:
                 continue
 
             watcher = player_map[position]
-            watcher.remove(game_object)
+            try:
+                watcher.remove(game_object)
+            except KeyError:
+                pass
 
             if len(watcher) == 0:
                 player_map.pop(position)
@@ -102,3 +105,12 @@ class VisibilityMap:
     def clear(self):
         for player in self.__visibility_map.keys():
             self.__visibility_map[player] = {}
+
+
+    def text_format(self):
+        for player in self.__visibility_map.keys():
+            print('** {} **'.format(player.name))
+            for position in self.__visibility_map[player].keys():
+                print('    - {}'.format(position))
+                for game_object in self.__visibility_map[player][position]:
+                    print('        - {} at {}'.format(game_object.object_type, game_object.position))

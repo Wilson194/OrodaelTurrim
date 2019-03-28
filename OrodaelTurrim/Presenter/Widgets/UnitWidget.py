@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Presenter.Dialogs.FilterDialog import FilterDialog
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
@@ -47,6 +48,7 @@ class UnitWidget(QWidget):
         button.setDisabled(True)
 
         self.findChild(QPushButton, 'placeButton').clicked.connect(self.place_unit_slot)
+        self.findChild(QPushButton, 'filtersButton').clicked.connect(self.edit_filters_slot)
 
 
     @pyqtSlot()
@@ -115,3 +117,9 @@ class UnitWidget(QWidget):
     @pyqtSlot()
     def game_over_slot(self):
         self.redraw_ui()
+
+
+    @pyqtSlot()
+    def edit_filters_slot(self):
+        result = FilterDialog.execute_(self.__object_type)
+        print(result)

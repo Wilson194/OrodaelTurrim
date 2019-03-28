@@ -28,7 +28,7 @@ def main(gui, rounds, log_output):
 
     # Register defender
     defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(defender, PlayerResources(20, 10), [])
+    game_engine.register_player(defender, PlayerResources(100, 10), [])
 
     # Register attacker
     player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
@@ -36,7 +36,6 @@ def main(gui, rounds, log_output):
     player2.initialize()
 
     game_engine.start(500)
-
 
     if gui:
         # Inicialize main widget
