@@ -1,7 +1,8 @@
 import copy
+import time
 from typing import List, Dict, Set
 
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QRunnable, pyqtSlot
 from antlr4 import *
 
 from OrodaelTurrim.Business.Factory import EffectFactory
@@ -532,3 +533,17 @@ class GameEngine:
 
     def spawn_information(self) -> List[List[UncertaintySpawn]]:
         return self.__spawn_uncertainty.spawn_information
+
+
+    def run_game_rounds(self, rounds: int, display: bool) -> None:
+        game_history = self.get_game_history()
+        while rounds > 0 and not Connector().get_variable('game_over'):
+            time.sleep(0)
+            game_history.active_player.act()
+            self.simulate_rest_of_player_turn(game_history.active_player)
+
+            if display and game_history.on_first_player:
+                Connector().emit('redraw_map')
+
+            if game_history.on_first_player:
+                rounds -= 1

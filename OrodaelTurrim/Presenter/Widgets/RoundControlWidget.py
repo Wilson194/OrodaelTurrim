@@ -7,54 +7,9 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox, Q
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Business.Thread import ThreadWorker
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Dialogs.LoadingDialog import LoadingDialog
-
-
-class WorkerSignals(QObject):
-    finished = pyqtSignal()
-
-
-class Worker(QRunnable):
-    '''
-    Worker thread
-
-    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
-
-    :param callback: The function callback to run on this worker thread. Supplied args and
-                     kwargs will be passed through to the runner.
-    :type callback: function
-    :param args: Arguments to pass to the callback function
-    :param kwargs: Keywords to pass to the callback function
-
-    '''
-
-
-    def __init__(self, game_engine, rounds):
-        super(Worker, self).__init__()
-        self.game_engine = game_engine
-        self.rounds = rounds
-        self.signals = WorkerSignals()
-
-
-    @pyqtSlot()
-    def run(self):
-        '''
-        Initialise the runner function with passed args, kwargs.
-        '''
-        print('In Worker:', threading.get_ident())
-        game_history = self.game_engine.get_game_history()
-        while self.rounds > 0 and not Connector().get_variable('game_over'):
-            game_history.active_player.act()
-            self.game_engine.simulate_rest_of_player_turn(game_history.active_player)
-
-            # if display:
-            #     Connector().emit('redraw_map')
-
-            if game_history.on_first_player:
-                self.rounds -= 1
-
-        self.signals.finished.emit()
 
 
 class RoundControlWidget(QWidget):
@@ -151,24 +106,9 @@ class RoundControlWidget(QWidget):
         check_box = self.findChild(QCheckBox, 'displayProcessCheck')  # type: QCheckBox
         display = check_box.isChecked()
 
-        worker = Worker(self.__game_engine, rounds)
+        worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds, display)
+        worker.signals.redraw_signal.connect(self.redraw)
         self.threadpool.start(worker)
-
-        print('Before dialog:', threading.get_ident())
-        LoadingDialog.execute_(worker.signals)
-        # game_history = self.__game_engine.get_game_history()
-        # while rounds > 0 and not Connector().get_variable('game_over'):
-        #     game_history.active_player.act()
-        #     self.__game_engine.simulate_rest_of_player_turn(game_history.active_player)
-        #
-        #     if display:
-        #         Connector().emit('redraw_map')
-        #
-        #     if game_history.on_first_player:
-        #         rounds -= 1
-
-        Connector().emit('redraw_map')
-        Connector().emit('redraw_ui')
 
 
     @pyqtSlot()

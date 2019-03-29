@@ -5,9 +5,11 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from OrodaelTurrim.Structure.Utils import QtSingleton
 
 from OrodaelTurrim.Structure.Position import Position
+import threading
 
 
 class Connector(QObject, metaclass=QtSingleton):
+    _lock = threading.Lock()
     redraw_ui = pyqtSignal()
     redraw_map = pyqtSignal()
     display_border = pyqtSignal(dict, list)
@@ -16,6 +18,9 @@ class Connector(QObject, metaclass=QtSingleton):
     history_action = pyqtSignal()
     status_message = pyqtSignal(str)
     update_log = pyqtSignal()
+
+    game_thread_start = pyqtSignal()
+    game_thread_finished = pyqtSignal()
 
 
     def __init__(self, parent=None, **kwargs):
@@ -42,11 +47,13 @@ class Connector(QObject, metaclass=QtSingleton):
 
 
     def set_variable(self, name: str, value: Any) -> None:
-        self._variables[name] = value
+        with self._lock:
+            self._variables[name] = value
 
 
     def get_variable(self, name: str) -> Any:
-        return self._variables.get(name, None)
+        with self._lock:
+            return self._variables.get(name, None)
 
 
 class Caller:

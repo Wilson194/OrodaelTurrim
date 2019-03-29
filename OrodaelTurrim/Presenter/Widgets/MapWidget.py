@@ -117,8 +117,6 @@ class MapTileGraphicsItem(GraphicItem):
         """
         super().__init__(parent, game_engine, position, transformation)
 
-
-
         # self.setAcceptHoverEvents(True)
 
 
@@ -201,8 +199,6 @@ class ObjectGraphicsItem(GraphicItem):
         """
 
         super().__init__(parent, game_engine, position, transformation)
-
-
 
 
     def transformation_change_slot(self, transformation: float):
@@ -296,6 +292,7 @@ class MapWidget(QWidget):
 
         Connector().subscribe('redraw_map', self.redraw_map)
         Connector().subscribe('display_border', self.display_borders)
+        Connector().subscribe('game_thread_finished', self.redraw_map)
 
         self.init_ui()
 

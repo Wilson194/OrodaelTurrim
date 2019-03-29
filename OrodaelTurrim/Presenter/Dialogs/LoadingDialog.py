@@ -7,17 +7,17 @@ from OrodaelTurrim.Presenter.Dialogs.GameOverDialog import GameOverDialog
 
 class LoadingDialog(QDialog):
 
-    def __init__(self, signals):
+    def __init__(self):
         super().__init__()
 
-        print('---->', signals.finished)
-        signals.finished.connect(self.accept)
-        Connector().subscribe('game_over', self.accept)
+        # print('---->', signals.finished)
+        # signals.finished.connect(self.accept)
+        # Connector().subscribe('game_over', self.accept)
 
 
     @staticmethod
-    def execute_(signals):
-        dialog = LoadingDialog(signals)
+    def execute_():
+        dialog = LoadingDialog()
         result = dialog.exec_()
 
         return result
