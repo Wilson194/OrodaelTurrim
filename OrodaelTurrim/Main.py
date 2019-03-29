@@ -1,3 +1,5 @@
+import threading
+
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
 from OrodaelTurrim import DEBUG
@@ -15,6 +17,7 @@ import click
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
 @click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
 def main(gui, rounds, log_output):
+    print(threading.get_ident())
     # Generate the map
     game_map = MapGenerator(11, 11).generate()
 

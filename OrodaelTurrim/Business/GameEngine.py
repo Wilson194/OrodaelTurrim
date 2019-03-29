@@ -70,8 +70,8 @@ class GameEngine:
 
         self.__spawn_uncertainty.clear()
 
-        Connector().emit('redraw_ui')
-        Connector().emit('redraw_map')
+        # Connector().emit('redraw_ui')
+        # Connector().emit('redraw_map')
 
 
     def register_player(self, player: IPlayer, resources: PlayerResources,
@@ -525,8 +525,9 @@ class GameEngine:
 
 
     def unit_spawn_signal(self):
-        Connector().emit('redraw_map')
-        Connector().emit('redraw_ui')
+        pass
+        # Connector().emit('redraw_map')
+        # Connector().emit('redraw_ui')
 
 
     def spawn_information(self) -> List[List[UncertaintySpawn]]:

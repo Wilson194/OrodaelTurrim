@@ -40,7 +40,7 @@ class FilterDialog(QDialog):
 
         self.__list = self.findChild(QListWidget, 'listWidget')  # type: QListWidget
 
-        add_button = self.findChild(QPushButton, 'addButton')  # type: QPushButton
+        add_button: QPushButton = self.findChild(QPushButton, 'addButton')
         remove_button = self.findChild(QPushButton, 'removeButton')  # type: QPushButton
         up_button = self.findChild(QPushButton, 'upButton')  # type: QPushButton
         down_button = self.findChild(QPushButton, 'downButton')  # type: QPushButton

@@ -6,6 +6,11 @@ from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Structure.Enums import GameOverStates
 
 
+def printer(a):
+    print('Hover')
+
+
+
 class GameOverDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -14,6 +19,9 @@ class GameOverDialog(QDialog):
 
         self.findChild(QPushButton, 'findReasonButton').clicked.connect(self.find_reason_slot)
         self.findChild(QPushButton, 'letHimDieButton').clicked.connect(self.let_him_die_slot)
+        button = self.findChild(QPushButton, 'letHimDieButton')
+        button.enterEvent = printer
+        button.leaveEvent = printer
 
 
     def init_ui(self):
@@ -29,6 +37,10 @@ class GameOverDialog(QDialog):
     @pyqtSlot()
     def let_him_die_slot(self):
         self.done(GameOverStates.LET_HIM_DIE.value)
+
+
+    def hover_slot(self):
+        print('hoooooooveeeerrrrr')
 
 
     @staticmethod

@@ -223,8 +223,8 @@ class GameHistory:
                 return
             self.move_to_previous()
         self.undo_player_actions()
-        Connector().emit('redraw_ui')
-        Connector().emit('redraw_map')
+        # Connector().emit('redraw_ui')
+        # Connector().emit('redraw_map')
 
 
     def move_turn_forth(self) -> None:
@@ -237,8 +237,8 @@ class GameHistory:
 
         self.move_to_next()
 
-        Connector().emit('redraw_ui')
-        Connector().emit('redraw_map')
+        # Connector().emit('redraw_ui')
+        # Connector().emit('redraw_map')
 
 
     def move_to_present(self) -> None:

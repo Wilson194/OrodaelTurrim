@@ -51,7 +51,7 @@ class UnitWidget(QWidget):
         self.findChild(QPushButton, 'filtersButton').clicked.connect(self.edit_filters_slot)
 
 
-    @pyqtSlot()
+    @pyqtSlot(Position)
     def map_tile_select_slot(self, position: Position):
         self.__selected_position = position
         self.redraw_ui()

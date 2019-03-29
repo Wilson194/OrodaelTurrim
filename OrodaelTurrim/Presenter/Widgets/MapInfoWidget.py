@@ -181,6 +181,7 @@ class MapInfoWidget(QWidget):
         self.draw_character_effects()
 
 
+    @pyqtSlot(Position)
     def map_tile_select_slot(self, position: Position) -> None:
         self.__selected_tile = position
         self.redraw_ui_slot()

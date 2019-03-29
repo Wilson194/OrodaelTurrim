@@ -117,7 +117,7 @@ class MapTileGraphicsItem(GraphicItem):
         """
         super().__init__(parent, game_engine, position, transformation)
 
-        Connector().subscribe('zoom', self.transformation_change_slot)
+
 
         # self.setAcceptHoverEvents(True)
 
@@ -202,7 +202,7 @@ class ObjectGraphicsItem(GraphicItem):
 
         super().__init__(parent, game_engine, position, transformation)
 
-        Connector().subscribe('zoom', self.transformation_change_slot)
+
 
 
     def transformation_change_slot(self, transformation: float):
@@ -399,7 +399,7 @@ class MapWidget(QWidget):
             self.view.scale(factor, factor)
 
 
-    @pyqtSlot()
+    @pyqtSlot(dict, list)
     def display_borders(self, border_info: Dict[Position, Border], clear_colors: List[QColor] = None):
         if clear_colors:
             if type(clear_colors) is not list:

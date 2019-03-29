@@ -1,24 +1,40 @@
+import sys
 from typing import Callable, Any
 
-from OrodaelTurrim.Structure.Utils import Singleton
+from PyQt5.QtCore import pyqtSignal, QObject
+from OrodaelTurrim.Structure.Utils import QtSingleton
+
+from OrodaelTurrim.Structure.Position import Position
 
 
-class Connector(metaclass=Singleton):
-    def __init__(self):
-        self._database = {}
+class Connector(QObject, metaclass=QtSingleton):
+    redraw_ui = pyqtSignal()
+    redraw_map = pyqtSignal()
+    display_border = pyqtSignal(dict, list)
+    game_over = pyqtSignal()
+    map_position_change = pyqtSignal(Position)
+    history_action = pyqtSignal()
+    status_message = pyqtSignal(str)
+    update_log = pyqtSignal()
+
+
+    def __init__(self, parent=None, **kwargs):
+        super().__init__(parent, **kwargs)
         self._variables = {}
 
 
     def subscribe(self, name: str, target: Callable):
-        if name in self._database:
-            self._database[name].append(target)
-        else:
-            self._database[name] = [target]
+        try:
+            getattr(self, name).connect(target)
+        except AttributeError:
+            sys.stderr.write('Signal {} not defined, signal not subscribed!\n'.format(name))
 
 
     def emit(self, name: str, *args, **kwargs) -> None:
-        for target in self._database.get(name, []):
-            target(*args, **kwargs)
+        try:
+            getattr(self, name).emit(*args, **kwargs)
+        except AttributeError:
+            sys.stderr.write('Signal {} not defined, signal not emitted!\n'.format(name))
 
 
     def functor(self, name) -> "Caller":

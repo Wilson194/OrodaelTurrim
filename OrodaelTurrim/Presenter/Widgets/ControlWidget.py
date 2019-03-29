@@ -1,5 +1,6 @@
 import os
 import sys
+import threading
 
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import pyqtSlot
@@ -76,6 +77,7 @@ class ControlWidget(QWidget):
 
     @pyqtSlot()
     def game_over_slot(self):
+        print(threading.get_ident())
         result = GameOverDialog.execute_()
 
         if result == GameOverStates.LET_HIM_DIE.value:
