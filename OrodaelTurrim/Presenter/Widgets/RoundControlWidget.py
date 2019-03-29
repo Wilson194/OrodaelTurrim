@@ -1,3 +1,4 @@
+import multiprocessing
 import threading
 
 from PyQt5 import uic
@@ -68,6 +69,9 @@ class RoundControlWidget(QWidget):
         if self.__game_engine.get_game_history().on_first_player:
             self.__game_engine.get_game_history().active_player.act()
 
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
+
 
     @pyqtSlot()
     def redraw_ui(self):
@@ -106,9 +110,18 @@ class RoundControlWidget(QWidget):
         check_box = self.findChild(QCheckBox, 'displayProcessCheck')  # type: QCheckBox
         display = check_box.isChecked()
 
-        worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds, display)
-        worker.signals.redraw_signal.connect(self.redraw)
-        self.threadpool.start(worker)
+        if display:
+            for i in range(rounds):
+                worker = ThreadWorker(self.__game_engine, 'run_game_rounds', 1, display)
+                self.threadpool.start(worker)
+        else:
+            worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds, display)
+            self.threadpool.start(worker)
+
+            LoadingDialog.execute_()
+
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
 
 
     @pyqtSlot()
@@ -117,6 +130,9 @@ class RoundControlWidget(QWidget):
 
         self.findChild(QPushButton, 'nextTurnButton').setDisabled(False)
         self.findChild(QPushButton, 'lastTurnButton').setDisabled(False)
+
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
 
 
     @pyqtSlot()
@@ -127,10 +143,16 @@ class RoundControlWidget(QWidget):
             self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
             self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
 
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
+
 
     @pyqtSlot()
     def last_turn_slot(self):
         self.__game_engine.get_game_history().move_to_present()
+
+        Connector().emit('redraw_ui')
+        Connector().emit('redraw_map')
 
 
     @pyqtSlot()

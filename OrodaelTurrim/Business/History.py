@@ -31,7 +31,7 @@ class GameHistory:
         self.__turns.append([])
         self.start_next_player_turn()
 
-        Connector().functor('redraw_ui')()
+        # Connector().functor('redraw_ui')()
 
 
     def start_next_player_turn(self) -> None:
@@ -40,7 +40,7 @@ class GameHistory:
 
         self.__turns[self.__current_turn].append([])
 
-        Connector().functor('redraw_ui')()
+        # Connector().functor('redraw_ui')()
 
 
     def delete_player_turn(self) -> None:
@@ -94,7 +94,7 @@ class GameHistory:
 
         self.__current_turn += 1
 
-        Connector().functor('redraw_ui')()
+        # Connector().functor('redraw_ui')()
 
 
     def move_to_previous(self) -> None:
@@ -113,7 +113,7 @@ class GameHistory:
 
         self.__current_action = self.last_action_index
 
-        Connector().functor('redraw_ui')()
+        # Connector().functor('redraw_ui')()
 
 
     @property
@@ -177,8 +177,6 @@ class GameHistory:
         else:
             self.start_next_player_turn()
 
-        Connector().emit('redraw_ui')
-
 
     def undo_player_turn(self) -> None:
         if not self.in_preset:
@@ -197,7 +195,6 @@ class GameHistory:
         self.undo_player_actions()
         self.clear_player_turn()
 
-        Connector().emit('redraw_ui')
 
 
     def move_action_back(self) -> None:
@@ -206,7 +203,6 @@ class GameHistory:
 
         self.move_to_previous()
 
-        Connector().emit('redraw_ui')
 
 
     def move_action_forth(self) -> None:
@@ -214,7 +210,6 @@ class GameHistory:
         if not self.before_first_action:
             self.current_action.execute()
 
-        Connector().emit('redraw_ui')
 
 
     def move_turn_back(self) -> None:
@@ -223,8 +218,6 @@ class GameHistory:
                 return
             self.move_to_previous()
         self.undo_player_actions()
-        # Connector().emit('redraw_ui')
-        # Connector().emit('redraw_map')
 
 
     def move_turn_forth(self) -> None:
@@ -237,8 +230,6 @@ class GameHistory:
 
         self.move_to_next()
 
-        # Connector().emit('redraw_ui')
-        # Connector().emit('redraw_map')
 
 
     def move_to_present(self) -> None:

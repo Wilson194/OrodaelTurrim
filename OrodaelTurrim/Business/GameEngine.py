@@ -3,6 +3,7 @@ import time
 from typing import List, Dict, Set
 
 from PyQt5.QtCore import pyqtSignal, QRunnable, pyqtSlot
+from PyQt5.QtWidgets import QApplication
 from antlr4 import *
 
 from OrodaelTurrim.Business.Factory import EffectFactory
@@ -71,8 +72,6 @@ class GameEngine:
 
         self.__spawn_uncertainty.clear()
 
-        # Connector().emit('redraw_ui')
-        # Connector().emit('redraw_map')
 
 
     def register_player(self, player: IPlayer, resources: PlayerResources,
@@ -321,12 +320,10 @@ class GameEngine:
 
     def earn(self, player: IPlayer, amount: int) -> None:
         self.__player_resources[player].add_resources(amount)
-        Connector().emit('redraw_ui')
 
 
     def spend(self, player: IPlayer, amount: int) -> None:
         self.__player_resources[player].remove_resources(amount)
-        Connector().emit('redraw_ui')
 
 
     def create_move_action(self, game_object: GameObject, position: Position) -> None:
@@ -490,8 +487,6 @@ class GameEngine:
         self.execute_action(SpendResourcesAction(self, information.owner, prototype.cost))
         self.execute_action(SpawnAction(self, self.create_unit(information)))
 
-        self.unit_spawn_signal()
-
 
     def get_resources(self, player: IPlayer) -> int:
         return self.__player_resources[player].resources
@@ -525,12 +520,6 @@ class GameEngine:
         return player in self.__defender_bases
 
 
-    def unit_spawn_signal(self):
-        pass
-        # Connector().emit('redraw_map')
-        # Connector().emit('redraw_ui')
-
-
     def spawn_information(self) -> List[List[UncertaintySpawn]]:
         return self.__spawn_uncertainty.spawn_information
 
@@ -538,12 +527,10 @@ class GameEngine:
     def run_game_rounds(self, rounds: int, display: bool) -> None:
         game_history = self.get_game_history()
         while rounds > 0 and not Connector().get_variable('game_over'):
-            time.sleep(0)
+            Connector().emit('thread_next_round', rounds)
+
             game_history.active_player.act()
             self.simulate_rest_of_player_turn(game_history.active_player)
-
-            if display and game_history.on_first_player:
-                Connector().emit('redraw_map')
 
             if game_history.on_first_player:
                 rounds -= 1

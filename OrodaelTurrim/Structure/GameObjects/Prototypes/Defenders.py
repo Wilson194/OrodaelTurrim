@@ -26,7 +26,7 @@ class Archer(GameObjectPrototype):
 
 
 class Base(GameObjectPrototype):
-    ATTRIBUTES = AttributeBundle(5, 0, 50000, 1, 2)  # Todo : Back to 500 hipoints
+    ATTRIBUTES = AttributeBundle(5, 0, 500, 1, 2)
     COST = 0
     ASSET_NAME = "base"
 
