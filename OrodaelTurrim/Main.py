@@ -8,6 +8,7 @@ from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Main import MainWindow
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.Resources import PlayerResources
 import click
 
@@ -28,6 +29,9 @@ def main(gui, rounds, log_output):
     game_object_proxy = GameObjectProxy(game_engine)
     game_control_proxy = GameControlProxy(game_engine)
     game_uncertainty_proxy = GameUncertaintyProxy(game_engine)
+
+    # Initialize Filter factory
+    FilterFactory(map_proxy, game_object_proxy)
 
     # Register defender
     defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)

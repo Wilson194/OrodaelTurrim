@@ -1,12 +1,13 @@
 import inspect
-from typing import Union
+from typing import Union, List
 
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QPushButton, QListWidget, QListWidgetItem, QAbstractItemView
 from OrodaelTurrim.Structure.Filter import AttackFilter
-from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter as AttackFilterPattern
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
+from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter as AttackFilterPattern, FilterReference
 
 from OrodaelTurrim import UI_ROOT, ICONS_ROOT
 from OrodaelTurrim.Structure.Enums import GameObjectType
@@ -15,19 +16,18 @@ from OrodaelTurrim.Structure.Enums import GameObjectType
 class ListWidgetItem(QListWidgetItem):
     def __init__(self, name, arguments):
         super().__init__()
-        self.__name = name
-        self.__arguments = arguments
+        self.name = name
+        self.arguments = arguments
         self.setText(name)
 
 
 class FilterDialog(QDialog):
-    filters = {}
 
-
-    def __init__(self, game_object_type: GameObjectType):
+    def __init__(self, game_object_type: GameObjectType, filters: List[FilterReference]):
         super().__init__()
 
         self.__game_object_type = game_object_type
+        self.__filters = filters
 
         self.__list = None
 
@@ -57,9 +57,8 @@ class FilterDialog(QDialog):
 
         self.__list.setDragDropMode(QAbstractItemView.InternalMove)
 
-        if self.__game_object_type in FilterDialog.filters:
-            for item in FilterDialog.filters[self.__game_object_type]:
-                self.__list.addItem(item)
+        for item in self.__filters:
+            self.__list.addItem(ListWidgetItem(item.name, item.arguments))
 
 
     @pyqtSlot()
@@ -108,20 +107,17 @@ class FilterDialog(QDialog):
 
 
     def get_inputs(self):
-        return self.__list.findItems('.*', QtCore.Qt.MatchRegExp)
+        result = []
+        for item in self.__list.findItems('.*', QtCore.Qt.MatchRegExp):
+            result.append(FilterReference(item.name, item.arguments))
 
-
-    def store_state(self):
-        FilterDialog.filters[self.__game_object_type] = self.get_inputs()
+        return result
 
 
     @staticmethod
-    def execute_(game_object_type: GameObjectType):
-        dialog = FilterDialog(game_object_type)
+    def execute_(game_object_type: GameObjectType, filters: List[FilterReference]):
+        dialog = FilterDialog(game_object_type, filters)
         result = dialog.exec_()
-
-        if result == QtWidgets.QDialog.Accepted:
-            dialog.store_state()
 
         data = dialog.get_inputs()
 
@@ -145,9 +141,9 @@ class AddFilterDialog(QDialog):
 
         self.list_widget.itemDoubleClicked.connect(self.accept)
 
-        filters = self.get_list_of_filters()
-        for name, parameters in filters:
-            self.list_widget.addItem(name)
+        filters = FilterFactory().attack_filters
+        for _filter in filters:
+            self.list_widget.addItem(_filter.name)
 
 
     def get_list_of_filters(self):

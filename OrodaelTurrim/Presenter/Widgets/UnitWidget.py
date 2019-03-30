@@ -1,3 +1,5 @@
+from typing import List
+
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
@@ -9,6 +11,8 @@ from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Dialogs.FilterDialog import FilterDialog
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import GameObjectType
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
+from OrodaelTurrim.Structure.Filter.FilterPattern import FilterReference
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototypePool
 from OrodaelTurrim.Structure.Position import Position
@@ -21,6 +25,7 @@ class UnitWidget(QWidget):
         self.__game_engine = game_engine
         self.__object_type = object_type
         self.__selected_position = None
+        self.__filters = []  # type: List[FilterReference]
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui)
@@ -106,8 +111,13 @@ class UnitWidget(QWidget):
 
     @pyqtSlot()
     def place_unit_slot(self):
+        filter_instances = []
+        for _filter in self.__filters:
+            instance = FilterFactory().attack_filter(_filter.name, *_filter.arguments)
+            filter_instances.append(instance)
+
         player = self.__game_engine.get_game_history().active_player
-        unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, [], [])
+        unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, [], filter_instances)
         self.__game_engine.spawn_unit(unit_info)
 
         Connector().emit('redraw_map')
@@ -121,5 +131,6 @@ class UnitWidget(QWidget):
 
     @pyqtSlot()
     def edit_filters_slot(self):
-        result = FilterDialog.execute_(self.__object_type)
-        print(result)
+        result, data = FilterDialog.execute_(self.__object_type, self.__filters)
+        if result:
+            self.__filters = data

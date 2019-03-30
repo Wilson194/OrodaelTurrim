@@ -73,7 +73,6 @@ class GameEngine:
         self.__spawn_uncertainty.clear()
 
 
-
     def register_player(self, player: IPlayer, resources: PlayerResources,
                         unit_spawn_info: List[SpawnInformation]) -> None:
         self.__players.append(player)
@@ -524,11 +523,9 @@ class GameEngine:
         return self.__spawn_uncertainty.spawn_information
 
 
-    def run_game_rounds(self, rounds: int, display: bool) -> None:
+    def run_game_rounds(self, rounds: int) -> None:
         game_history = self.get_game_history()
         while rounds > 0 and not Connector().get_variable('game_over'):
-            Connector().emit('thread_next_round', rounds)
-
             game_history.active_player.act()
             self.simulate_rest_of_player_turn(game_history.active_player)
 

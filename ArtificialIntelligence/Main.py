@@ -6,6 +6,7 @@ from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 from OrodaelTurrim.Structure.Filter.AttackFilter import AttackBaseFilter, AttackMostVulnerableFilter, \
     AttackNearestFilter, AttackNoResistantFilter, AttackStrongestFilter
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter, MoveFilter
 from OrodaelTurrim.Structure.Filter.MoveFilter import MoveToNearestEnemyFilter, MoveToRangeFilter, MoveToBaseFilter, \
     MoveToSafeDistanceFilter
@@ -70,16 +71,16 @@ class AIPlayer(IAttacker):
 
 
     def __prepare_units_filters(self):
-        nearest_enemy = MoveToNearestEnemyFilter(self.map_proxy, self.game_object_proxy)
-        to_range = MoveToRangeFilter(self.map_proxy, self.game_object_proxy)
-        to_base = MoveToBaseFilter(self.map_proxy, self.game_object_proxy)
-        safe_dist = MoveToSafeDistanceFilter(self.map_proxy, self.game_object_proxy)
+        nearest_enemy = FilterFactory().move_filter(MoveToNearestEnemyFilter)
+        to_range = FilterFactory().move_filter(MoveToRangeFilter)
+        to_base = FilterFactory().move_filter(MoveToBaseFilter)
+        safe_dist = FilterFactory().move_filter(MoveToSafeDistanceFilter)
 
-        base = AttackBaseFilter(self.map_proxy, self.game_object_proxy)
-        vulnerable = AttackMostVulnerableFilter(self.map_proxy, self.game_object_proxy)
-        nearest = AttackNearestFilter(self.map_proxy, self.game_object_proxy)
-        no_resistance = AttackNoResistantFilter(self.map_proxy, self.game_object_proxy)
-        strongest = AttackStrongestFilter(self.map_proxy, self.game_object_proxy)
+        base = FilterFactory().attack_filter(AttackBaseFilter)
+        vulnerable = FilterFactory().attack_filter(AttackMostVulnerableFilter)
+        nearest = FilterFactory().attack_filter(AttackNearestFilter)
+        no_resistance = FilterFactory().attack_filter(AttackNoResistantFilter)
+        strongest = FilterFactory().attack_filter(AttackStrongestFilter)
 
         self.unit_filters = {
             GameObjectType.CYCLOPS: ([vulnerable], [nearest_enemy, to_base]),

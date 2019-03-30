@@ -112,10 +112,10 @@ class RoundControlWidget(QWidget):
 
         if display:
             for i in range(rounds):
-                worker = ThreadWorker(self.__game_engine, 'run_game_rounds', 1, display)
+                worker = ThreadWorker(self.__game_engine, 'run_game_rounds', 1)
                 self.threadpool.start(worker)
         else:
-            worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds, display)
+            worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds)
             self.threadpool.start(worker)
 
             LoadingDialog.execute_()

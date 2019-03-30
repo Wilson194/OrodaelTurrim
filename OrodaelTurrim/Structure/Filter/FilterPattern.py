@@ -1,9 +1,11 @@
+import inspect
 from abc import ABC, abstractmethod
 from typing import List, Union
 import random
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy
 from OrodaelTurrim.Structure.Position import Position
+from OrodaelTurrim.Structure.Utils import Singleton
 
 
 class TileFilter(ABC):
@@ -55,3 +57,11 @@ class AttackFilter(TileFilter):
     @abstractmethod
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
         pass
+
+
+class FilterReference:
+    def __init__(self, name, arguments):
+        self.name = name
+        self.arguments = arguments
+
+
