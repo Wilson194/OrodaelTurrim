@@ -24,6 +24,7 @@ class MapInfoWidget(QWidget):
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui_slot)
+        Connector().subscribe('game_thread_finished', self.redraw_ui_slot)
 
         self.init_ui()
 

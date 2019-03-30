@@ -23,6 +23,7 @@ class SpawnInfoWidget(QWidget):
         self.__round_3_box = None
 
         Connector().subscribe('redraw_ui', self.redraw_ui)
+        Connector().subscribe('game_thread_finished', self.redraw_ui)
 
         self.init_ui()
 

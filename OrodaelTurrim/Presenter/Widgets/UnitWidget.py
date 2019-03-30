@@ -29,6 +29,7 @@ class UnitWidget(QWidget):
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui)
+        Connector().subscribe('game_thread_finished', self.redraw_ui)
         Connector().subscribe('game_over', self.game_over_slot)
 
         self.init_ui()

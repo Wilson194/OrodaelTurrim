@@ -35,6 +35,7 @@ class GameControlWidget(QWidget):
             self._scroll_area_layout.addWidget(UnitWidget(self._scroll_area, self.__game_engine, game_object))
 
         Connector().subscribe('redraw_ui', self.redraw_available_money_slot)
+        Connector().subscribe('game_thread_finished', self.redraw_available_money_slot)
 
         self.redraw_available_money_slot()
 

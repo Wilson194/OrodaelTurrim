@@ -26,6 +26,7 @@ class LogWidget(QWidget):
             uic.loadUi(f, self)
 
         Connector().subscribe('redraw_ui', self.update_text)
+        Connector().subscribe('game_thread_finished', self.update_text)
 
 
     @pyqtSlot()

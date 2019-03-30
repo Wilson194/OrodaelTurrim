@@ -4,7 +4,7 @@ import threading
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot, QThreadPool, QRunnable, QObject, pyqtSignal
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox, QMessageBox, QApplication
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox, QMessageBox, QApplication, QDoubleSpinBox
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -23,6 +23,7 @@ class RoundControlWidget(QWidget):
         self.init_ui()
 
         Connector().subscribe('redraw_ui', self.redraw_ui)
+        Connector().subscribe('game_thread_finished', self.redraw_ui)
         self.threadpool = QThreadPool()
 
 
@@ -110,18 +111,18 @@ class RoundControlWidget(QWidget):
         check_box = self.findChild(QCheckBox, 'displayProcessCheck')  # type: QCheckBox
         display = check_box.isChecked()
 
+        delay_box = self.findChild(QDoubleSpinBox, 'delayBox')  # type: QDoubleSpinBox
+        delay = delay_box.value()
+
         if display:
             for i in range(rounds):
-                worker = ThreadWorker(self.__game_engine, 'run_game_rounds', 1)
+                worker = ThreadWorker(self.__game_engine, 'run_game_rounds', delay, 1)
                 self.threadpool.start(worker)
         else:
-            worker = ThreadWorker(self.__game_engine, 'run_game_rounds', rounds)
+            worker = ThreadWorker(self.__game_engine, 'run_game_rounds', 0, rounds)
             self.threadpool.start(worker)
 
             LoadingDialog.execute_()
-
-        Connector().emit('redraw_ui')
-        Connector().emit('redraw_map')
 
 
     @pyqtSlot()

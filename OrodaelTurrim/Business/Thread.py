@@ -17,19 +17,23 @@ class ThreadWorker(QRunnable):
     _lock = Lock()
 
 
-    def __init__(self, game_engine: GameEngine, function_name: str, *args, **kwargs):
+    def __init__(self, game_engine: GameEngine, function_name: str, delay: float, *args, **kwargs):
         super().__init__()
         self.game_engine = game_engine
         self.function_name = function_name
+        self.delay = delay
+
         self.args = args
         self.kwargs = kwargs
+
         self.signals = WorkerSignals()
 
 
     @pyqtSlot()
     def run(self):
         self._lock.acquire()
-        time.sleep(0.1)
+
+        time.sleep(max(self.delay, 0.1))
         getattr(self.game_engine, self.function_name)(*self.args, **self.kwargs)
         Connector().emit('game_thread_finished')
         self._lock.release()
