@@ -1,14 +1,18 @@
-class ZNSException(Exception):
+class OrodaelTurrimException(Exception):
     pass
 
 
-class IllegalArgumentException(ZNSException):
+class IllegalArgumentException(OrodaelTurrimException):
     pass
 
 
-class IllegalActionException(ZNSException):
+class IllegalActionException(OrodaelTurrimException):
     pass
 
 
-class IllegalHistoryOperation(ZNSException):
+class IllegalHistoryOperation(OrodaelTurrimException):
+    pass
+
+
+class IllegalLogMessage(OrodaelTurrimException):
     pass

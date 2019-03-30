@@ -15,6 +15,7 @@ from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
 from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectApplyAction, EffectTickAction, \
     EffectDamageAction, EffectExpireAction
+from OrodaelTurrim.Structure.Actions.Log import LogAction
 from OrodaelTurrim.Structure.Actions.Placement import DieAction, SpawnAction
 from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction
 from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
@@ -342,6 +343,13 @@ class GameEngine:
 
         for effect_type in attack_effects:
             self.handle_effect_attack(attacked, effect_type)
+
+
+    def create_log_action(self, message: str) -> None:
+        if type(message) is not str:
+            return
+
+        self.execute_action(LogAction(self, message))
 
 
     def compute_attribute(self, game_object: GameObject, attribute_type: AttributeType, original_value: float) -> float:

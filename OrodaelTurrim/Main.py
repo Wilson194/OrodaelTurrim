@@ -4,6 +4,7 @@ from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
 from OrodaelTurrim import DEBUG
 from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Business.Logger import LogReceiver
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
@@ -18,7 +19,6 @@ import click
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
 @click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
 def main(gui, rounds, log_output):
-    print(threading.get_ident())
     # Generate the map
     game_map = MapGenerator(11, 11).generate()
 
@@ -32,6 +32,9 @@ def main(gui, rounds, log_output):
 
     # Initialize Filter factory
     FilterFactory(map_proxy, game_object_proxy)
+
+    # Initialize Logger
+    _ = LogReceiver(game_engine)
 
     # Register defender
     defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
