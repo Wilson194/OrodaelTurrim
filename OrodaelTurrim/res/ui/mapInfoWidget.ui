@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>603</width>
-    <height>658</height>
+    <height>627</height>
    </rect>
   </property>
   <property name="font">
@@ -26,7 +26,7 @@
     <number>0</number>
    </property>
    <item row="4" column="0" colspan="11">
-    <widget class="QWidget" name="widget_3" native="true">
+    <widget class="QWidget" name="characterWidget" native="true">
      <property name="enabled">
       <bool>true</bool>
      </property>

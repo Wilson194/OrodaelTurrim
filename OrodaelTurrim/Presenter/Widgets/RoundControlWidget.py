@@ -4,7 +4,8 @@ import threading
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot, QThreadPool, QRunnable, QObject, pyqtSignal
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox, QMessageBox, QApplication, QDoubleSpinBox
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QSpinBox, QCheckBox, QMessageBox, QApplication, \
+    QDoubleSpinBox, QSlider
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -42,6 +43,8 @@ class RoundControlWidget(QWidget):
 
         self.findChild(QPushButton, 'nextTurnButton').setDisabled(True)
         self.findChild(QPushButton, 'lastTurnButton').setDisabled(True)
+
+
 
         self.redraw_ui()
 
@@ -159,3 +162,6 @@ class RoundControlWidget(QWidget):
     @pyqtSlot()
     def game_over_slot(self):
         self.redraw_ui()
+
+
+
