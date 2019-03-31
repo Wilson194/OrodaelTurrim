@@ -1,5 +1,6 @@
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 
+from ExpertSystem.Business.Parser.KnowledgeBase.ErrorListener import CustomErrorListener
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
@@ -43,6 +44,8 @@ class Player(IPlayer):
         lexer = RulesLexer(input_file)
         stream = CommonTokenStream(lexer)
         parser = RulesParser(stream)
+        parser.removeErrorListeners()
+        parser.addErrorListener(CustomErrorListener())
         tree = parser.rules_set()
 
         rules_listener = RulesListenerImplementation()

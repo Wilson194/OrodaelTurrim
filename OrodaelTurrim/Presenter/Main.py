@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtCore import Qt, QEventLoop
+from PyQt5.QtCore import Qt, QEventLoop, pyqtSlot, QObject
 from PyQt5.QtGui import QIcon, QWindow
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMainWindow
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMainWindow, QMessageBox
 
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -54,8 +54,9 @@ class MainWidget(QWidget):
         right.setLayout(control_layout)
 
 
-class MainWindow:
+class MainWindow(QObject):
     def __init__(self, game_engine: GameEngine):
+        super().__init__()
         self.app = QtWidgets.QApplication([])
         self.window = QtWidgets.QMainWindow()
 
@@ -72,6 +73,7 @@ class MainWindow:
         Connector().subscribe('status_message', self.status_info)
         Connector().subscribe('map_position_change', self.tile_selected)
         Connector().subscribe('map_position_clear', self.tile_unselected)
+        Connector().subscribe('error_message', self.error_message_slot)
 
 
     def execute(self):
@@ -96,9 +98,19 @@ class MainWindow:
         else:
             self.status_info('No tile selected')
 
+
     def tile_unselected(self):
         self.status_info('No tile selected')
 
 
     def status_info(self, text: str):
         self.window.statusBar().showMessage(text)
+
+
+    @pyqtSlot(str, str)
+    def error_message_slot(self, context: str, error_message: str):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(error_message)
+        msg.setWindowTitle('Error: ' + context)
+        msg.exec_()
