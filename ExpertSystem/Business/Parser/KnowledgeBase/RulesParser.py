@@ -7,8 +7,8 @@ import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30")
-        buf.write("\u0084\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31")
+        buf.write("\u0094\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\3\2\7\2\32")
         buf.write("\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3")
         buf.write("\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3/\n\3\3\4\3\4\3\5")
@@ -18,38 +18,46 @@ def serializedATN():
         buf.write("\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7c\n\7\3\b\3\b\3\b")
         buf.write("\3\b\5\bi\n\b\3\t\3\t\3\n\3\n\3\13\3\13\3\13\3\13\3\13")
         buf.write("\3\13\5\13u\n\13\3\13\3\13\3\13\7\13z\n\13\f\13\16\13")
-        buf.write("}\13\13\3\f\3\f\3\f\5\f\u0082\n\f\3\f\2\4\n\24\r\2\4\6")
-        buf.write("\b\n\f\16\20\22\24\26\2\5\3\2\b\t\3\2\24\25\3\2\n\17\2")
-        buf.write("\u0088\2\33\3\2\2\2\4.\3\2\2\2\6\60\3\2\2\2\b\62\3\2\2")
-        buf.write("\2\n?\3\2\2\2\fb\3\2\2\2\16h\3\2\2\2\20j\3\2\2\2\22l\3")
-        buf.write("\2\2\2\24t\3\2\2\2\26\u0081\3\2\2\2\30\32\5\4\3\2\31\30")
-        buf.write("\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34")
-        buf.write("\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 ")
-        buf.write("!\7\3\2\2!\"\5\6\4\2\"#\7\4\2\2#$\5\b\5\2$%\7\26\2\2%")
-        buf.write("/\3\2\2\2&\'\7\3\2\2\'(\5\6\4\2()\7\4\2\2)*\5\b\5\2*+")
-        buf.write("\7\5\2\2+,\7\24\2\2,-\7\26\2\2-/\3\2\2\2. \3\2\2\2.&\3")
-        buf.write("\2\2\2/\5\3\2\2\2\60\61\5\n\6\2\61\7\3\2\2\2\62\63\5\24")
-        buf.write("\13\2\63\t\3\2\2\2\64\65\b\6\1\2\65@\5\f\7\2\66\67\5\f")
-        buf.write("\7\2\678\7\22\2\289\7\24\2\29:\7\23\2\2:@\3\2\2\2;<\7")
-        buf.write("\20\2\2<=\5\n\6\2=>\7\21\2\2>@\3\2\2\2?\64\3\2\2\2?\66")
-        buf.write("\3\2\2\2?;\3\2\2\2@I\3\2\2\2AB\f\7\2\2BC\7\6\2\2CH\5\n")
-        buf.write("\6\bDE\f\6\2\2EF\7\7\2\2FH\5\n\6\7GA\3\2\2\2GD\3\2\2\2")
-        buf.write("HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2J\13\3\2\2\2KI\3\2\2\2L")
-        buf.write("M\7\25\2\2Mc\5\16\b\2NO\7\25\2\2OP\5\16\b\2PQ\5\22\n\2")
-        buf.write("QR\7\24\2\2Rc\3\2\2\2Sc\7\25\2\2TU\7\25\2\2UV\5\22\n\2")
-        buf.write("VW\7\24\2\2Wc\3\2\2\2XY\7\25\2\2YZ\5\22\n\2Z[\7\25\2\2")
-        buf.write("[c\3\2\2\2\\]\7\25\2\2]^\5\16\b\2^_\5\22\n\2_`\7\25\2")
-        buf.write("\2`c\3\2\2\2ac\t\2\2\2bL\3\2\2\2bN\3\2\2\2bS\3\2\2\2b")
-        buf.write("T\3\2\2\2bX\3\2\2\2b\\\3\2\2\2ba\3\2\2\2c\r\3\2\2\2de")
-        buf.write("\5\20\t\2ef\5\16\b\2fi\3\2\2\2gi\5\20\t\2hd\3\2\2\2hg")
-        buf.write("\3\2\2\2i\17\3\2\2\2jk\t\3\2\2k\21\3\2\2\2lm\t\4\2\2m")
-        buf.write("\23\3\2\2\2no\b\13\1\2op\7\20\2\2pq\5\24\13\2qr\7\21\2")
-        buf.write("\2ru\3\2\2\2su\5\26\f\2tn\3\2\2\2ts\3\2\2\2u{\3\2\2\2")
-        buf.write("vw\f\5\2\2wx\7\6\2\2xz\5\24\13\6yv\3\2\2\2z}\3\2\2\2{")
-        buf.write("y\3\2\2\2{|\3\2\2\2|\25\3\2\2\2}{\3\2\2\2~\u0082\7\25")
-        buf.write("\2\2\177\u0080\7\25\2\2\u0080\u0082\5\16\b\2\u0081~\3")
-        buf.write("\2\2\2\u0081\177\3\2\2\2\u0082\27\3\2\2\2\f\33.?GIbht")
-        buf.write("{\u0081")
+        buf.write("}\13\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3")
+        buf.write("\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0092\n\f\3\f\2\4\n")
+        buf.write("\24\r\2\4\6\b\n\f\16\20\22\24\26\2\5\3\2\b\t\3\2\25\26")
+        buf.write("\3\2\13\20\2\u009c\2\33\3\2\2\2\4.\3\2\2\2\6\60\3\2\2")
+        buf.write("\2\b\62\3\2\2\2\n?\3\2\2\2\fb\3\2\2\2\16h\3\2\2\2\20j")
+        buf.write("\3\2\2\2\22l\3\2\2\2\24t\3\2\2\2\26\u0091\3\2\2\2\30\32")
+        buf.write("\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33")
+        buf.write("\34\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3")
+        buf.write("\37\3\3\2\2\2 !\7\3\2\2!\"\5\6\4\2\"#\7\4\2\2#$\5\b\5")
+        buf.write("\2$%\7\27\2\2%/\3\2\2\2&\'\7\3\2\2\'(\5\6\4\2()\7\4\2")
+        buf.write("\2)*\5\b\5\2*+\7\5\2\2+,\7\25\2\2,-\7\27\2\2-/\3\2\2\2")
+        buf.write(". \3\2\2\2.&\3\2\2\2/\5\3\2\2\2\60\61\5\n\6\2\61\7\3\2")
+        buf.write("\2\2\62\63\5\24\13\2\63\t\3\2\2\2\64\65\b\6\1\2\65@\5")
+        buf.write("\f\7\2\66\67\5\f\7\2\678\7\23\2\289\7\25\2\29:\7\24\2")
+        buf.write("\2:@\3\2\2\2;<\7\21\2\2<=\5\n\6\2=>\7\22\2\2>@\3\2\2\2")
+        buf.write("?\64\3\2\2\2?\66\3\2\2\2?;\3\2\2\2@I\3\2\2\2AB\f\7\2\2")
+        buf.write("BC\7\6\2\2CH\5\n\6\bDE\f\6\2\2EF\7\7\2\2FH\5\n\6\7GA\3")
+        buf.write("\2\2\2GD\3\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2J\13\3\2")
+        buf.write("\2\2KI\3\2\2\2LM\7\26\2\2Mc\5\16\b\2NO\7\26\2\2OP\5\16")
+        buf.write("\b\2PQ\5\22\n\2QR\7\25\2\2Rc\3\2\2\2Sc\7\26\2\2TU\7\26")
+        buf.write("\2\2UV\5\22\n\2VW\7\25\2\2Wc\3\2\2\2XY\7\26\2\2YZ\5\22")
+        buf.write("\n\2Z[\7\26\2\2[c\3\2\2\2\\]\7\26\2\2]^\5\16\b\2^_\5\22")
+        buf.write("\n\2_`\7\26\2\2`c\3\2\2\2ac\t\2\2\2bL\3\2\2\2bN\3\2\2")
+        buf.write("\2bS\3\2\2\2bT\3\2\2\2bX\3\2\2\2b\\\3\2\2\2ba\3\2\2\2")
+        buf.write("c\r\3\2\2\2de\5\20\t\2ef\5\16\b\2fi\3\2\2\2gi\5\20\t\2")
+        buf.write("hd\3\2\2\2hg\3\2\2\2i\17\3\2\2\2jk\t\3\2\2k\21\3\2\2\2")
+        buf.write("lm\t\4\2\2m\23\3\2\2\2no\b\13\1\2op\7\21\2\2pq\5\24\13")
+        buf.write("\2qr\7\22\2\2ru\3\2\2\2su\5\26\f\2tn\3\2\2\2ts\3\2\2\2")
+        buf.write("u{\3\2\2\2vw\f\5\2\2wx\7\6\2\2xz\5\24\13\6yv\3\2\2\2z")
+        buf.write("}\3\2\2\2{y\3\2\2\2{|\3\2\2\2|\25\3\2\2\2}{\3\2\2\2~\u0092")
+        buf.write("\7\26\2\2\177\u0080\7\26\2\2\u0080\u0092\5\16\b\2\u0081")
+        buf.write("\u0082\7\26\2\2\u0082\u0083\5\16\b\2\u0083\u0084\7\n\2")
+        buf.write("\2\u0084\u0085\7\25\2\2\u0085\u0092\3\2\2\2\u0086\u0087")
+        buf.write("\7\26\2\2\u0087\u0088\5\16\b\2\u0088\u0089\7\n\2\2\u0089")
+        buf.write("\u008a\7\26\2\2\u008a\u0092\3\2\2\2\u008b\u008c\7\26\2")
+        buf.write("\2\u008c\u008d\7\n\2\2\u008d\u0092\7\25\2\2\u008e\u008f")
+        buf.write("\7\26\2\2\u008f\u0090\7\n\2\2\u0090\u0092\7\26\2\2\u0091")
+        buf.write("~\3\2\2\2\u0091\177\3\2\2\2\u0091\u0081\3\2\2\2\u0091")
+        buf.write("\u0086\3\2\2\2\u0091\u008b\3\2\2\2\u0091\u008e\3\2\2\2")
+        buf.write("\u0092\27\3\2\2\2\f\33.?GIbht{\u0091")
         return buf.getvalue()
 
 
@@ -64,14 +72,14 @@ class RulesParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'IF'", "'THEN'", "'WITH'", "'AND'", "'OR'", 
-                     "'TRUE'", "'FALSE'", "'>'", "'>='", "'<'", "'<='", 
-                     "'=='", "'!='", "'('", "')'", "'['", "']'", "<INVALID>", 
-                     "<INVALID>", "';'" ]
+                     "'TRUE'", "'FALSE'", "':='", "'>='", "'>'", "'<='", 
+                     "'<'", "'=='", "'!='", "'('", "')'", "'['", "']'", 
+                     "<INVALID>", "<INVALID>", "';'" ]
 
     symbolicNames = [ "<INVALID>", "IF", "THEN", "WITH", "AND", "OR", "TRUE", 
-                      "FALSE", "GT", "GE", "LT", "LE", "EQ", "NE", "LPAREN", 
-                      "RPAREN", "LSPAREN", "RSPAREN", "DECIMAL", "IDENTIFIER", 
-                      "SEMI", "COMMENT", "WS" ]
+                      "FALSE", "ASSIGN", "GE", "GT", "LE", "LT", "EQ", "NE", 
+                      "LPAREN", "RPAREN", "LSPAREN", "RSPAREN", "DECIMAL", 
+                      "IDENTIFIER", "SEMI", "COMMENT", "WS" ]
 
     RULE_rules_set = 0
     RULE_single_rule = 1
@@ -97,21 +105,22 @@ class RulesParser ( Parser ):
     OR=5
     TRUE=6
     FALSE=7
-    GT=8
+    ASSIGN=8
     GE=9
-    LT=10
+    GT=10
     LE=11
-    EQ=12
-    NE=13
-    LPAREN=14
-    RPAREN=15
-    LSPAREN=16
-    RSPAREN=17
-    DECIMAL=18
-    IDENTIFIER=19
-    SEMI=20
-    COMMENT=21
-    WS=22
+    LT=12
+    EQ=13
+    NE=14
+    LPAREN=15
+    RPAREN=16
+    LSPAREN=17
+    RSPAREN=18
+    DECIMAL=19
+    IDENTIFIER=20
+    SEMI=21
+    COMMENT=22
+    WS=23
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -845,7 +854,7 @@ class RulesParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 106
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << RulesParser.GT) | (1 << RulesParser.GE) | (1 << RulesParser.LT) | (1 << RulesParser.LE) | (1 << RulesParser.EQ) | (1 << RulesParser.NE))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << RulesParser.GE) | (1 << RulesParser.GT) | (1 << RulesParser.LE) | (1 << RulesParser.LT) | (1 << RulesParser.EQ) | (1 << RulesParser.NE))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1011,12 +1020,21 @@ class RulesParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def IDENTIFIER(self):
-            return self.getToken(RulesParser.IDENTIFIER, 0)
+        def IDENTIFIER(self, i:int=None):
+            if i is None:
+                return self.getTokens(RulesParser.IDENTIFIER)
+            else:
+                return self.getToken(RulesParser.IDENTIFIER, i)
 
         def args(self):
             return self.getTypedRuleContext(RulesParser.ArgsContext,0)
 
+
+        def ASSIGN(self):
+            return self.getToken(RulesParser.ASSIGN, 0)
+
+        def DECIMAL(self):
+            return self.getToken(RulesParser.DECIMAL, 0)
 
         def getRuleIndex(self):
             return RulesParser.RULE_r_function_expr
@@ -1037,7 +1055,7 @@ class RulesParser ( Parser ):
         localctx = RulesParser.R_function_exprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_r_function_expr)
         try:
-            self.state = 127
+            self.state = 143
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,9,self._ctx)
             if la_ == 1:
@@ -1052,6 +1070,50 @@ class RulesParser ( Parser ):
                 self.match(RulesParser.IDENTIFIER)
                 self.state = 126
                 self.args()
+                pass
+
+            elif la_ == 3:
+                self.enterOuterAlt(localctx, 3)
+                self.state = 127
+                self.match(RulesParser.IDENTIFIER)
+                self.state = 128
+                self.args()
+                self.state = 129
+                self.match(RulesParser.ASSIGN)
+                self.state = 130
+                self.match(RulesParser.DECIMAL)
+                pass
+
+            elif la_ == 4:
+                self.enterOuterAlt(localctx, 4)
+                self.state = 132
+                self.match(RulesParser.IDENTIFIER)
+                self.state = 133
+                self.args()
+                self.state = 134
+                self.match(RulesParser.ASSIGN)
+                self.state = 135
+                self.match(RulesParser.IDENTIFIER)
+                pass
+
+            elif la_ == 5:
+                self.enterOuterAlt(localctx, 5)
+                self.state = 137
+                self.match(RulesParser.IDENTIFIER)
+                self.state = 138
+                self.match(RulesParser.ASSIGN)
+                self.state = 139
+                self.match(RulesParser.DECIMAL)
+                pass
+
+            elif la_ == 6:
+                self.enterOuterAlt(localctx, 6)
+                self.state = 140
+                self.match(RulesParser.IDENTIFIER)
+                self.state = 141
+                self.match(RulesParser.ASSIGN)
+                self.state = 142
+                self.match(RulesParser.IDENTIFIER)
                 pass
 
 

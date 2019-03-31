@@ -1,7 +1,11 @@
 from typing import List
 
 import pytest
+from antlr4 import InputStream
 
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer, CommonTokenStream, ParseTreeWalker
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
+from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.Position import Position
@@ -33,3 +37,18 @@ class Utils:
         list2.sort()
 
         return len(set(list1) - set(list2)) == 0 and len(set(list2) - set(list1)) == 0
+
+
+    def parse_antlr_grammar(self, rule: str):
+        input_file = InputStream(rule)
+
+        lexer = RulesLexer(input_file)
+        stream = CommonTokenStream(lexer)
+        parser = RulesParser(stream)
+        tree = parser.rules_set()
+
+        rules_listener = RulesListenerImplementation()
+        walker = ParseTreeWalker()
+        walker.walk(rules_listener, tree)
+
+        return rules_listener.rules

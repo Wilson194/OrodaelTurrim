@@ -75,7 +75,7 @@ class Expression:
         text = ''
         text += '{} {}'.format(self.name, ' '.join(self.args))
         if self.comparator:
-            text += '{} {}'.format(self.comparator, self.value)
+            text += ' {} {}'.format(self.comparator, self.value)
 
         if self.uncertainty:
             text += '[{}]'.format(self.uncertainty)

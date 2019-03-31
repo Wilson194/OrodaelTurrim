@@ -14,10 +14,11 @@ TRUE: 'TRUE';
 FALSE: 'FALSE';
 
 // Operators
-GT : '>';
+ASSIGN : ':=';
 GE : '>=';
-LT : '<';
+GT : '>';
 LE : '<=';
+LT : '<';
 EQ : '==';
 NE : '!=';
 
@@ -72,7 +73,7 @@ args : arg args | arg;
 
 arg : DECIMAL | IDENTIFIER;
 
-comp_operator : GT |GE | LT | LE | EQ | NE;
+comp_operator : GT | GE | LT | LE | EQ | NE;
 
 
 right_logical_expr
@@ -81,5 +82,11 @@ right_logical_expr
  | r_function_expr                              # RLogicalExpression
  ;
 
-r_function_expr : IDENTIFIER | IDENTIFIER args;
+r_function_expr
+              : IDENTIFIER
+              | IDENTIFIER args
+              | IDENTIFIER args ASSIGN DECIMAL
+              | IDENTIFIER args ASSIGN IDENTIFIER
+              | IDENTIFIER ASSIGN DECIMAL
+              | IDENTIFIER ASSIGN IDENTIFIER;
 

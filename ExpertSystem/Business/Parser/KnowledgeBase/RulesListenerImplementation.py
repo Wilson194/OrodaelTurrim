@@ -35,7 +35,7 @@ class RulesListenerImplementation(RulesListener):
     # Enter a parse tree produced by RulesParser#single_rule.
     def enterSingle_rule(self, ctx: RulesParser.Single_ruleContext):
         self.rule = Rule()
-        if ctx.WITH():
+        if ctx.WITH() and ctx.DECIMAL() and 'missing' not in ctx.DECIMAL().getText():
             self.rule.uncertainty = float(ctx.DECIMAL().getText())
 
 
@@ -127,7 +127,8 @@ class RulesListenerImplementation(RulesListener):
     # Enter a parse tree produced by RulesParser#function_expr.
     def enterFunction_expr(self, ctx: RulesParser.Function_exprContext):
         expression = Expression()
-        expression.uncertainty = float(self.expression_uncertainty.getText())
+        if self.expression_uncertainty:
+            expression.uncertainty = float(self.expression_uncertainty.getText())
 
         if ctx.IDENTIFIER():
             expression.name = ctx.IDENTIFIER(0).getText()
@@ -229,10 +230,19 @@ class RulesListenerImplementation(RulesListener):
     def enterR_function_expr(self, ctx: RulesParser.R_function_exprContext):
         expression = Expression()
 
-        expression.name = str(ctx.IDENTIFIER())
+        expression.name = ctx.IDENTIFIER(0).getText()
 
         if ctx.args():
             expression.args = [x.getText() for x in ctx.args().getChildren()]
+
+        # if ctx.ASSIGN():
+        #     expression.comparator = '='
+        #
+        # if ctx.DECIMAL():
+        #     expression.value = ctx.DECIMAL().getText()
+        #
+        # if ctx.IDENTIFIER(1):
+        #     expression.value = ctx.IDENTIFIER(1).getText()
 
         self.context.value = expression
 
