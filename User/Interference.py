@@ -5,13 +5,6 @@ from User import ActionBase
 from ExpertSystem.Business.UserFramework import IInterference
 from ExpertSystem.Structure.RuleBase import Rule, Fact, ExpressionNode, Expression
 
-expressions = {
-    'A': True,
-    'B': True,
-    'C': False,
-    'D': True,
-}
-
 
 class Interference(IInterference):
     def __init__(self):

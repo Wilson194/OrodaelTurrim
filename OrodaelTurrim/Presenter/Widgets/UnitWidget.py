@@ -28,6 +28,7 @@ class UnitWidget(QWidget):
         self.__filters = []  # type: List[FilterReference]
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
+        Connector().subscribe('map_position_clear', self.map_tile_unselect_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui)
         Connector().subscribe('game_thread_finished', self.redraw_ui)
         Connector().subscribe('game_over', self.game_over_slot)
@@ -62,6 +63,12 @@ class UnitWidget(QWidget):
     @pyqtSlot(Position)
     def map_tile_select_slot(self, position: Position):
         self.__selected_position = position
+        self.redraw_ui()
+
+
+    @pyqtSlot()
+    def map_tile_unselect_slot(self):
+        self.__selected_position = None
         self.redraw_ui()
 
 

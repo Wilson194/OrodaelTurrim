@@ -25,6 +25,7 @@ class MapInfoWidget(QWidget):
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui_slot)
         Connector().subscribe('game_thread_finished', self.redraw_ui_slot)
+        Connector().subscribe('map_position_clear', self.map_tile_unselected_slot)
 
         self.init_ui()
 
@@ -210,6 +211,11 @@ class MapInfoWidget(QWidget):
     @pyqtSlot(Position)
     def map_tile_select_slot(self, position: Position) -> None:
         self.__selected_tile = position
+        self.redraw_ui_slot()
+
+    @pyqtSlot()
+    def map_tile_unselected_slot(self):
+        self.__selected_tile = None
         self.redraw_ui_slot()
 
 

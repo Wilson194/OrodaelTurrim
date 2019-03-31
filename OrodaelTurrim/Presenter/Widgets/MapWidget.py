@@ -15,7 +15,7 @@ from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
 from OrodaelTurrim.Structure.Map import Border
-from OrodaelTurrim.Structure.Position import Position, Point
+from OrodaelTurrim.Structure.Position import Position, Point, OffsetPosition
 
 HEXAGON_SIZE = Point(296, 148)
 
@@ -411,6 +411,6 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def clear_view_slot(self):
-        Connector().emit('map_position_change', None)
+        Connector().emit('map_position_clear')
         self.borders.clear()
         self.redraw_map()

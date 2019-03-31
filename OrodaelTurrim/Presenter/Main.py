@@ -71,6 +71,7 @@ class MainWindow:
 
         Connector().subscribe('status_message', self.status_info)
         Connector().subscribe('map_position_change', self.tile_selected)
+        Connector().subscribe('map_position_clear', self.tile_unselected)
 
 
     def execute(self):
@@ -94,6 +95,9 @@ class MainWindow:
             self.status_info(text)
         else:
             self.status_info('No tile selected')
+
+    def tile_unselected(self):
+        self.status_info('No tile selected')
 
 
     def status_info(self, text: str):

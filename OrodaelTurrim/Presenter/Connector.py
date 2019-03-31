@@ -19,6 +19,7 @@ class Connector(QObject, metaclass=QtSingleton):
     status_message = pyqtSignal(str)
     update_log = pyqtSignal()
     log_message = pyqtSignal(str)
+    map_position_clear = pyqtSignal()
 
     game_thread_finished = pyqtSignal()
 
