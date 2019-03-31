@@ -3,7 +3,7 @@ from typing import List
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QPlainTextEdit, QTextEdit
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -55,6 +55,8 @@ class UnitWidget(QWidget):
 
         self.findChild(QPushButton, 'placeButton').clicked.connect(self.place_unit_slot)
         self.findChild(QPushButton, 'filtersButton').clicked.connect(self.edit_filters_slot)
+
+        self.findChild(QTextEdit, 'infoText').setText(GameObjectPrototypePool[self.__object_type].description_static)
 
 
     @pyqtSlot(Position)
@@ -118,7 +120,7 @@ class UnitWidget(QWidget):
             filter_instances.append(instance)
 
         player = self.__game_engine.get_game_history().active_player
-        unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, [], filter_instances)
+        unit_info = SpawnInformation(player, self.__object_type, self.__selected_position, filter_instances, [])
         self.__game_engine.spawn_unit(unit_info)
 
         Connector().emit('redraw_map')

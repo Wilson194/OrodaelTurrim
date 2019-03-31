@@ -64,7 +64,6 @@ class GameObject:
             self.get_attribute(AttributeType.ACTIONS))).keys())
 
 
-
     @property
     def enemies_in_range(self):
         attack_range = int(self.get_attribute(AttributeType.ATTACK_RANGE))
@@ -193,6 +192,16 @@ class GameObject:
     @property
     def description(self) -> str:
         return self.__prototype.description.format(self.__current_hit_points)
+
+
+    @property
+    def move_filters(self):
+        return self.__move_filters
+
+
+    @property
+    def attack_filters(self):
+        return self.__attack_filters
 
 
 # TODO: Move to structure

@@ -63,18 +63,66 @@ class GameObjectPrototype(ABC):
 
     @property
     def description(self) -> str:
-        return '''Actions: {} <br>
-        Attack: {}<br>        
-        Defense: {}<br>
-        Attack range: {}<br>
-        Sight: {} <br>
-        Hit points: {} / {{}}'''.format(self.get_attribute_value(AttributeType.ACTIONS),
-                                        self.get_attribute_value(AttributeType.ATTACK),
-                                        self.get_attribute_value(AttributeType.DEFENSE),
-                                        self.get_attribute_value(AttributeType.ATTACK_RANGE),
-                                        self.get_attribute_value(AttributeType.SIGHT),
-                                        self.get_attribute_value(AttributeType.HIT_POINTS),
-                                        )
+        return '''        
+        <table>
+            <tr>
+                <td> Actions: </td> <td> {} </td>
+            </tr>
+            <tr>
+                <td> Attack: </td>       <td>{}</td>
+            </tr>
+            <tr>        
+                <td> Defense: </td>      <td>{}</td>
+            </tr>
+            <tr>
+                <td> Range: </td> <td>{}</td>
+            </tr>
+            <tr>
+                <td> Sight: </td>        <td>{}</td>
+            </tr>
+            <tr>
+                <td> Max HP: </td>   <td>{:0.1f}</td>
+            </tr>
+            <tr>
+                <td style="padding-right:8px;"> Current HP: </td>   <td>{{:0.1f}}</td>
+            </tr>
+        </table>'''.format(
+            self.get_attribute_value(AttributeType.ACTIONS),
+            self.get_attribute_value(AttributeType.ATTACK),
+            self.get_attribute_value(AttributeType.DEFENSE),
+            self.get_attribute_value(AttributeType.ATTACK_RANGE),
+            self.get_attribute_value(AttributeType.SIGHT),
+            self.get_attribute_value(AttributeType.HIT_POINTS))
+
+    @property
+    def description_static(self):
+        return '''        
+                <table>
+                    <tr>
+                        <td> Actions: </td> <td> {} </td>
+                    </tr>
+                    <tr>
+                        <td> Attack: </td>       <td>{}</td>
+                    </tr>
+                    <tr>        
+                        <td> Defense: </td>      <td>{}</td>
+                    </tr>
+                    <tr>
+                        <td> Range: </td> <td>{}</td>
+                    </tr>
+                    <tr>
+                        <td> Sight: </td>        <td>{}</td>
+                    </tr>
+                    <tr>
+                        <td> Max HP: </td>   <td>{:0.1f}</td>
+                    </tr>
+                </table>'''.format(
+            self.get_attribute_value(AttributeType.ACTIONS),
+            self.get_attribute_value(AttributeType.ATTACK),
+            self.get_attribute_value(AttributeType.DEFENSE),
+            self.get_attribute_value(AttributeType.ATTACK_RANGE),
+            self.get_attribute_value(AttributeType.SIGHT),
+            self.get_attribute_value(AttributeType.HIT_POINTS))
 
 
 class GetMeta(type):

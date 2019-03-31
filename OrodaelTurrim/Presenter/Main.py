@@ -35,7 +35,7 @@ class MainWidget(QWidget):
         splitter1 = QSplitter(Qt.Horizontal)
         splitter1.addWidget(left)
         splitter1.addWidget(right)
-        splitter1.setSizes([100, 100])
+        splitter1.setSizes([100, 70])
 
         hbox.addWidget(splitter1)
         self.setLayout(hbox)

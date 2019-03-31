@@ -8,7 +8,7 @@ from OrodaelTurrim.Business.Factory import BorderFactory
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
-from OrodaelTurrim.Structure.Enums import AttributeType
+from OrodaelTurrim.Structure.Enums import AttributeType, GameRole
 from OrodaelTurrim.Structure.Map import Border
 from OrodaelTurrim.Structure.Position import Position
 
@@ -103,14 +103,16 @@ class MapInfoWidget(QWidget):
             self.findChild(QLabel, 'tileLabel').setVisible(False)
 
 
-    def draw_character_info(self, position: Position):
+    def draw_character_info(self, position: Position):  # TODO: Refactor add hide not visible unit
         if position and self.__game_engine.is_position_occupied(position):
+            # Display name of the game object
             character_label = self.findChild(QLabel, 'characterLabel')  # type: QLabel
             character_label.setVisible(True)
             character_label.setContentsMargins(0, 0, 0, 20)
             character_label.setText(
                 'Character: {}'.format(self.__game_engine.get_object_type(position).name.capitalize()))
 
+            # Display game object image
             character_image_label = self.findChild(QLabel, 'characterImageLabel')  # type: QLabel
             character_image_label.setVisible(True)
 
@@ -119,29 +121,52 @@ class MapInfoWidget(QWidget):
             character_image_label.setPixmap(
                 QPixmap(str(AssetsEncoder[img])).scaled(226, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-            self.findChild(QTextEdit, 'characterInfoWidget').setText(
+            # Unit attributes
+            self.findChild(QTextEdit, 'objectAttributesText').setText(
                 self.__game_engine.get_game_object(position).description)
+
+            # Display unit filters
+            if self.__game_engine.get_game_object(position).role == GameRole.DEFENDER:
+                attack_filters = self.__game_engine.get_game_object(position).attack_filters
+                text = ''
+                for attack_filter in attack_filters:
+                    text += '{} <br>'.format(attack_filter.__class__.__name__)
+                text += 'Random'
+                self.findChild(QLabel, 'objectFiltersLabel').setVisible(True)
+                self.findChild(QTextEdit, 'objectFiltersText').setText(text)
+            else:
+                self.findChild(QTextEdit, 'objectFiltersText').setText('')
+                self.findChild(QLabel, 'objectFiltersLabel').setVisible(False)
 
             self.findChild(QPushButton, 'visibilityButton').setVisible(True)
             self.findChild(QPushButton, 'attackButton').setVisible(True)
             self.findChild(QPushButton, 'moveButton').setVisible(True)
 
+            self.findChild(QLabel, 'objectAttributesLabel').setVisible(True)
+            self.findChild(QLabel, 'objectEffectsLabel').setVisible(True)
+
+
         else:
             self.findChild(QLabel, 'characterLabel').setVisible(False)
             self.findChild(QLabel, 'characterImageLabel').setVisible(False)
-            self.findChild(QTextEdit, 'characterInfoWidget').setText('')
+            self.findChild(QTextEdit, 'objectAttributesText').setText('')
+
+            self.findChild(QLabel, 'objectAttributesLabel').setVisible(False)
+            self.findChild(QLabel, 'objectEffectsLabel').setVisible(False)
+            self.findChild(QLabel, 'objectFiltersLabel').setVisible(False)
+
             self.findChild(QPushButton, 'visibilityButton').setVisible(False)
             self.findChild(QPushButton, 'attackButton').setVisible(False)
             self.findChild(QPushButton, 'moveButton').setVisible(False)
 
 
     def draw_character_effects(self):
-        text_edit = self.findChild(QTextEdit, 'characterEffectsText')  # type: QTextEdit
+        text_edit = self.findChild(QTextEdit, 'objectEffectsText')  # type: QTextEdit
         text = ''
         if self.__selected_tile and self.__game_engine.is_position_occupied(self.__selected_tile):
             effects = self.__game_engine.get_game_object(self.__selected_tile).active_effects
             for effect in effects:
-                text += '<p>{} ({})</p>'.format(effect.effect_type.name.capitalize(), effect.remaining_duration)
+                text += '{} ({})<br>'.format(effect.effect_type.name.capitalize(), effect.remaining_duration)
 
         text_edit.setText(text)
 
