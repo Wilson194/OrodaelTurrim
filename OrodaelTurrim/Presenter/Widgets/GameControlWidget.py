@@ -1,46 +1,53 @@
+import typing
+
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Widgets.UnitWidget import UnitWidget
 from OrodaelTurrim.Structure.Enums import GameObjectType
-from OrodaelTurrim.Structure.Position import Position
 
 
 class GameControlWidget(QWidget):
-    def __init__(self, parent=None, game_engine: GameEngine = None):
+    """ Widget for manual unit spawn """
+
+    scroll_area_layout: QVBoxLayout
+    scroll_area: QWidget
+
+
+    def __init__(self, parent: QWidget = None, game_engine: GameEngine = None):
         super().__init__(parent)
 
         self.__game_engine = game_engine
 
-        self._scroll_area_layout = None
-        self._scroll_area = None
+        Connector().subscribe('redraw_ui', self.redraw_available_money_slot)
+        Connector().subscribe('game_thread_finished', self.redraw_available_money_slot)
 
         self.init_ui()
 
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         with open(str(UI_ROOT / 'gameControlWidget.ui')) as f:
             uic.loadUi(f, self)
 
-        self._scroll_area = self.findChild(QWidget, 'unitsArea')  # type: QWidget
-        self._scroll_area_layout = QVBoxLayout(self)
+        self.scroll_area = typing.cast(QWidget, self.findChild(QWidget, 'unitsArea'))
+        self.scroll_area_layout = QVBoxLayout(self)
 
-        self._scroll_area.setLayout(self._scroll_area_layout)
+        self.scroll_area.setLayout(self.scroll_area_layout)
 
+        # Insert widget for each Defender unit
         for game_object in GameObjectType.defenders():
-            self._scroll_area_layout.addWidget(UnitWidget(self._scroll_area, self.__game_engine, game_object))
-
-        Connector().subscribe('redraw_ui', self.redraw_available_money_slot)
-        Connector().subscribe('game_thread_finished', self.redraw_available_money_slot)
+            self.scroll_area_layout.addWidget(UnitWidget(self.scroll_area, self.__game_engine, game_object))
 
         self.redraw_available_money_slot()
 
 
     @pyqtSlot()
-    def redraw_available_money_slot(self, position: Position = None):
+    def redraw_available_money_slot(self) -> None:
+        """ Redraw label for available money"""
+
         self.findChild(QLabel, 'moneyLabel').setText('Available money: {}'.format(
             self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)))

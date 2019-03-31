@@ -16,6 +16,8 @@ from OrodaelTurrim.Structure.Position import Position
 
 
 class MapInfoWidget(QWidget):
+    """Widget for display information about selected tile"""
+
     position_axial_icon: QLabel
     position_cubic_icon: QLabel
     position_offset_icon: QLabel
@@ -33,12 +35,11 @@ class MapInfoWidget(QWidget):
     move_button: QPushButton
 
 
-    def __init__(self, parent=None, game_engine: GameEngine = None):
+    def __init__(self, parent: QWidget = None, game_engine: GameEngine = None):
         super().__init__(parent)
 
         self.__game_engine = game_engine
         self.__selected_tile = None  # type: Optional[Position]
-        self.label = None
 
         Connector().subscribe('map_position_change', self.map_tile_select_slot)
         Connector().subscribe('redraw_ui', self.redraw_ui_slot)
@@ -48,7 +49,7 @@ class MapInfoWidget(QWidget):
         self.init_ui()
 
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         with open(str(UI_ROOT / 'mapInfoWidget.ui')) as f:
             uic.loadUi(f, self)
 
@@ -90,6 +91,7 @@ class MapInfoWidget(QWidget):
 
 
     def draw_position_info(self) -> None:
+        """ Draw info about position (Offset, Cubic  and Axial Positions) """
         if self.__selected_tile:
             self.position_label.setVisible(True)
 
@@ -114,6 +116,8 @@ class MapInfoWidget(QWidget):
 
 
     def draw_tile_info(self) -> None:
+        """ Draw info about map tile """
+
         tile_image = typing.cast(QLabel, self.findChild(QLabel, 'tileImageLabel'))
         tile_label = typing.cast(QLabel, self.findChild(QLabel, 'tileLabel'))
         tile_text = typing.cast(QTextEdit, self.findChild(QTextEdit, 'tileInfoText'))
@@ -139,7 +143,8 @@ class MapInfoWidget(QWidget):
             tile_label.setVisible(False)
 
 
-    def draw_character_info(self):
+    def draw_character_info(self) -> None:
+        """ Draw info about character on the selected position """
 
         character_label = typing.cast(QLabel, self.findChild(QLabel, 'characterLabel'))
         character_image = typing.cast(QLabel, self.findChild(QLabel, 'characterImageLabel'))
@@ -207,7 +212,9 @@ class MapInfoWidget(QWidget):
             move_button.setVisible(False)
 
 
-    def draw_characters_filters(self):
+    def draw_characters_filters(self) -> None:
+        """ Draw info about character filters on the selected tile """
+
         filter_label = typing.cast(QLabel, self.findChild(QLabel, 'objectFiltersLabel'))
         filter_text = typing.cast(QTextEdit, self.findChild(QTextEdit, 'objectFiltersText'))
 
@@ -224,7 +231,9 @@ class MapInfoWidget(QWidget):
             filter_label.setVisible(False)
 
 
-    def draw_character_effects(self):
+    def draw_character_effects(self) -> None:
+        """ Draw info about character effects on the selected tile """
+
         effect_text = typing.cast(QTextEdit, self.findChild(QTextEdit, 'objectEffectsText'))
         effect_label = typing.cast(QLabel, self.findChild(QLabel, 'objectEffectsLabel'))
 
@@ -238,7 +247,9 @@ class MapInfoWidget(QWidget):
         effect_label.setVisible(True)
 
 
-    def redraw_ui_slot(self):
+    @pyqtSlot()
+    def redraw_ui_slot(self) -> None:
+        """ Redraw whole UI of widget """
         self.draw_tile_info()
         self.draw_character_info()
         self.draw_position_info()
@@ -246,18 +257,21 @@ class MapInfoWidget(QWidget):
 
     @pyqtSlot(Position)
     def map_tile_select_slot(self, position: Position) -> None:
+        """ Selected position change"""
         self.__selected_tile = position
         self.redraw_ui_slot()
 
 
     @pyqtSlot()
-    def map_tile_unselected_slot(self):
+    def map_tile_unselected_slot(self) -> None:
+        """ Clear selected position """
         self.__selected_tile = None
         self.redraw_ui_slot()
 
 
     @pyqtSlot()
-    def show_visibility_slot(self):
+    def show_visibility_slot(self) -> None:
+        """ Display vision of the unit on the selected position """
         tiles = self.__game_engine.get_game_object(self.__selected_tile).visible_tiles
 
         border_dict = BorderFactory.create(3, QColor(0, 0, 255), tiles)
@@ -266,7 +280,8 @@ class MapInfoWidget(QWidget):
 
 
     @pyqtSlot()
-    def show_attack_range_slot(self):
+    def show_attack_range_slot(self) -> None:
+        """ Display attack range of the unit on the selected position """
         attack_range = self.__game_engine.get_game_object(self.__selected_tile).get_attribute(
             AttributeType.ATTACK_RANGE)
 
@@ -278,7 +293,8 @@ class MapInfoWidget(QWidget):
 
 
     @pyqtSlot()
-    def show_accessible_tiles_slot(self):
+    def show_accessible_tiles_slot(self) -> None:
+        """ Display accessible tiles of the unit on the selected position"""
         tiles = self.__game_engine.get_game_object(self.__selected_tile).accessible_tiles
 
         border_dict = BorderFactory.create(3, QColor(0, 0, 255), tiles)

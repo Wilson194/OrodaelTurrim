@@ -1,20 +1,22 @@
-import inspect
-from typing import Union, List
+import typing
+from typing import List, Tuple
 
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QPushButton, QListWidget, QListWidgetItem, QAbstractItemView
-from OrodaelTurrim.Structure.Filter import AttackFilter
-from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
-from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter as AttackFilterPattern, FilterReference
 
 from OrodaelTurrim import UI_ROOT, ICONS_ROOT
 from OrodaelTurrim.Structure.Enums import GameObjectType
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
+from OrodaelTurrim.Structure.Filter.FilterPattern import FilterReference
 
 
 class ListWidgetItem(QListWidgetItem):
-    def __init__(self, name, arguments):
+    """ Overload QListWidgetItem for store arguments of the filter"""
+
+
+    def __init__(self, name: str, arguments: List):
         super().__init__()
         self.name = name
         self.arguments = arguments
@@ -22,93 +24,105 @@ class ListWidgetItem(QListWidgetItem):
 
 
 class FilterDialog(QDialog):
+    """ Window for setup filters and order of the filters"""
+
+    list_widget: QListWidget
+
 
     def __init__(self, game_object_type: GameObjectType, filters: List[FilterReference]):
         super().__init__()
 
-        self.__game_object_type = game_object_type
-        self.__filters = filters
-
-        self.__list = None
+        self.game_object_type = game_object_type
+        self.filters = filters
 
         self.init_ui()
 
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         with open(str(UI_ROOT / 'filterDialog.ui')) as f:
             uic.loadUi(f, self)
 
-        self.__list = self.findChild(QListWidget, 'listWidget')  # type: QListWidget
+        self.list_widget = typing.cast(QListWidget, self.findChild(QListWidget, 'listWidget'))
 
-        add_button: QPushButton = self.findChild(QPushButton, 'addButton')
-        remove_button = self.findChild(QPushButton, 'removeButton')  # type: QPushButton
-        up_button = self.findChild(QPushButton, 'upButton')  # type: QPushButton
-        down_button = self.findChild(QPushButton, 'downButton')  # type: QPushButton
+        add_button = typing.cast(QPushButton, self.findChild(QPushButton, 'addButton'))
+        remove_button = typing.cast(QPushButton, self.findChild(QPushButton, 'removeButton'))
+        up_button = typing.cast(QPushButton, self.findChild(QPushButton, 'upButton'))
+        down_button = typing.cast(QPushButton, self.findChild(QPushButton, 'downButton'))
 
+        # Set images of control buttons
         add_button.setIcon(QIcon(str(ICONS_ROOT / 'plus.png')))
         remove_button.setIcon(QIcon(str(ICONS_ROOT / 'minus.png')))
         up_button.setIcon(QIcon(str(ICONS_ROOT / 'up.png')))
         down_button.setIcon(QIcon(str(ICONS_ROOT / 'down.png')))
 
+        # Connect signals
         add_button.clicked.connect(self.add_filter_slot)
         remove_button.clicked.connect(self.remove_filter_slot)
         up_button.clicked.connect(self.move_filter_up_slot)
         down_button.clicked.connect(self.move_filter_down_slot)
 
-        self.__list.setDragDropMode(QAbstractItemView.InternalMove)
+        self.list_widget.setDragDropMode(QAbstractItemView.InternalMove)
 
-        for item in self.__filters:
-            self.__list.addItem(ListWidgetItem(item.name, item.arguments))
+        # Load filters based on given list ( saved values)
+        for item in self.filters:
+            self.list_widget.addItem(ListWidgetItem(item.name, item.arguments))
 
 
     @pyqtSlot()
-    def add_filter_slot(self):
+    def add_filter_slot(self) -> None:
+        """ Add new filter - spawn new window"""
         result, data = AddFilterDialog.execute_()
         if result:
-            self.__list.addItem(ListWidgetItem(*data))
+            self.list_widget.addItem(ListWidgetItem(*data))
 
 
     @pyqtSlot()
-    def remove_filter_slot(self):
-        for item in self.__list.selectedItems():
-            self.__list.takeItem(self.__list.row(item))
+    def remove_filter_slot(self) -> None:
+        """ Remove selected filter """
+        for item in self.list_widget.selectedItems():
+            self.list_widget.takeItem(self.list_widget.row(item))
 
 
     @pyqtSlot()
-    def move_filter_up_slot(self):
-        current_row = self.__list.currentRow()
+    def move_filter_up_slot(self) -> None:
+        """ Move selected filter up """
+        current_row = self.list_widget.currentRow()
         previous_row = current_row - 1
 
         if previous_row < 0:
             return
 
-        item = self.__list.item(current_row)
+        item = self.list_widget.item(current_row)
 
-        self.__list.takeItem(current_row)
-        self.__list.insertItem(previous_row, item)
+        self.list_widget.takeItem(current_row)
+        self.list_widget.insertItem(previous_row, item)
 
-        self.__list.setCurrentRow(previous_row)
+        self.list_widget.setCurrentRow(previous_row)
 
 
     @pyqtSlot()
-    def move_filter_down_slot(self):
-        current_row = self.__list.currentRow()
+    def move_filter_down_slot(self) -> None:
+        """ Move selected filter down """
+        current_row = self.list_widget.currentRow()
         next_row = current_row + 1
 
-        if next_row >= self.__list.count():
+        if next_row >= self.list_widget.count():
             return
 
-        item = self.__list.item(current_row)
+        item = self.list_widget.item(current_row)
 
-        self.__list.takeItem(current_row)
-        self.__list.insertItem(next_row, item)
+        self.list_widget.takeItem(current_row)
+        self.list_widget.insertItem(next_row, item)
 
-        self.__list.setCurrentRow(next_row)
+        self.list_widget.setCurrentRow(next_row)
 
 
-    def get_inputs(self):
+    def get_inputs(self) -> List[FilterReference]:
+        """ Get inputs from QListWidget"""
         result = []
-        for item in self.__list.findItems('.*', QtCore.Qt.MatchRegExp):
+
+        item: ListWidgetItem
+        for item in self.list_widget.findItems('.*', QtCore.Qt.MatchRegExp):
             result.append(FilterReference(item.name, item.arguments))
 
         return result
@@ -125,39 +139,32 @@ class FilterDialog(QDialog):
 
 
 class AddFilterDialog(QDialog):
+    """ Add new filter from the list """
+
+    list_widget: QListWidget
+
+
     def __init__(self):
         super().__init__()
-
-        self.list_widget = None  # type: QListWidget
 
         self.init_ui()
 
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         with open(str(UI_ROOT / 'addFilterDialog.ui')) as f:
             uic.loadUi(f, self)
 
-        self.list_widget = self.findChild(QListWidget, 'listWidget')
+        self.list_widget = typing.cast(QListWidget, self.findChild(QListWidget, 'listWidget'))
 
         self.list_widget.itemDoubleClicked.connect(self.accept)
 
+        # Load filters and set one item for each
         filters = FilterFactory().attack_filters
         for _filter in filters:
             self.list_widget.addItem(_filter.name)
 
 
-    def get_list_of_filters(self):
-        result = []
-        for name, obj, in inspect.getmembers(AttackFilter):
-            if inspect.isclass(obj) and issubclass(obj, AttackFilterPattern) and not inspect.isabstract(obj):
-                parameters = [parameter for parameter in inspect.getfullargspec(obj.__init__).args if
-                              parameter not in ['self', 'map_proxy', 'game_object_proxy']]
-                result.append((name, parameters))
-
-        return result
-
-
-    def get_inputs(self):
+    def get_inputs(self) -> Tuple[str, List]:
         selected = self.list_widget.selectedItems()[0]  # type: QListWidgetItem
         return selected.text(), []
 

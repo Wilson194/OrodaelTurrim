@@ -1,29 +1,43 @@
-import math
-from math import sqrt
+import typing
 from pathlib import Path
-from typing import List, Tuple, Dict
-from PyQt5 import uic
-from PyQt5.QtCore import Qt, QRectF, QRect, pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QPixmap, QPen, QColor, QBrush
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
-    QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsSceneHoverEvent, QPushButton
+from typing import List, Tuple, Dict, Union
+
+import math
 from PyQt5 import QtCore, QtGui
-from OrodaelTurrim import IMAGES_ROOT, UI_ROOT, DEBUG, ICONS_ROOT
+from PyQt5 import uic
+from PyQt5.QtCore import Qt, QRectF, pyqtSlot
+from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPixmap, QPen, QColor, QBrush
+from PyQt5.QtWidgets import QGraphicsItem, QWidget, QGraphicsScene, QGraphicsView, QScrollArea, QHBoxLayout, \
+    QStyleOptionGraphicsItem, QGraphicsSceneMouseEvent, QPushButton
+from math import sqrt
+
+from OrodaelTurrim import UI_ROOT, DEBUG, ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Utils import AssetsEncoder
 from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
 from OrodaelTurrim.Structure.Map import Border
-from OrodaelTurrim.Structure.Position import Position, Point, OffsetPosition
+from OrodaelTurrim.Structure.Position import Position, Point
 
 HEXAGON_SIZE = Point(296, 148)
+BORDER_OPACITY = 0.65
+FOG_OF_WAR_OPACITY = 0.50
 
 
 class GraphicItem(QGraphicsItem):
-    image_size = Point(296, 200)
-    hexagon_size = HEXAGON_SIZE
+    """
+    General graphic item for each item on map.
+    Generalize position computation and overload PyQt functions
+    """
+    image_size = Point(296, 200)  # Size if tile image in pixels
+    hexagon_size = HEXAGON_SIZE  # Size of only hexagon (without top overlay) in pixels
     hexagon_offset = Point(149, 127)
+
+    _image_size: Point  # Real size of image based on transformation
+    _size: float  # Length from hexagon center to hexagon corner
+    _size_w: float  # Width of the hexagon with transformation
+    _size_h: float  # Height of the hexagon with transformation
 
 
     def __init__(self, parent: "MapWidget", game_engine: GameEngine, position: Position, transformation: float = 0.3):
@@ -35,15 +49,12 @@ class GraphicItem(QGraphicsItem):
         self._map_object = game_engine.get_game_map()
         self._transformation = transformation
 
-        self._image_size = None
-        self._size = None
-        self._size_w = None
-        self._size_h = None
-
         self.calculate_sizes()
 
 
-    def calculate_sizes(self):
+    def calculate_sizes(self) -> None:
+        """ Calculate sizes based on image size and transformation"""
+
         self._image_size = Point(self.image_size.x * self._transformation, self.image_size.y * self._transformation)
         self._size = self.hexagon_size.x * self._transformation / 2
 
@@ -64,9 +75,15 @@ class GraphicItem(QGraphicsItem):
 
     def hex_corner_offset(self, corner: int) -> Tuple[float, float]:
         """
-        Compute offset to corner
+        Compute offset to the corner based on corner number
+          4 - 5
+         /     \
+        3       0
+         |     /
+          2 - 1
+
         :param corner: number of corner, start from right corner
-        :return: float offset
+        :return: tuple of x and y offset to corner
         """
         angle = math.pi / 180 * (corner * 60)
         return self._size_w * math.cos(angle), self._size_h * math.sin(angle)
@@ -74,7 +91,7 @@ class GraphicItem(QGraphicsItem):
 
     def get_corners(self) -> List[Point]:
         """
-        Get list of corners of hexagon
+        Get list of Points of corners of hexagon
         :return: list of corners points
         """
         center = self.get_center()
@@ -87,7 +104,7 @@ class GraphicItem(QGraphicsItem):
 
     def boundingRect(self) -> QRectF:
         """
-        Over rider bounding rectangle for determinate paint event
+        Override bounding rectangle for determinate paint event
         :return: rectangle of png image
         """
         center = self.get_center()
@@ -109,18 +126,11 @@ class MapTileGraphicsItem(GraphicItem):
 
 
     def __init__(self, parent: "MapWidget", game_engine: GameEngine, position: Position, transformation: float = 0.3):
-        """
-        Create QGraphicItem object for rendering
-        :param map_object: reference to map object
-        :param position: position of tile
-        :param transformation: size multiplication
-        """
         super().__init__(parent, game_engine, position, transformation)
 
-        # self.setAcceptHoverEvents(True)
 
-
-    def transformation_change_slot(self, transformation: float):
+    def transformation_change_slot(self, transformation: float) -> None:
+        """ Change transformation and recalculate sizes"""
         self._transformation = transformation
         self.calculate_sizes()
         self.update()
@@ -136,19 +146,19 @@ class MapTileGraphicsItem(GraphicItem):
         """
 
         # Get image
-        image_path = self.__get_tile_image(self._map_object[self._position].terrain_type)
+        image_path = self.get_tile_image(self._map_object[self._position].terrain_type)
         pixmap = QPixmap(str(image_path))
 
         painter.drawPixmap(self.boundingRect().toRect(), pixmap)
 
         if DEBUG:
-            # Draw test position
-            self.__draw_position(painter)
-            # Draw image rectangle
+            # Draw position numbers on tiles
+            self.draw_position(painter)
+            # Draw bounding rectangle
             painter.drawRect(self.boundingRect())
 
 
-    def __draw_position(self, painter: QPainter) -> None:
+    def draw_position(self, painter: QPainter) -> None:
         """
         Draw offset position to each tile
         """
@@ -162,22 +172,28 @@ class MapTileGraphicsItem(GraphicItem):
                          '{},{}'.format(self._position.offset.q, self._position.offset.r))
 
 
-    def __get_tile_image(self, tile_type: TerrainType) -> Path:
+    def get_tile_image(self, tile_type: TerrainType) -> Path:
         """
         Get path to image based on terrain type
+
         :param tile_type: enum of terrain type
         :return: Path to png image
         """
+        # For river determinate rotation correct rotation
         if tile_type == TerrainType.RIVER:
             river_direction = []
             out_of_map_direction = []
+
             for i, position in enumerate(self._position.get_all_neighbours()):
+                # Select out of the map direction (River always end on the map edge
                 if not self._map_object.position_on_map(position):
                     out_of_map_direction.append(i)
 
+                # Select river neighbour
                 elif self._map_object[position].terrain_type == TerrainType.RIVER:
                     river_direction.append(int(i))
 
+            # If more than out of map position, selected position with maximum different way from on map river
             if out_of_map_direction:
                 river_direction.append(
                     sorted(out_of_map_direction, key=lambda x: abs(river_direction[0] - x), reverse=True)[0])
@@ -189,19 +205,15 @@ class MapTileGraphicsItem(GraphicItem):
 
 
 class ObjectGraphicsItem(GraphicItem):
-    def __init__(self, parent: "MapWidget", game_engine: GameEngine, position: Position, transformation: float = 0.3):
-        """
-        Create QGraphicItem object for rendering
-        :param map_object: reference to map object
-        :param position: position of tile
-        :param border: border class for define border rendering
-        :param transformation: size multiplication
-        """
+    """ Graphic item for display units on map """
 
+
+    def __init__(self, parent: "MapWidget", game_engine: GameEngine, position: Position, transformation: float = 0.3):
         super().__init__(parent, game_engine, position, transformation)
 
 
-    def transformation_change_slot(self, transformation: float):
+    def transformation_change_slot(self, transformation: float) -> None:
+        """ Change transformation and recalculate sizes"""
         self._transformation = transformation
         self.calculate_sizes()
         self.update()
@@ -224,12 +236,7 @@ class ObjectGraphicsItem(GraphicItem):
 
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
-        """
-        Override paint function. Call every time when need to be render
-        :param painter: painter object
-        :param option: style options of item
-        :param widget: parent widget
-        """
+        """ Override paint function. Call every time when need to be render """
 
         # Check if there is object
         if self._game_engine.get_object_type(self._position) == GameObjectType.NONE:
@@ -247,6 +254,8 @@ class ObjectGraphicsItem(GraphicItem):
 
 
 class TileBorderGraphicsItem(GraphicItem):
+    """ Graphic item for draw borders of the tiles """
+
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
         border = self.parent.borders.get(self._position, None)
@@ -254,7 +263,7 @@ class TileBorderGraphicsItem(GraphicItem):
         if not border:
             return
 
-        painter.setOpacity(0.65)
+        painter.setOpacity(BORDER_OPACITY)
 
         colors = border.color
         borders = border.order
@@ -262,17 +271,19 @@ class TileBorderGraphicsItem(GraphicItem):
         for i in range(len(corners) - 1, -1, -1):
             if borders[i] != 0:
                 painter.setPen(QPen(colors[i], borders[i], Qt.SolidLine))
-
                 painter.drawLine(corners[i], corners[i - 1])
 
 
 class TileVisibilityGraphicsItem(GraphicItem):
+    """ Graphic item for draw fog of war"""
+
+
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget) -> None:
         visible = self._position in self._game_engine.get_player_visible_tiles(
             self._game_engine.get_game_history().active_player)
 
         if not visible:
-            painter.setOpacity(0.50)
+            painter.setOpacity(FOG_OF_WAR_OPACITY)
             painter.setPen(QPen(Qt.white, 0, Qt.SolidLine))
 
             painter.setBrush(QBrush(QColor(70, 70, 70), Qt.SolidPattern))
@@ -281,13 +292,18 @@ class TileVisibilityGraphicsItem(GraphicItem):
 
 
 class MapWidget(QWidget):
+    """ Widget with map canvas and control buttons"""
 
-    def __init__(self, parent=None, game_engine: GameEngine = None):
+    scroll_area: QScrollArea  # Scroll area for map
+    scene: QGraphicsScene
+    view: QGraphicsView
+
+
+    def __init__(self, parent: QWidget = None, game_engine: GameEngine = None):
         super().__init__(parent)
         self.__game_engine = game_engine
 
         self.borders = {}  # type: Dict[Position, Border]
-
         self.transformation = 0.4
 
         Connector().subscribe('redraw_map', self.redraw_map)
@@ -297,22 +313,26 @@ class MapWidget(QWidget):
         self.init_ui()
 
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         with open(str(UI_ROOT / 'mapWidget.ui')) as f:
             uic.loadUi(f, self)
 
-        self.scroll_area = self.findChild(QScrollArea, 'scrollArea')  # type:QScrollArea
+        self.scroll_area = typing.cast(QScrollArea, self.findChild(QScrollArea, 'scrollArea'))
         scroll_layout = QHBoxLayout()
 
         self.scene = QGraphicsScene(self.scroll_area)
 
         game_map = self.__game_engine.get_game_map()
 
+        # Create graphic item for each map objects. Z order of the items is based on insertion to scene
+        # Insert Map tiles and Units
         for position in game_map.tiles:
             self.scene.addItem(MapTileGraphicsItem(self, self.__game_engine, position, self.transformation))
             self.scene.addItem(ObjectGraphicsItem(self, self.__game_engine, position, self.transformation))
+        # Insert Fog of war items
         for position in game_map.tiles:
             self.scene.addItem(TileVisibilityGraphicsItem(self, self.__game_engine, position, self.transformation))
+        # Insert Border items
         for position in game_map.tiles:
             self.scene.addItem(TileBorderGraphicsItem(self, self.__game_engine, position, self.transformation))
 
@@ -320,15 +340,15 @@ class MapWidget(QWidget):
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setCacheMode(QGraphicsView.CacheBackground)
         self.view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
-        # view.setDragMode(QGraphicsView.ScrollHandDrag)
 
         scroll_layout.addWidget(self.view)
         self.scroll_area.setLayout(scroll_layout)
 
-        zoom_in_button = self.findChild(QPushButton, 'zoomInButton')  # type: QPushButton
-        zoom_out_button = self.findChild(QPushButton, 'zoomOutButton')  # type: QPushButton
-        zoom_reset_button = self.findChild(QPushButton, 'zoomResetButton')  # type: QPushButton
-        clear_view_button = self.findChild(QPushButton, 'clearViewButton')  # type: QPushButton
+        # Setup buttons under map
+        zoom_in_button = typing.cast(QPushButton, self.findChild(QPushButton, 'zoomInButton'))
+        zoom_out_button = typing.cast(QPushButton, self.findChild(QPushButton, 'zoomOutButton'))
+        zoom_reset_button = typing.cast(QPushButton, self.findChild(QPushButton, 'zoomResetButton'))
+        clear_view_button = typing.cast(QPushButton, self.findChild(QPushButton, 'clearViewButton'))
 
         zoom_in_button.clicked.connect(self.zoom_in_slot)
         zoom_out_button.clicked.connect(self.zoom_out_slot)
@@ -340,19 +360,23 @@ class MapWidget(QWidget):
         zoom_reset_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'zoom_reset.png')))
         clear_view_button.setIcon(QtGui.QIcon(str(ICONS_ROOT / 'eye_cross.png')))
 
+        # Send click on map with transformation for correct position computation
         self.scene.mousePressEvent = lambda x: self.click_on_map(x, self.transformation)
 
         self.view.show()
 
 
-    def clear_border_color(self, color: QColor):
+    def clear_border_color(self, color: Union[QColor, List[QColor]]) -> None:
+        """ Clear borders of given colors"""
         for k in list(self.borders):
             if self.borders[k].color[0] == color:
                 del self.borders[k]
 
 
     @pyqtSlot()
-    def click_on_map(self, event: QGraphicsSceneMouseEvent, transformation: float):
+    def click_on_map(self, event: QGraphicsSceneMouseEvent, transformation: float) -> None:
+        """ Handle click on map - try to compute position and inform about selected tile"""
+
         position = Position.from_pixel(event.scenePos(), transformation).offset
 
         if self.__game_engine.get_game_map().position_on_map(position):
@@ -366,23 +390,26 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def redraw_map(self) -> None:
+        """ Update scene based on redraw signal """
         if not Connector().get_variable('redraw_disable'):
-            print('Redrawing')
             self.scene.update()
 
 
     @pyqtSlot()
     def zoom_in_slot(self):
+        """ Zoom in map by 25% """
         self.view.scale(1.25, 1.25)
 
 
     @pyqtSlot()
     def zoom_out_slot(self):
+        """ Zoom out map by 25% """
         self.view.scale(0.80, 0.80)
 
 
     @pyqtSlot()
     def zoom_reset_slot(self):
+        """ Reset zoom to state, that whole map is visible"""
         rect = QtCore.QRectF(self.scene.sceneRect())
         if not rect.isNull():
             self.view.setSceneRect(rect)
@@ -398,6 +425,7 @@ class MapWidget(QWidget):
 
     @pyqtSlot(dict, list)
     def display_borders(self, border_info: Dict[Position, Border], clear_colors: List[QColor] = None):
+        """ Display borders on the map"""
         if clear_colors:
             if type(clear_colors) is not list:
                 clear_colors = [clear_colors]
@@ -411,6 +439,7 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def clear_view_slot(self):
+        """ Clear all borders on map and clear selected position"""
         Connector().emit('map_position_clear')
         self.borders.clear()
         self.redraw_map()
