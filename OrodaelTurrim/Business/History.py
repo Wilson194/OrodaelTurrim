@@ -19,8 +19,6 @@ class GameHistory:
 
         self.__turns = []  # type: List[List[List["GameAction"]]]
 
-        self.__log_signal = Connector().functor('update_log')
-
         self.start_next_game_turn()
 
 
@@ -165,7 +163,6 @@ class GameHistory:
 
         self.__turns[self.__current_turn][self.__current_player].append(action)
         self.__current_action += 1
-        self.__log_signal()
 
 
     def end_turn(self) -> None:
@@ -196,7 +193,6 @@ class GameHistory:
         self.clear_player_turn()
 
 
-
     def move_action_back(self) -> None:
         if not self.before_first_action:
             self.current_action.undo()
@@ -204,12 +200,10 @@ class GameHistory:
         self.move_to_previous()
 
 
-
     def move_action_forth(self) -> None:
         self.move_to_next()
         if not self.before_first_action:
             self.current_action.execute()
-
 
 
     def move_turn_back(self) -> None:
@@ -229,7 +223,6 @@ class GameHistory:
         self.redo_player_actions()
 
         self.move_to_next()
-
 
 
     def move_to_present(self) -> None:

@@ -3,6 +3,9 @@ from OrodaelTurrim.Structure.Enums import GameObjectType, TerrainType
 
 
 class GetMeta(type):
+    """ Meta class that add getitem on assets dict on static class """
+
+
     def __getitem__(self, item):
         try:
             return AssetsEncoder.assets[item]
@@ -11,6 +14,7 @@ class GetMeta(type):
 
 
 class AssetsEncoder(metaclass=GetMeta):
+    """ Decode GameObjectType Enum to image """
     assets = {
         GameObjectType.ARCHER: IMAGES_ROOT / 'Objects' / 'archer.png',
         GameObjectType.BASE: IMAGES_ROOT / 'Objects' / 'base.png',
@@ -45,8 +49,4 @@ class AssetsEncoder(metaclass=GetMeta):
         'river_2-5': IMAGES_ROOT / 'Terrain' / 'river_2-5.png',
         'river_3-5': IMAGES_ROOT / 'Terrain' / 'river_3-5.png',
 
-        'river_2-3': IMAGES_ROOT / 'Terrain' / 'river_2-4.png',
-        'river_0-5': IMAGES_ROOT / 'Terrain' / 'river_0-3.png',
-        'river_3-4': IMAGES_ROOT / 'Terrain' / 'river_3-5.png',
-        'river_0-1': IMAGES_ROOT / 'Terrain' / 'river_0-2.png',
     }

@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtCore import Qt, QEventLoop, pyqtSlot, QObject
-from PyQt5.QtGui import QIcon, QWindow
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMainWindow, QMessageBox
+from PyQt5.QtCore import Qt, pyqtSlot, QObject
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox
 
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -16,7 +16,10 @@ PATH_RES = Path(__file__).parent.parent / 'res'
 
 
 class MainWidget(QWidget):
-    def __init__(self, parent=None, game_engine: GameEngine = None):
+    """ Main widget with QSplit - Map / Control"""
+
+
+    def __init__(self, parent: QWidget = None, game_engine: GameEngine = None):
         super().__init__(parent)
         self.__game_engine = game_engine
 
@@ -26,9 +29,11 @@ class MainWidget(QWidget):
     def init_ui(self):
         hbox = QHBoxLayout(self)
 
+        # Left frame for map
         left = QFrame(self)
         left.setFrameShape(QFrame.StyledPanel)
 
+        # Right frame for control tabs
         right = QFrame(self)
         right.setFrameShape(QFrame.StyledPanel)
 
@@ -55,6 +60,9 @@ class MainWidget(QWidget):
 
 
 class MainWindow(QObject):
+    """ Main windows class with QApplication instance """
+
+
     def __init__(self, game_engine: GameEngine):
         super().__init__()
         self.app = QtWidgets.QApplication([])
@@ -76,21 +84,22 @@ class MainWindow(QObject):
         Connector().subscribe('error_message', self.error_message_slot)
 
 
-    def execute(self):
+    def execute(self) -> int:
+        """ Display main window and start loop """
         self.window.show()
         self.window.showMaximized()
 
+        # Window icon
         self.window.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
         self.window.setWindowTitle('Orodael Turrim')
 
         self.app.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
 
-        Connector().functor('history_action')()
-
         return self.app.exec()
 
 
-    def tile_selected(self, position: Position):
+    def tile_selected(self, position: Position) -> None:
+        """ Display selected position in windows status bar """
         if position:
             text = '     Offset: {}, Cubic: {}, Axial: {}'.format(position.offset.string, position.cubic.string,
                                                                   position.axial.string)
@@ -99,16 +108,19 @@ class MainWindow(QObject):
             self.status_info('No tile selected')
 
 
-    def tile_unselected(self):
+    def tile_unselected(self) -> None:
+        """ Clear status bar"""
         self.status_info('No tile selected')
 
 
-    def status_info(self, text: str):
+    def status_info(self, text: str) -> None:
+        """ Display text on status bar"""
         self.window.statusBar().showMessage(text)
 
 
     @pyqtSlot(str, str)
-    def error_message_slot(self, context: str, error_message: str):
+    def error_message_slot(self, context: str, error_message: str) -> None:
+        """ Display error window with error message """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText(error_message)
