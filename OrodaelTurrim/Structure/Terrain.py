@@ -7,7 +7,16 @@ if TYPE_CHECKING:
 
 
 class Terrain(ABC):
+    """ Abstract class for terrain types."""
+
+
     def compute_damage(self, hit_points: float) -> float:
+        """
+        Computes, how much damage will this terrain inflict on start of each turn
+
+        :param hit_points: Previous value of hit points of game object
+        :return: Amount of damage to be inflicted to game object
+        """
         return 0
 
 
@@ -36,6 +45,13 @@ class Terrain(ABC):
 
 
     def affect_attribute(self, attribute: "AttributeType", original_value: Union[int, float]) -> Union[float, int]:
+        """
+        Provides affected value of specified attribute by this terrain
+
+        :param attribute: Type of attribute, which should be affected
+        :param original_value: Original value of affected attribute
+        :return: Affected value of specified attribute by this terrain
+        """
         from OrodaelTurrim.Structure.Enums import AttributeType
 
         if attribute == AttributeType.ACTIONS:
@@ -59,11 +75,24 @@ class Terrain(ABC):
 
     @abstractmethod
     def get_move_cost(self, target: 'TerrainType') -> int:
+        """
+        Get move cost of the terrain based current terrain type and target terrain type.
+        Move cost have value based on target and source terrain type
+
+        :param target:  target terrain type
+        :return: action cost
+        """
         pass
 
 
     @abstractmethod
     def get_remaining_sigh(self, current_sight: int) -> int:
+        """
+        Get remaining sight after current terrain type
+
+        :param current_sight: current sight number
+        :return: remaining sight
+        """
         pass
 
 
@@ -73,11 +102,24 @@ class Terrain(ABC):
         pass
 
 
-    def info_text(self):
+    def info_text(self) -> str:
+        """ Return text information of the terrain"""
         return ""
 
 
+    @abstractmethod
+    def char(self) -> str:
+        """ Return character that represent this terrain type for string map definition """
+        pass
+
+
 class Field(Terrain):
+    """
+    Class representing field on map. This to horizon stretching plane of yellow crop provides neither bonuses
+    nor penalties. Just an opportunity to ruin another harvest.
+    """
+
+
     def get_move_cost(self, target: 'TerrainType') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
@@ -110,6 +152,12 @@ class Field(Terrain):
 
 
 class Forest(Terrain):
+    """
+    Class representing ever green forest. The shadows of the trees provide shelter from enemy arrows
+    and the bushes make excellent place for an ambush. However, entering the forest might prove bit exhausting.
+    """
+
+
     def get_move_cost(self, target: 'Terrain') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
@@ -152,6 +200,11 @@ class Forest(Terrain):
 
 
 class Hill(Terrain):
+    """
+    Class representing little hill. Someone kept on throwing piles of dirt here and now look, there is a hill.
+    """
+
+
     def get_move_cost(self, target: 'TerrainType') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.HILL:
@@ -192,6 +245,12 @@ class Hill(Terrain):
 
 
 class Mountain(Terrain):
+    """
+    Class representing pointy rock giants. Everyone who tried climbing those knows, it is not a piece of cake.
+    On the other hand, they provide great place to stay safe, since nobody wants to climb them either.
+    """
+
+
     def get_move_cost(self, target: 'TerrainType') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
@@ -229,6 +288,7 @@ class Mountain(Terrain):
     def char(self) -> str:
         return 'M'
 
+
     def info_text(self):
         return """    
         <br>            
@@ -239,8 +299,13 @@ class Mountain(Terrain):
         """.format()
 
 
-
 class River(Terrain):
+    """
+    Class representing mass of water. Does not matter if it´s river, lake or pond, nobody wants to get wet.
+    Especially not Larry (he cannot swim).
+    """
+
+
     def get_move_cost(self, target: 'TerrainType') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
@@ -278,6 +343,7 @@ class River(Terrain):
     def char(self) -> str:
         return 'R'
 
+
     def info_text(self):
         return """    
         <br>            
@@ -288,8 +354,13 @@ class River(Terrain):
         """.format()
 
 
-
 class Village(Terrain):
+    """
+    Class representing little village in the countryside. Few huts, church and pub - everything a simple
+    adventurer would need and even more!
+    """
+
+
     def get_move_cost(self, target: 'Terrain') -> int:
         from OrodaelTurrim.Structure.Enums import TerrainType
         if target == TerrainType.MOUNTAIN:
@@ -325,6 +396,7 @@ class Village(Terrain):
     def char(self) -> str:
         return 'V'
 
+
     def info_text(self):
         return """    
         <br>            
@@ -333,4 +405,3 @@ class Village(Terrain):
         <p>Defence bonus: 0.3</p>        
         <p>Actions bonus: 1</p>        
         """.format()
-

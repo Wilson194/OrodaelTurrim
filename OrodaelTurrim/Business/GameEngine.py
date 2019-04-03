@@ -28,7 +28,6 @@ from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, TerrainType, EffectType, GameRole
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject, SpawnInformation, UncertaintySpawn
 from OrodaelTurrim.Structure.Position import Position
-from OrodaelTurrim.Structure.TypeStrucutre import TwoWayDict
 
 
 class GameEngine:

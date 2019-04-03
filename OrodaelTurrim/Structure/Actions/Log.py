@@ -6,6 +6,9 @@ if TYPE_CHECKING:
 
 
 class LogAction(GameAction):
+    """ User custom log action """
+
+
     def __init__(self, game_engine: "GameEngine", log_message: str):
         super().__init__(game_engine)
 

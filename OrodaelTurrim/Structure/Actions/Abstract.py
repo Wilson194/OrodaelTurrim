@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 
 class GameAction(ABC):
+    """ Core class defining methods for game actions (history marks) """
     TIME_STAMP_FORMAT = '%H:%M:%S'
 
 
@@ -17,17 +18,23 @@ class GameAction(ABC):
 
     @abstractmethod
     def execute(self) -> None:
+        """ Executes given game action """
         pass
 
 
     @abstractmethod
     def undo(self) -> None:
+        """
+        Undoes any effects, which this game action caused effectively returning game to the state
+        before this action happened
+        """
         pass
 
 
     @property
     @abstractmethod
     def text(self) -> str:
+        """ Returns text representation of this game action to show, what happened """
         pass
 
 

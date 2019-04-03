@@ -1,4 +1,3 @@
-
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
@@ -9,6 +8,9 @@ if TYPE_CHECKING:
 
 
 class EffectApplyAction(GameAction):
+    """ Represents game action of effect being applied on game object """
+
+
     def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
         self.__effect = effect
@@ -30,6 +32,9 @@ class EffectApplyAction(GameAction):
 
 
 class EffectDamageAction(GameAction):
+    """ Represents game action of effect damaging its owner game object """
+
+
     def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject, damage: float):
         super().__init__(game_engine)
 
@@ -53,6 +58,9 @@ class EffectDamageAction(GameAction):
 
 
 class EffectExpireAction(GameAction):
+    """ Represents game action of effect expiring on game object """
+
+
     def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
 
@@ -75,6 +83,9 @@ class EffectExpireAction(GameAction):
 
 
 class EffectRefreshAction(GameAction):
+    """  Represents game action of effect being refreshed """
+
+
     def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
 
@@ -100,6 +111,9 @@ class EffectRefreshAction(GameAction):
 
 
 class EffectTickAction(GameAction):
+    """ Represents game action of effect ticking out on game object """
+
+
     def __init__(self, game_engine: "GameEngine", effect: Effect, owner: GameObject):
         super().__init__(game_engine)
         self.__effect = effect

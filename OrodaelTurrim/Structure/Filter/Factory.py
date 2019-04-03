@@ -1,9 +1,10 @@
 import inspect
 import sys
 from multi_key_dict import multi_key_dict
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy
+from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter, MoveFilter
 from OrodaelTurrim.Structure.Utils import Singleton
 
 
@@ -15,6 +16,9 @@ class FilterClassInfo:
 
 
 class FilterFactory(metaclass=Singleton):
+    """ Factory for easy creating filters without need proxy instances """
+
+
     def __init__(self, map_proxy: MapProxy = None, game_object_proxy: GameObjectProxy = None):
         self.__map_proxy = map_proxy
         self.__game_object_proxy = game_object_proxy
@@ -27,9 +31,9 @@ class FilterFactory(metaclass=Singleton):
 
 
     def __prepare_attack_filters(self):
+        """ Find attack filters in each possible location, check if they are correct and register them """
         from OrodaelTurrim.Structure.Filter import AttackFilter as ODAttackFilter
         from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter as AttackFilterPattern
-        from OrodaelTurrim.Structure.Filter.FilterPattern import MoveFilter as MoveFilterPattern
         from ArtificialIntelligence import Filter as AIFilter
         from User import AttackFilter as UAttackFilter
 
@@ -64,6 +68,7 @@ class FilterFactory(metaclass=Singleton):
 
 
     def __prepare_move_filters(self):
+        """ Find move filters in each possible location, check if they are correct and register them """
         from OrodaelTurrim.Structure.Filter import MoveFilter
         from OrodaelTurrim.Structure.Filter.FilterPattern import MoveFilter as MoveFilterPattern
         from ArtificialIntelligence import Filter as AIFilter
@@ -97,31 +102,47 @@ class FilterFactory(metaclass=Singleton):
                 self.__move_filters[name, obj] = FilterClassInfo(name, obj, parameters)
 
 
-    def attack_filter(self, name: Union[str, type], *args, **kwargs):
+    def attack_filter(self, name: Union[str, type], *args, **kwargs) -> Optional[AttackFilter]:
+        """
+        Get attack filter by name or class
+
+        :param name: str name of the class or Class type itself
+        :param args: extra arguments that filter need (don't pass proxy arguments)
+        :param kwargs: extra keyword arguments that filter need (don't pass proxy arguments)
+        :return: None if filter doesn't exists,
+                Raise exception if there is problem with creating Filter,
+                Attack filter otherwise
+        """
         if name not in self.__attack_filters:
             return None
 
-        try:
-            return self.__attack_filters[name].cls(self.__map_proxy, self.__game_object_proxy, *args, **kwargs)
-        except:
-            pass
+        return self.__attack_filters[name].cls(self.__map_proxy, self.__game_object_proxy, *args, **kwargs)
 
 
-    def move_filter(self, name: Union[str, type], *args, **kwargs):
+    def move_filter(self, name: Union[str, type], *args, **kwargs) -> Optional[MoveFilter]:
+        """
+        Get move filter by name or class
+
+        :param name: str name of the class or Class type itself
+        :param args: extra arguments that filter need (don't pass proxy arguments)
+        :param kwargs: extra keyword arguments that filter need (don't pass proxy arguments)
+        :return: None if filter doesn't exists,
+                Raise exception if there is problem with creating Filter,
+                Move filter otherwise
+        """
         if name not in self.__move_filters:
             return None
 
-        try:
-            return self.__move_filters[name].cls(self.__map_proxy, self.__game_object_proxy, *args, **kwargs)
-        except:
-            pass
+        return self.__move_filters[name].cls(self.__map_proxy, self.__game_object_proxy, *args, **kwargs)
 
 
     @property
     def attack_filters(self) -> List[FilterClassInfo]:
+        """ Get list of FilterClassInfo of all founded attack filters """
         return self.__attack_filters.values()
 
 
     @property
     def move_filters(self) -> List[FilterClassInfo]:
+        """ Get list of FilterClassInfo of all founded move filters """
         return self.__move_filters.values()

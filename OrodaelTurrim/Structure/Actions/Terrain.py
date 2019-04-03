@@ -1,4 +1,3 @@
-
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
@@ -10,6 +9,9 @@ if TYPE_CHECKING:
 
 
 class TerrainDamageAction(GameAction):
+    """ Represents game action of game object getting damaged by terrain it's standing on"""
+
+
     def __init__(self, game_engine: "GameEngine", game_object: GameObject, terrain_type: TerrainType, damage: float):
         super().__init__(game_engine)
 

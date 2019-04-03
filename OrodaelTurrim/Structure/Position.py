@@ -47,6 +47,14 @@ class Point(QPointF):
 
 
 class Position(ABC):
+    """
+    Parent class for all positions. In framework are used 3 types of positions
+
+    * Offset
+    * Cubic
+    * Axial
+     You can anytime convert between them, but for speed optimization is good practise to use one position type.
+    """
     # Correction for aligning along X axis
     CORRECTION_X = 1e-6
 
@@ -60,24 +68,28 @@ class Position(ABC):
     @property
     @abstractmethod
     def cubic(self) -> 'CubicPosition':
+        """ Convert position to Cubic format """
         pass
 
 
     @property
     @abstractmethod
     def axial(self) -> 'AxialPosition':
+        """ Convert position to Axial format """
         pass
 
 
     @property
     @abstractmethod
     def offset(self) -> 'OffsetPosition':
+        """ Convert position to Offset format """
         pass
 
 
     @property
     @abstractmethod
     def int_coord(self) -> 'Position':
+        """ Convert positions values to int values """
         pass
 
 
@@ -91,15 +103,21 @@ class Position(ABC):
         pass
 
 
-    def length(self):
+    def length(self) -> int:
+        """ Returns the distance of this position from center one """
         return (abs(self.cubic.x) + abs(self.cubic.y) + abs(self.cubic.z)) // 2
 
 
-    def interpolate(self, start: float, finish: float, progress: float) -> float:
-        return start + (finish - start) * progress
-
-
     def interpolate_to(self, start: list, finish: list, progress: float) -> 'Position':
+        """"
+        Computes interpolated value
+
+        :param start: The starting point
+        :param finish: The ending point
+        :param progress:  Ration of the progress in between the ends
+        :return: Interpolated Position
+        """
+
         x = start[0] + (finish[0] - start[0]) * progress
         y = start[1] + (finish[1] - start[1]) * progress
         z = start[2] + (finish[2] - start[2]) * progress
@@ -108,24 +126,48 @@ class Position(ABC):
 
 
     def distance_from(self, position: 'Position') -> int:
+        """ Return distance between two positions """
         return (self.cubic - position.cubic).length()
 
 
     def distance_to_nearest(self, positions: List['Position']) -> int:
+        """
+        Computes the distance to nearest of given positions
+
+        :param positions: Set of positions to consider in computation
+        :return: Distance to nearest position
+        """
         return min([self.distance_from(x) for x in positions])
 
 
+    Direction = Union["HexDirection", "OddOffsetDirection", "EvenOffsetDirection", "AxialDirection"]
+
+
     @abstractmethod
-    def neighbour(self, direction) -> 'Position':
+    def neighbour(self, direction: Direction) -> 'Position':
+        """
+        Computes position of neighbour of this position in specified hex direction
+
+        :param direction: Direction of neighbour to be computed
+        :return: Position of neighbour of this position in specified hex direction
+        """
         pass
 
 
     @abstractmethod
     def get_all_neighbours(self) -> List['Position']:
+        """ Return list of all neighbours positions """
         pass
 
 
     def plot_line(self, position: 'Position', nudge: 'Nudge') -> List['Position']:
+        """
+        Computes all positions between this and specified position
+
+        :param position: Final position to plot line to
+        :param nudge: Correct line to get result not on exact edge
+        :return: All positions between this and specified position
+        """
         distance = self.distance_from(position)
 
         step = 1.0 / max(distance, 1)
@@ -146,6 +188,7 @@ class Position(ABC):
 
     @staticmethod
     def from_pixel(point: Union[QPoint, Point, QPointF], transformation: float) -> "AxialPosition":
+        """ Compute position from the pixels on the map screen """
         from OrodaelTurrim.Presenter.Widgets.MapWidget import HEXAGON_SIZE
 
         x_size = (HEXAGON_SIZE.x * transformation / 2)
@@ -158,6 +201,7 @@ class Position(ABC):
 
 
 class CubicPosition(Position):
+    """ Cubic position representation """
     __slots__ = ['__x_position', '__y_position', '__z_position']
 
 
@@ -267,6 +311,7 @@ class CubicPosition(Position):
 
 
 class AxialPosition(Position):
+    """ Axial position representation """
     __slots__ = ['__q', '__r']
 
 
@@ -347,6 +392,7 @@ class AxialPosition(Position):
 
 
 class OffsetPosition(Position):
+    """ Offset position representation """
     __slots__ = ['__q', '__r']
 
 
@@ -444,10 +490,3 @@ class OffsetPosition(Position):
     @property
     def string(self):
         return '{} {}'.format(self.q, self.r)
-
-
-    @staticmethod
-    def from_cubic(x, y, z):
-        col = x
-        row = z + (x - (x & 1)) // 2
-        return OffsetPosition(col, row)

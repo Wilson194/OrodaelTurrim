@@ -8,6 +8,9 @@ from OrodaelTurrim.Structure.Filter.FilterPattern import MoveFilter
 
 
 class MoveToBaseFilter(MoveFilter):
+    """ Represents filter which prefers moving to closest proximity of base """
+
+
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
         bases = self.map_proxy.get_bases_positions()
         min_distance = min([x.distance_to_nearest(bases) for x in tiles])
@@ -15,6 +18,9 @@ class MoveToBaseFilter(MoveFilter):
 
 
 class MoveToNearestEnemyFilter(MoveFilter):
+    """ Represents filter which prefers moving to the nearest enemies """
+
+
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy):
         super().__init__(map_proxy, game_object_proxy)
 
@@ -33,6 +39,9 @@ class MoveToNearestEnemyFilter(MoveFilter):
 
 
 class MoveToRangeFilter(MoveFilter):
+    """ Represents filter which prefers moving to tiles which allows this game object to attack its enemies """
+
+
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
         enemies = self.game_object_proxy.get_visible_enemies(position).keys()
         if not enemies:
@@ -43,6 +52,9 @@ class MoveToRangeFilter(MoveFilter):
 
 
 class MoveToSafeDistanceFilter(MoveFilter):
+    """  Represents filter which prefers moving as far as possible of enemies """
+
+
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
         enemies = self.game_object_proxy.get_visible_enemies(position).keys()
 
@@ -54,6 +66,9 @@ class MoveToSafeDistanceFilter(MoveFilter):
 
 
 class MoveToTerrainFilter(MoveFilter):
+    """ Represents filter which prefers moving to tiles with specified terrain types """
+
+
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, terrain_types: List[TerrainType]):
         super().__init__(map_proxy, game_object_proxy)
         self.__terrain_types = terrain_types

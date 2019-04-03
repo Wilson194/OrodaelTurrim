@@ -1,11 +1,15 @@
-from typing import List, Set
+from typing import Set
 
+from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType, EffectType
 from OrodaelTurrim.Structure.GameObjects.Attributes import AttributeBundle
-from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType, EffectType, AttributeType
 from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototype
 
 
 class Archer(GameObjectPrototype):
+    """
+    Represents an elf archer with pointy ears and even pointier arrows. There used to be a lot adventurers,
+    but then all of them got an arrow to the knee ...
+    """
     ATTRIBUTES = AttributeBundle(10, 5, 50, 3, 4)
     COST = 5
     ASSET_NAME = "archer"
@@ -26,6 +30,9 @@ class Archer(GameObjectPrototype):
 
 
 class Base(GameObjectPrototype):
+    """
+    Represents defenders base as an object which defenders are trying to prevent attackers from destroying
+    """
     ATTRIBUTES = AttributeBundle(5, 0, 500, 1, 2)
     COST = 0
     ASSET_NAME = "base"
@@ -46,6 +53,10 @@ class Base(GameObjectPrototype):
 
 
 class Druid(GameObjectPrototype):
+    """
+    Represents the guardian of forest. He is usually calm but try to stomp on his favorite flower and
+    his bear friends will stomp on you
+    """
     ATTRIBUTES = AttributeBundle(30, 10, 100, 2, 6)
     COST = 25
     ASSET_NAME = "druid"
@@ -66,6 +77,7 @@ class Druid(GameObjectPrototype):
 
 
 class Ent(GameObjectPrototype):
+    """ Represents a giant moving tree. Now you regret that little heart you curved into me, don't you?! """
     ATTRIBUTES = AttributeBundle(10, 50, 200, 1, 2)
     COST = 50
     ASSET_NAME = "ent"
@@ -86,6 +98,7 @@ class Ent(GameObjectPrototype):
 
 
 class Knight(GameObjectPrototype):
+    """ Represents a knight in shining armor. That shine? Mr. Proper! """
     ATTRIBUTES = AttributeBundle(20, 20, 100, 1, 2)
     COST = 10
     ASSET_NAME = "knight"
@@ -106,6 +119,7 @@ class Knight(GameObjectPrototype):
 
 
 class Magician(GameObjectPrototype):
+    """ Represents a powerful battle caster. You´re wizard ... uhm ... MAGICIAN, Harry! """
     ATTRIBUTES = AttributeBundle(50, 5, 75, 2, 3)
     COST = 30
     ASSET_NAME = "magician"

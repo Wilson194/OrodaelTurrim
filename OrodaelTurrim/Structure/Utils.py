@@ -5,6 +5,7 @@ except ImportError:
 
 
 class Singleton(type):
+    """ Singleton metaclass for standard python classes """
     _instances = {}
 
 
@@ -15,6 +16,9 @@ class Singleton(type):
 
 
 class QtSingleton(pyqtWrapperType, type):
+    """ Special singleton metaclass for PyQt classes """
+
+
     def __init__(cls, name, bases, dict):
         super().__init__(name, bases, dict)
         cls.instance = None

@@ -4,6 +4,9 @@ from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 
 
 class EndTurnAction(GameAction):
+    """ Represents game action of player ending their turn """
+
+
     def __init__(self, game_engine: GameEngine, player: IPlayer):
         super().__init__(game_engine)
 
@@ -24,6 +27,9 @@ class EndTurnAction(GameAction):
 
 
 class StartTurnAction(GameAction):
+    """ Represents game action of player starting their turn """
+
+
     def __init__(self, game_engine: GameEngine, player: IPlayer):
         super().__init__(game_engine)
 

@@ -2,7 +2,11 @@ from OrodaelTurrim.Structure.Enums import AttributeType
 
 
 class AttributeBundle:
-    def __init__(self, attack: float, defense: float, hit_points: float, attack_range: int, sight: int, actions: int = 0):
+    """ Represents data class holding attribute values for game objects """
+
+
+    def __init__(self, attack: float, defense: float, hit_points: float, attack_range: int, sight: int,
+                 actions: int = 0):
         self.actions = actions
         self.attack = attack
         self.defense = defense
@@ -12,27 +16,30 @@ class AttributeBundle:
 
 
 class AttributeAffection:
-    def affect_actions(self, original_value: int):
+    """ Class that representing affection of the target attribute """
+
+
+    def affect_actions(self, original_value: int) -> int:
         return original_value
 
 
-    def affect_attack(self, original_value: float):
+    def affect_attack(self, original_value: float) -> float:
         return original_value
 
 
-    def affect_defense(self, original_value: float):
+    def affect_defense(self, original_value: float) -> float:
         return original_value
 
 
-    def affect_hit_points(self, original_value: float):
+    def affect_hit_points(self, original_value: float) -> float:
         return original_value
 
 
-    def affect_attack_range(self, original_value: int):
+    def affect_attack_range(self, original_value: int) -> int:
         return original_value
 
 
-    def affect_sight(self, original_value: int):
+    def affect_sight(self, original_value: int) -> int:
         return original_value
 
 

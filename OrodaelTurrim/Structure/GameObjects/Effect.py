@@ -5,6 +5,7 @@ from OrodaelTurrim.Structure.GameObjects.Attributes import AttributeAffection
 
 
 class Effect(ABC):
+    """ Abstract class defining common behavior of effects """
     DEFAULT_DURATION = 3
 
 
@@ -18,18 +19,27 @@ class Effect(ABC):
 
 
     def compute_damage(self, hit_points: float) -> float:
+        """
+        Computes, how much damage will this effect inflict on start of each turn
+
+        :param hit_points: Previous value of hit points of game object
+        :return: Amount of damage to be inflicted to game object
+        """
         return 0
 
 
     def refresh(self) -> None:
+        """ Refreshes the effect back to default duration """
         self.__duration = self.DEFAULT_DURATION
 
 
     def tick(self) -> None:
+        """ Sends signal to effect to diminish its timer """
         self.__duration -= 1
 
 
     def un_tick(self) -> None:
+        """ Sends signal to effect to increase its timer """
         self.__duration += 1
 
 
@@ -41,6 +51,7 @@ class Effect(ABC):
 
     @property
     def remaining_duration(self) -> int:
+        """ Retrieves remaining duration of this effect """
         return self.__duration
 
 
@@ -51,10 +62,16 @@ class Effect(ABC):
 
     @property
     def hax_expired(self) -> bool:
+        """
+        Check whether the effect expired or not
+
+        :return: True in case effect expired and should be removed, false otherwise
+        """
         return self.__duration <= 0
 
 
 class Blind(Effect):
+    """ Represents a state, when object has greatly reduced sight."""
     SIGHT_REDUCTION = 0.5
 
 
@@ -70,6 +87,7 @@ class Blind(Effect):
 
 
 class Burn(Effect):
+    """ Effect representing state of burning object """
     BURN_DAMAGE = 5.0
 
 
@@ -87,6 +105,7 @@ class Burn(Effect):
 
 
 class Freeze(Effect):
+    """ Effect representing state of object, when it is frozen. """
     ACTION_REDUCTION = 0.5
     DEFENSE_REDUCTION = 0.75
 
@@ -104,6 +123,7 @@ class Freeze(Effect):
 
 
 class Root(Effect):
+    """ Represents a state, when object is rooted and therefore not able to inflict so much damage. """
     ATTACK_REDUCTION = 0.5
 
 

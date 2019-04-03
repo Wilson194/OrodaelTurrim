@@ -1,11 +1,14 @@
 from enum import Enum
 from typing import List
 
-from OrodaelTurrim.Structure.Position import Position, CubicPosition, AxialPosition, OffsetPosition
+from OrodaelTurrim.Structure.Position import CubicPosition, AxialPosition, OffsetPosition
 from OrodaelTurrim.Structure.Terrain import Field, Forest, Hill, Mountain, River, Village
 
 
 class AutoNumber(Enum):
+    """ Subclass of Enum to automatic number value generate"""
+
+
     def __new__(cls):
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
@@ -14,6 +17,7 @@ class AutoNumber(Enum):
 
 
 class TerrainType(Enum):
+    """ Types of terrains on map"""
     FIELD = Field()
     FOREST = Forest()
     HILL = Hill()
@@ -23,6 +27,7 @@ class TerrainType(Enum):
 
 
 class Nudge(Enum):
+    """ Nudge position to one direction for line draw purpose """
     POSITIVE = 1
     NEGATIVE = -1
 
@@ -32,6 +37,7 @@ class Nudge(Enum):
 
 
 class HexDirection(Enum):
+    """ Direction of neighbours on hexagon grid defined with Cubic position"""
     UPPER = CubicPosition(0, 1, -1)
     RIGHT_UPPER = CubicPosition(1, 0, -1)
     RIGHT_LOWER = CubicPosition(1, -1, 0)
@@ -47,6 +53,7 @@ class HexDirection(Enum):
 
 
 class AxialDirection(Enum):
+    """ Direction of neighbours on hexagon grid defined with Axial position"""
     UPPER = AxialPosition(0, -1)
     RIGHT_UPPER = AxialPosition(+1, -1)
     RIGHT_LOWER = AxialPosition(+1, 0)
@@ -56,6 +63,10 @@ class AxialDirection(Enum):
 
 
 class OddOffsetDirection(Enum):
+    """
+    Direction of neighbours on hexagon grid defined with Offset position
+    Be careful that directions are different for odd and even columns
+    """
     UPPER = OffsetPosition(0, -1)
     RIGHT_UPPER = OffsetPosition(+1, -1)
     RIGHT_LOWER = OffsetPosition(+1, 0)
@@ -65,6 +76,10 @@ class OddOffsetDirection(Enum):
 
 
 class EvenOffsetDirection(Enum):
+    """
+        Direction of neighbours on hexagon grid defined with Offset position
+        Be careful that directions are different for odd and even columns
+    """
     UPPER = OffsetPosition(0, -1)
     RIGHT_UPPER = OffsetPosition(+1, 0)
     RIGHT_LOWER = OffsetPosition(+1, +1)
@@ -74,6 +89,14 @@ class EvenOffsetDirection(Enum):
 
 
 class EffectType(AutoNumber):
+    """
+    List of all effect that could units cause
+
+    * BLIND - reduce sight to half
+    * BURN - remove 5 HP each round
+    * FREEZE - reduce actions to half and reduce defence by 25%
+    * ROOT - reduce attack power to half
+    """
     BLIND = ()
     BURN = ()
     FREEZE = ()
@@ -81,6 +104,16 @@ class EffectType(AutoNumber):
 
 
 class AttributeType(AutoNumber):
+    """
+    Enum for all attributes of unit
+
+    * ACTIONS - Used for unit movement. Moving from terrain to terrain cost difference amount of actions
+    * ATTACK - Attack power, compute attack life cost based on defender armor
+    * DEFENSE - Define armor of the unit, subtract from attack number
+    * HIT_POINTS - maximum hit points
+    * ATTACK_RANGE - how far unit could attack, same computation as sight
+    * SIGHT - How far unit see, some tiles cost more than 1 sight
+    """
     ACTIONS = ()
     ATTACK = ()
     DEFENSE = ()
@@ -90,18 +123,27 @@ class AttributeType(AutoNumber):
 
 
 class GameRole(AutoNumber):
+    """ Enum for partition users to attacker and defenders """
     ATTACKER = ()
     DEFENDER = ()
     NEUTRAL = ()
 
 
-    def is_enemy(self, role: "GameRole"):
+    def is_enemy(self, role: "GameRole") -> bool:
+        """
+        Determinate if target role is enemy for me
+        :param role: target role
+        :return: True if target is enemy, False otherwise
+        """
         if self == role or self == GameRole.NEUTRAL or role == GameRole.NEUTRAL:
             return False
         return True
 
 
 class GameObjectType(Enum):
+    """
+    Enum for all units. Enum is tuple of GameRole, place cost and ID
+    """
     NONE = (GameRole.NEUTRAL, 0, 1)
     BASE = (GameRole.DEFENDER, 0, 2)
 
@@ -123,25 +165,29 @@ class GameObjectType(Enum):
 
     @staticmethod
     def defenders() -> List["GameObjectType"]:
+        """ Get list of all defender unit """
         return [x for x in list(GameObjectType) if x.value[0] == GameRole.DEFENDER]
 
 
     @staticmethod
     def attackers() -> List["GameObjectType"]:
+        """ Get list of all attacker units"""
         return [x for x in list(GameObjectType) if x.value[0] == GameRole.ATTACKER]
 
 
     @property
     def price(self) -> int:
+        """ Return price of the unit """
         return self.value[1]
 
 
     @property
     def role(self) -> GameRole:
+        """ Return role of the unit """
         return self.value[0]
 
 
 class GameOverStates(AutoNumber):
+    """ Enum for what to do after Game is over """
     FIND_REASON = ()
-    TRY_AGAIN = ()
     LET_HIM_DIE = ()

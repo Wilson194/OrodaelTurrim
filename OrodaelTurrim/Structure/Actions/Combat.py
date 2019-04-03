@@ -9,6 +9,9 @@ if TYPE_CHECKING:
 
 
 class AttackAction(GameAction):
+    """  Represents game action of one game object attacking another """
+
+
     def __init__(self, game_engine: "GameEngine", attacker: GameObject, target: GameObject):
         super().__init__(game_engine)
 
@@ -38,6 +41,9 @@ class AttackAction(GameAction):
 
 
 class MoveAction(GameAction):
+    """ Represents game action of game object moving """
+
+
     def __init__(self, game_engine: "GameEngine", game_object: GameObject, from_position: Position,
                  to_position: Position):
         super().__init__(game_engine)

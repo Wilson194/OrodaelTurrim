@@ -8,6 +8,9 @@ if TYPE_CHECKING:
 
 
 class DieAction(GameAction):
+    """ Represents game action of game object dying """
+
+
     def __init__(self, game_engine: "GameEngine", dead_object: GameObject):
         super().__init__(game_engine)
 
@@ -29,6 +32,9 @@ class DieAction(GameAction):
 
 
 class SpawnAction(GameAction):
+    """ Represents game action of game object being spawned """
+
+
     def __init__(self, game_engine: "GameEngine", spawned_object: GameObject):
         super().__init__(game_engine)
         self.__spawned_object = spawned_object

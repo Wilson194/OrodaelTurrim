@@ -8,6 +8,9 @@ if TYPE_CHECKING:
 
 
 class EarnResourcesAction(GameAction):
+    """ Represents game action of player earning resources """
+
+
     def __init__(self, game_engine: "GameEngine", player: IPlayer, amount: int):
         super().__init__(game_engine)
         self.__amount = amount
@@ -28,6 +31,9 @@ class EarnResourcesAction(GameAction):
 
 
 class SpendResourcesAction(GameAction):
+    """ Represents game action of player spending resources """
+
+
     def __init__(self, game_engine: "GameEngine", player: IPlayer, amount: int):
         super().__init__(game_engine)
         self.__amount = amount
