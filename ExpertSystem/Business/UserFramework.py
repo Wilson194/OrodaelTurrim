@@ -10,6 +10,9 @@ if TYPE_CHECKING:
 
 
 class IKnowledgeBase(ABC):
+    """ Abstract class for User knowledge base definition """
+
+
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, player: IPlayer):
         self.fact_base = []
         self.map_proxy = map_proxy
@@ -19,17 +22,43 @@ class IKnowledgeBase(ABC):
 
     @abstractmethod
     def create_knowledge_base(self):
+        """ This method will be called every time before interference """
         pass
 
 
 class IInterference(ABC):
+    """ Abstract class for interference """
+
+
     @abstractmethod
-    def interfere(self, fact_base: Set[Any], rules: List[Rule], action_base: "ActionBase"):
+    def interfere(self, fact_base: Set[Any], rules: List[Rule], action_base: "ActionBase") -> None:
+        """
+        Interference method
+
+        :param fact_base: - fact base created in the KnowledgeBase class by user
+        :param rules: - parsed rules from rules file
+        :param action_base: - instance of User defined action base
+        """
         pass
 
 
 class IActionBase(ABC):
+    """
+    Abstract method for user defined action base
+
+    You can use `in` operator to check if method is in base (str or Expression)
+
+    You can use ``[]`` operator to call function from ActionBase (with str without argument or Expresion with arguments)
+    """
+
+
     def __init__(self, game_control_proxy: GameControlProxy, player: IPlayer):
+        """
+        Constructor of Action base
+
+        :param game_control_proxy: proxy for user operations
+        :param player: Instance of your player
+        """
         self.game_control_proxy = game_control_proxy
         self.player = player
 

@@ -31,7 +31,7 @@ class Border:
         self.lower = lower
         self.left_lower = left_lower
         self.left_upper = left_upper
-        self.color = color
+        self.__color = color
 
 
     @staticmethod
@@ -49,16 +49,16 @@ class Border:
     @property
     def color(self) -> List[QColor]:
         """ Get list of colors of edges """
-        if type(self.color) is list:
-            return self.color
+        if type(self.__color) is list:
+            return self.__color
         else:
-            return [self.color for x in range(6)]
+            return [self.__color for x in range(6)]
 
 
     @color.setter
     def color(self, value: [List[QColor], QColor]):
         """ Set color of the edges """
-        self.color = value
+        self.__color = value
 
 
     def __str__(self):

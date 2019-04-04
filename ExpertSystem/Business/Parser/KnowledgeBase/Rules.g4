@@ -12,7 +12,6 @@ OR : 'OR';
 
 TRUE: 'TRUE';
 FALSE: 'FALSE';
-
 // Operators
 ASSIGN : ':=';
 GE : '>=';
