@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, TYPE_CHECKING, Any, Set, Union
 
-from ExpertSystem.Structure.RuleBase import Rule, Expression
+from ExpertSystem.Structure.RuleBase import Rule, Expression, Fact
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
 
@@ -14,15 +14,16 @@ class IKnowledgeBase(ABC):
 
 
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, player: IPlayer):
-        self.fact_base = []
         self.map_proxy = map_proxy
         self.game_object_proxy = game_object_proxy
         self.player = player
 
 
     @abstractmethod
-    def create_knowledge_base(self):
-        """ This method will be called every time before interference """
+    def create_knowledge_base(self) -> List[Fact]:
+        """
+        This method will be called every time before interference. This method should return List of created Facts
+        """
         pass
 
 

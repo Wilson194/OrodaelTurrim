@@ -1,3 +1,8 @@
-IF player_dont_have_base THEN build_base 0 0;
+# Write your rules to this file
+# Rules could be on more lines, but must end with semicolon (;)
+# You can use hashtag for comment lines, block comments are not supported
+# Grammar definition is described in documentation
 
-# IF (A 2 5 >= 5 AND B 2 5 == 2.5) THEN C 2 5 := 2 AND D 8 0;
+
+IF player_dont_have_bas THEN build_base 0 0;
+
