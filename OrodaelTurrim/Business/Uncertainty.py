@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, List, Dict
 from OrodaelTurrim.Business.GameMap import BorderTiles, GameMap
 from OrodaelTurrim.Business.Interface.Player import IAttacker
 from OrodaelTurrim.Structure.GameObjects.GameObject import UncertaintySpawn, UncertaintyPosition
-from OrodaelTurrim.Structure.Position import OffsetPosition
 from OrodaelTurrim.config import Config
 
 if TYPE_CHECKING:
@@ -13,6 +12,7 @@ if TYPE_CHECKING:
 
 
 def scout_success_rate(number: float) -> int:
+    """ Recompute success rate of scouts to positions range"""
     if number < 0 or number > 1:
         raise ValueError('Insert number between 0 and 1')
 
@@ -22,8 +22,12 @@ def scout_success_rate(number: float) -> int:
         return 10
     elif number <= 0.4:
         return 8
+    elif number <= 0.5:
+        return 7
     elif number <= 0.6:
         return 6
+    elif number <= 0.7:
+        return 5
     elif number <= 0.8:
         return 4
     elif number <= 0.95:
@@ -33,6 +37,9 @@ def scout_success_rate(number: float) -> int:
 
 
 class SpawnUncertainty:
+    """ Class that compute spawn uncertainty from spawn information provided by AI """
+
+
     def __init__(self, game_engine: "GameEngine"):
         self.__attackers = []  # type: List: IAttacker
         self.__spawn_uncertainty = {}  # type: Dict[int, List[UncertaintySpawn]]
@@ -42,6 +49,7 @@ class SpawnUncertainty:
         self.__last_generated_turn = -1
         self.__scout_uncertainties = {}  # type: Dict[float]
 
+        # Try to load SEED from config
         try:
             seed = Config.UNCERTAINTY_RANDOM_SEED
             if not seed:
@@ -53,18 +61,21 @@ class SpawnUncertainty:
         self.__random = Random(seed)
 
 
-    def register_attacker(self, attacker: IAttacker):
+    def register_attacker(self, attacker: IAttacker) -> None:
+        """ Register attacker to database """
         self.__attackers.append(attacker)
 
 
-    def clear(self):
+    def clear(self) -> None:
+        """ Clear computed uncertainty """
         self.__spawn_uncertainty = {}
         self.__best_scout_uncertainty = {}
         self.__last_generated_turn = -1
         self.__scout_uncertainties = {}
 
 
-    def __compute_uncertainty(self, _round: int):
+    def __compute_uncertainty(self, _round: int) -> None:
+        """ Compute uncertainty list for target round"""
         current_turn = self.__game_engine.get_game_history().current_turn
 
         for attacker in self.__attackers:
@@ -89,6 +100,7 @@ class SpawnUncertainty:
 
     @property
     def spawn_information(self) -> List[List[UncertaintySpawn]]:
+        """ Get spawn information with computed uncertainty """
         current_turn = self.__game_engine.get_game_history().current_turn
 
         if self.__last_generated_turn != current_turn:

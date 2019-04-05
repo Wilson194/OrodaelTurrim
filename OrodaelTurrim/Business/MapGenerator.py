@@ -1,28 +1,40 @@
 import os
 import random
-import sys
 from typing import List, Set
 
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import TerrainType
-from OrodaelTurrim.Structure.Position import AxialPosition, OffsetPosition, Position
+from OrodaelTurrim.Structure.Position import OffsetPosition, Position
 from OrodaelTurrim.Structure.Terrain import River, Field, Terrain
 from OrodaelTurrim.config import Config
 
+# Probability that river will be on the map
 RIVER_ON_MAP = 0.9
 
+# Probability of each terran type
 MOUNTAIN = 0.1
 FIELD = 1  # 0.5
 HILL = 0.1
 FOREST = 0.2
 VILLAGE = 0.01
+
+# Precision of terrain types (how many items will be in random list
 PRECISION = 100
 
+# How much items add to list for each neighbour
 NEIGHBOUR_ADD = 2
 
 
 class MapGenerator:
+    """ Class for generating map for the game """
+
+
     def __init__(self, width: int, height: int, seed: int = None):
+        """
+        :param width: - width of the map (must be ood number)
+        :param height: - height of the map (must be odd number)
+        :param seed: - random seed for generating map
+        """
         self.__width = width
         self.__height = height
 
@@ -51,6 +63,11 @@ class MapGenerator:
 
 
     def create_base_random_list(self) -> List[TerrainType]:
+        """
+        Create random list of terrains based on probability constants
+
+        :return: List of terrain types
+        """
         random_list = []
 
         for i in range(int(MOUNTAIN * PRECISION)):
@@ -72,6 +89,10 @@ class MapGenerator:
 
 
     def get_random_terrain_type(self, position: Position) -> Terrain:
+        """
+        Get random terrain type for target position. Based on neighbours
+        """
+
         neigbours = self.__game_map.filter_positions_on_map(position.get_all_neighbours())
 
         for neigbour in neigbours:
@@ -85,12 +106,14 @@ class MapGenerator:
 
 
     def generate(self) -> GameMap:
+        """ Generate map method """
         self.__generate_river()
         self.__generate_tiles()
         return self.__game_map
 
 
     def __generate_tiles(self):
+        """ Generate all tiles (without water) """
         for i in range(-self.__vertical_radius, self.__vertical_radius + 1):
             for j in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
                 position = OffsetPosition(i, j)
@@ -99,11 +122,14 @@ class MapGenerator:
 
 
     def __generate_river(self):
-        def filter_river_neighbour(position, ancestor):
-            neighbours = [self.__game_map[x].terrain_type for x in
-                          self.__game_map.filter_positions_on_map(position.get_all_neighbours()) if ancestor != x]
+        """ Generate rivver tiles. There will be only one river with starting and ending at the map edge"""
 
-            if TerrainType.RIVER in neighbours:
+
+        def filter_river_neighbour(position, ancestor):
+            _neighbours = [self.__game_map[x].terrain_type for x in
+                           self.__game_map.filter_positions_on_map(position.get_all_neighbours()) if ancestor != x]
+
+            if TerrainType.RIVER in _neighbours:
                 return False
 
             return True
@@ -147,8 +173,8 @@ class MapGenerator:
                     river_length += 1
 
 
-    def __river_start_position(self):
-
+    def __river_start_position(self) -> Position:
+        """ Get river start position """
         left_bottom_corner = OffsetPosition(-self.__horizontal_radius, self.__vertical_radius)
         right_bottom_corner = OffsetPosition(self.__horizontal_radius, self.__vertical_radius)
 
@@ -162,4 +188,5 @@ class MapGenerator:
 
 
     def __pick_random_position(self, positions: Set[Position]) -> Position:
+        """ Pick random position from the set of positions """
         return random.choice(tuple(positions))

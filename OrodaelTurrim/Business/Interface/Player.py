@@ -61,6 +61,9 @@ class IPlayer(ABC):
 
 
 class IAttacker(IPlayer, ABC):
+    """ Specialization Player for attacker. Attacker must provide list of spawn information and have own random seed """
+
+
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)

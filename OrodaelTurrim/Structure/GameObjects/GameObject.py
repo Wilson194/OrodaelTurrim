@@ -69,10 +69,10 @@ class GameObject:
         """
         Recalculates cached values of visible and accessible tiles
         """
-        self.__visible_tiles = self.__game_engine.get_object_visible_tiles(self.position,
-                                                                           int(self.get_attribute(AttributeType.SIGHT)))
+        self.__visible_tiles = self.__game_engine.compute_visible_tiles(self.position,
+                                                                        int(self.get_attribute(AttributeType.SIGHT)))
 
-        self.__accessible_tiles = set(self.__game_engine.get_accessible_tiles(self.position, int(
+        self.__accessible_tiles = set(self.__game_engine.compute_accessible_tiles(self.position, int(
             self.get_attribute(AttributeType.ACTIONS))).keys())
 
 

@@ -151,6 +151,16 @@ class VisibilityMap:
             self.__visibility_map[player] = {}
 
 
+    def player_registered(self, player: IPlayer) -> bool:
+        """
+        Check if given player is registered in VisibilityMap
+
+        :param player: Target player to check
+        :return: True if player is registered, False otherwise
+        """
+        return player in self.__visibility_map.keys()
+
+
     def text_format(self):
         """ Print visibility map to console """
         for player in self.__visibility_map.keys():

@@ -1,11 +1,10 @@
 import copy
-import multiprocessing
-import random
-from typing import List, TYPE_CHECKING, Dict, Union, Set
+from collections import deque
+from typing import List, TYPE_CHECKING, Dict, Union, Set, Tuple, Optional
+
+from OrodaelTurrim.Structure.Enums import Nudge
 from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
 from OrodaelTurrim.Structure.Position import Position, OffsetPosition
-from collections import deque
-from OrodaelTurrim.Structure.Enums import Nudge, HexDirection
 from OrodaelTurrim.Structure.TypeStrucutre import DoubleLinkedList
 from OrodaelTurrim.Structure.Utils import Singleton
 
@@ -15,6 +14,9 @@ if TYPE_CHECKING:
 
 
 class GameMap:
+    """ Object representing rectangular game map """
+
+
     def __init__(self, width: int, height: int, tiles: List[List['TerrainType']] = None):
         self.__size = (width, height)
         if width % 2 == 0 or height % 2 == 0:
@@ -53,6 +55,7 @@ class GameMap:
     def set_tile(self, position: Position, terrain: 'Terrain') -> None:
         """
         Set target position tile
+
         :param position: position which should be set
         :param terrain: terrain object for position
         """
@@ -65,52 +68,69 @@ class GameMap:
 
     @property
     def tiles(self):
-        """
-        Iterator for all map tiles
-        """
+        """ Iterator for all map tiles """
         for y in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
             for x in range(-self.__vertical_radius, self.__vertical_radius + 1):
                 yield OffsetPosition(y, x)
 
 
     @property
-    def size(self):
+    def size(self) -> Tuple[int, int]:
+        """
+        Get size of the map
+
+        :return: Tuple of width and height
+        """
         return self.__width, self.__height
 
 
     @property
     def width(self) -> int:
+        """ Get width of the map """
         return self.__width
 
 
     @property
     def height(self) -> int:
+        """ Get height of the map """
         return self.__height
 
 
     @property
     def vertical_radius(self) -> int:
+        """ Vertical radius of map in tiles """
         return self.__vertical_radius
 
 
     @property
     def horizontal_radius(self) -> int:
+        """ Horizontal radius of map in tiles """
         return self.__horizontal_radius
 
 
     def position_on_map(self, position: Position) -> bool:
         """
         Check if position is on map
+
         :param position: target position
         :return: True if position is on map, False otherwise
         """
         x = position.offset.r
         y = position.offset.q
 
-        return - self.__vertical_radius <= x <= self.__vertical_radius and - self.__horizontal_radius <= y <= self.__horizontal_radius
+        vertical = - self.__vertical_radius <= x <= self.__vertical_radius
+        horizontal = - self.__horizontal_radius <= y <= self.__horizontal_radius
+
+        return vertical and horizontal
 
 
-    def filter_positions_on_map(self, positions: List[Position]):
+    def filter_positions_on_map(self, positions: List[Position]) -> List[Position]:
+        """
+        Filter list of positions, left only on map positions
+
+        :param positions: target positions
+        :return: List of positions at map
+        """
         on_map_positions = []
         for position in positions:
             if self.position_on_map(position):
@@ -120,13 +140,30 @@ class GameMap:
 
 
     def position_on_edge(self, position: Position) -> bool:
+        """
+        Determinate, if positions is on the edge of the map
+        :param position: target position
+        :return: True if position is on the edge, False otherwise
+        """
         x = position.offset.r
         y = position.offset.q
 
-        return self.__vertical_radius == x or -self.__vertical_radius == x or self.__horizontal_radius == y or -self.__horizontal_radius == y
+        vertical = self.__vertical_radius == x or -self.__vertical_radius == x
+        horizontal = self.__horizontal_radius == y or -self.__horizontal_radius == y
+
+        return vertical or horizontal
 
 
     def can_been_seen(self, start: Position, end: Position, sight: int, nudge: 'Nudge') -> bool:
+        """
+         Check whether the line from start to end exhausts given sight with given nudge correction
+
+        :param start: Starting position of line
+        :param end: Ending position of line
+        :param sight: Given sight point to be checked upon
+        :param nudge: Correcting nudge
+        :return: True in case sight has NOT been exhausted, false otherwise
+        """
         if start == end:
             return True
         line = start.plot_line(end, nudge)
@@ -141,9 +178,17 @@ class GameMap:
 
 
     def get_visible_tiles(self, position: Position, sight: int) -> Set[Position]:
+        """
+        Computes set of visible tiles from specified tile with given sight
+
+        :param position: Starting position of computation
+        :param sight: Current level of sight
+        :return: Set of visible tiles from specified tile with given sight
+        """
         if not self.position_on_map(position):
             return set()
 
+        # Check the cache information
         if position in self.__visible_tiles_cache and sight in self.__visible_tiles_cache[position]:
             return copy.deepcopy(self.__visible_tiles_cache[position][sight])
 
@@ -170,6 +215,7 @@ class GameMap:
                 if self.position_on_map(tile) and tile not in visited:
                     pool.add(tile)
 
+        # Save computed value to cache
         if position not in self.__visible_tiles_cache:
             self.__visible_tiles_cache[position] = {}
         if sight not in self.__visible_tiles_cache[position]:
@@ -179,6 +225,14 @@ class GameMap:
 
 
     def get_accessible_tiles(self, position: Position, actions: int) -> Dict[Position, int]:
+        """
+        Computes map with accessible tiles as keys and remaining action points as values from specified tile
+        with given action points
+
+        :param position: Starting position of computation
+        :param actions: Current action points
+        :return: Dict with accessible tiles as keys and remaining action points as values
+        """
         if not self.position_on_map(position):
             return {}
 
@@ -205,6 +259,11 @@ class GameMap:
 
     @property
     def border_tiles(self) -> Set[Position]:
+        """
+        Retrieves set of tiles on the edge of game map
+
+        :return: Set of border tiles
+        """
         border_tiles = set()
         for x in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
             border_tiles.add(OffsetPosition(x, -self.__vertical_radius))
@@ -232,6 +291,12 @@ class GameMap:
 
 
 class BorderTiles(metaclass=Singleton):
+    """
+    This class provides functionality for iterating over neighbour border tiles.
+    Class is singleton cause of speedup
+    """
+
+
     def __init__(self, game_map: GameMap = None):
         self.__game_map = game_map
 
@@ -239,7 +304,18 @@ class BorderTiles(metaclass=Singleton):
         self.__create_linked_list()
 
 
-    def get_position(self, starting_position: Position, shift: int) -> Position:
+    def get_position(self, starting_position: Position, shift: int) -> Optional[Position]:
+        """
+        with this method you can iterate over border tiles in clockwise or counterclockwise order
+
+        :param starting_position: Starting on edge position
+        :param shift: number of positions positive for clockwise, negative for counterclockwise
+        :return: target position or None if starting position is not on the edge
+        """
+
+        if not self.__game_map.position_on_edge(starting_position):
+            return None
+
         self.__border_tiles.pointer = self.__border_tiles.head
 
         while self.__border_tiles.value != starting_position:
@@ -255,6 +331,13 @@ class BorderTiles(metaclass=Singleton):
 
 
     def get_position_list(self, starting_position: Position, length: int) -> List[Position]:
+        """
+        Get list of positions on the edge. List will have clockwise order
+
+        :param starting_position: starting position of the list
+        :param length:  number of positions in return list
+        :return: List of length Positions (with starting_position)
+        """
         self.__border_tiles.pointer = self.__border_tiles.head
 
         while self.__border_tiles.value != starting_position:
@@ -269,7 +352,10 @@ class BorderTiles(metaclass=Singleton):
 
 
     def __create_linked_list(self):
-        PRECEDENCE = {OffsetPosition(self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
+        """ Create linked list for iterating over edge tiles """
+
+        # In the corners, there are more than one neighbor. Precedence list will chose correct one
+        precedence = {OffsetPosition(self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
                       OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius)}
 
         first = OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius)
@@ -285,7 +371,7 @@ class BorderTiles(metaclass=Singleton):
         while tiles:
             _next_set = set(current.get_all_neighbours()).intersection(tiles)
             if len(_next_set) > 1:
-                _next_set = _next_set.intersection(PRECEDENCE)
+                _next_set = _next_set.intersection(precedence)
 
             _next = _next_set.pop()
 
