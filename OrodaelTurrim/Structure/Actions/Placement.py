@@ -18,7 +18,6 @@ class DieAction(GameAction):
 
 
     def execute(self) -> None:
-        print('Die Die Die', self.__dead_object.object_type)
         self._game_engine.remove(self.__dead_object)
 
 

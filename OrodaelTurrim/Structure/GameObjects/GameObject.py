@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import List, TYPE_CHECKING, Dict, Set, Tuple, Union
+from typing import List, TYPE_CHECKING, Dict, Set, Union
 
-from OrodaelTurrim.Business.Interface import Player
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, EffectType, GameRole
 from OrodaelTurrim.Structure.Filter.FilterPattern import TileFilter, MoveFilter, AttackFilter
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
@@ -10,6 +9,7 @@ from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectP
 from OrodaelTurrim.Structure.Position import Position
 
 if TYPE_CHECKING:
+    from OrodaelTurrim.Business.Interface.Player import IPlayer
     from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
@@ -17,7 +17,7 @@ class GameObject:
     """ Interface defining common behavior of game objects (attackers and defenders) """
 
 
-    def __init__(self, owner: IPlayer, position: Position, object_type: GameObjectType, game_engine: "GameEngine"):
+    def __init__(self, owner: "IPlayer", position: Position, object_type: GameObjectType, game_engine: "GameEngine"):
         self.__owner = owner
         self.__game_engine = game_engine
 
@@ -132,7 +132,7 @@ class GameObject:
         :param effect_type: Type of effect to be removed
         """
         previous_sight = self.get_attribute(AttributeType.SIGHT)
-        self.__active_effects = [x for x in self.__active_effects if x.effect_type != effect_type]
+        self.__active_effects = set([x for x in self.__active_effects if x.effect_type != effect_type])
 
         if previous_sight != self.get_attribute(AttributeType.SIGHT):
             self.recalculate_cache()
@@ -228,7 +228,7 @@ class GameObject:
 
 
     @property
-    def owner(self) -> IPlayer:
+    def owner(self) -> "IPlayer":
         """
         Retrieves reference to player, who owns this game object
 
@@ -331,7 +331,7 @@ class SpawnInformation:
     """ Holds all necessary information for spawning unit """
 
 
-    def __init__(self, owner: IPlayer, object_type: GameObjectType, position: Position,
+    def __init__(self, owner: "IPlayer", object_type: GameObjectType, position: Position,
                  attack_filters: List[TileFilter], move_filters: List[TileFilter]):
         """
         :param owner: Owning player of spawned object

@@ -63,7 +63,7 @@ class AIPlayer(IAttacker):
         self.__cheapest_unit = [x for x in self.__attackers if x.price == min_price][0]
 
         # Border tiles
-        self.__border_tiles = self.map_proxy.border_tiles
+        self.__border_tiles = self.map_proxy.get_border_tiles()
 
         self.__prepare_units_filters()
 
@@ -83,20 +83,20 @@ class AIPlayer(IAttacker):
         strongest = FilterFactory().attack_filter(AttackStrongestFilter)
 
         self.unit_filters = {
-            GameObjectType.CYCLOPS: ([vulnerable], [nearest_enemy, to_base]),
-            GameObjectType.DEMON: ([no_resistance, strongest], [to_range]),
-            GameObjectType.ELEMENTAL: ([strongest, vulnerable], [safe_dist]),
-            GameObjectType.GARGOYLE: ([base], [to_base]),
-            GameObjectType.MINOTAUR: ([vulnerable], [nearest_enemy, to_base]),
+            GameObjectType.CYCLOPS    : ([vulnerable], [nearest_enemy, to_base]),
+            GameObjectType.DEMON      : ([no_resistance, strongest], [to_range]),
+            GameObjectType.ELEMENTAL  : ([strongest, vulnerable], [safe_dist]),
+            GameObjectType.GARGOYLE   : ([base], [to_base]),
+            GameObjectType.MINOTAUR   : ([vulnerable], [nearest_enemy, to_base]),
             GameObjectType.NECROMANCER: ([], [safe_dist]),
-            GameObjectType.ORC: ([nearest, base], [nearest_enemy, to_base]),
-            GameObjectType.SKELETON: ([nearest, base], [nearest_enemy, to_base]),
+            GameObjectType.ORC        : ([nearest, base], [nearest_enemy, to_base]),
+            GameObjectType.SKELETON   : ([nearest, base], [nearest_enemy, to_base]),
         }  # type: Dict[GameObjectType,Tuple[List[AttackFilter], List[MoveFilter]]]
 
 
     def __initialize_spawn_list(self):
-        resources = self.map_proxy.get_resources(self)
-        income = self.map_proxy.get_income(self)
+        resources = self.game_object_proxy.get_resources(self)
+        income = self.game_object_proxy.get_income(self)
 
         for round_list in self.spawn_information_list:
             # Generate list of spawn info for one round
@@ -117,7 +117,7 @@ class AIPlayer(IAttacker):
         _round, spend = self.__create_round_list(self.__resources_left)
 
         self.spawn_information_list.append(_round)
-        self.__resources_left = self.__resources_left + self.map_proxy.get_income(self) - spend
+        self.__resources_left = self.__resources_left + self.game_object_proxy.get_income(self) - spend
 
 
     def __create_round_list(self, resources: int) -> Tuple[List[SpawnInformation], int]:

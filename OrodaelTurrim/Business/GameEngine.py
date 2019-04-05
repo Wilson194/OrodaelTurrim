@@ -679,7 +679,7 @@ class GameEngine:
         Retrieves map of distances to currently visible enemies by game object on specified position
         Return None if there is no unit at the position
 
-        :param position:
+        :param position: Position of queried game object
         :return:
         """
         if position not in self.__game_object_positions:
@@ -825,7 +825,7 @@ class GameEngine:
         :param player: Player whose resources should be obtained
         :return: Current resources of given player
         """
-        return self.__player_resources[player].resources
+        return self.__player_resources.get(player, None).resources
 
 
     def get_income(self, player: IPlayer) -> int:
@@ -835,7 +835,7 @@ class GameEngine:
         :param player: Player whose income should be obtained
         :return: Current income of given player
         """
-        return self.__player_resources[player].income
+        return self.__player_resources.get(player, None).income
 
 
     def get_game_map(self) -> GameMap:
