@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ZNS'
+project = 'Orodael Turrim'
 copyright = '2018, Jan Horacek'
 author = 'Jan Horacek'
 
@@ -42,10 +42,10 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
+    'sphinx.ext.todo'
 ]
 
-pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Your Name'),]
-
+pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Your Name'), ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -106,7 +106,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ZNSdoc'
+htmlhelp_basename = 'Orodael Turrim'
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -132,7 +132,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ZNS.tex', 'ZNS Documentation',
+    (master_doc, 'OrodaelTurrim.tex', 'Orodael Turrim Documentation',
      'Jan Horacek', 'manual'),
 ]
 
@@ -141,7 +141,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'zns', 'ZNS Documentation',
+    (master_doc, 'zns', 'Orodael Turrim Documentation',
      [author], 1)
 ]
 
@@ -151,8 +151,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ZNS', 'ZNS Documentation',
-     author, 'ZNS', 'One line description of project.',
+    (master_doc, 'Orodael Turrim', 'Orodael Turrim Documentation',
+     author, 'Orodael Turrim', 'One line description of project.',
      'Miscellaneous'),
 ]
 

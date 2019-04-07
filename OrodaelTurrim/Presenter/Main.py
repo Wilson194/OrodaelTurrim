@@ -3,7 +3,7 @@ from pathlib import Path
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt, pyqtSlot, QObject
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox, QSystemTrayIcon
 
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -92,6 +92,8 @@ class MainWindow(QObject):
         # Window icon
         self.window.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
         self.window.setWindowTitle('Orodael Turrim')
+
+        QSystemTrayIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')), self.app)
 
         self.app.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
 
