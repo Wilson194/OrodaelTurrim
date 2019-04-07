@@ -93,8 +93,6 @@ class MainWindow(QObject):
         self.window.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
         self.window.setWindowTitle('Orodael Turrim')
 
-        QSystemTrayIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')), self.app)
-
         self.app.setWindowIcon(QIcon(str(ICONS_ROOT / 'game_icon.png')))
 
         return self.app.exec()

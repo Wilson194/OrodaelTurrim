@@ -1,17 +1,17 @@
-import threading
-
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
-from OrodaelTurrim import DEBUG
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.Logger import LogReceiver
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Main import MainWindow
+from OrodaelTurrim.Structure.Exceptions import IllegalConfigState
 from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.Resources import PlayerResources
 import click
+
+from OrodaelTurrim.config import Config
 
 
 @click.command()
@@ -19,8 +19,18 @@ import click
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
 @click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
 def main(gui, rounds, log_output):
-    # Generate the map
-    game_map = MapGenerator(11, 11).generate()
+    # Load map configuration from config or generate random map
+    height = Config.MAP_HEIGHT
+    width = Config.MAP_WIDTH
+
+    if (height is None or width is None) and Config.GAME_MAP:
+        height = len(Config.GAME_MAP)
+        width = len(Config.GAME_MAP[0])
+
+    if height is None or width is None:
+        raise IllegalConfigState('You must specify MAP_WIDTH and MAP_HEIGHT or GAME_MAP parameter in config file!')
+
+    game_map = MapGenerator(width, height).generate(Config.GAME_MAP)
 
     # Initialize game engine
     game_engine = GameEngine(game_map)
@@ -45,7 +55,7 @@ def main(gui, rounds, log_output):
     game_engine.register_player(player2, PlayerResources(500, 10), [])
     player2.initialize()
 
-    game_engine.start(500)
+    game_engine.start(rounds)
 
     if gui:
         # Inicialize main widget

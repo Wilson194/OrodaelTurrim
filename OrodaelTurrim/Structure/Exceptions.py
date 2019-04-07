@@ -21,3 +21,8 @@ class IllegalHistoryOperation(OrodaelTurrimException):
 class IllegalLogMessage(OrodaelTurrimException):
     """ You are trying to log message which is not correct type """
     pass
+
+
+class IllegalConfigState(OrodaelTurrimException):
+    """ Something missing in game config file """
+    pass

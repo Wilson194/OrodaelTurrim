@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from OrodaelTurrim.Structure.Position import CubicPosition, AxialPosition, OffsetPosition
 from OrodaelTurrim.Structure.Terrain import Field, Forest, Hill, Mountain, River, Village
@@ -24,6 +24,14 @@ class TerrainType(Enum):
     MOUNTAIN = Mountain()
     RIVER = River()
     VILLAGE = Village()
+
+
+    @staticmethod
+    def from_char(char: str) -> Optional["TerrainType"]:
+        for terrain_type in TerrainType:
+            if terrain_type.value.char() == char:
+                return terrain_type
+        return None
 
 
 class Nudge(Enum):

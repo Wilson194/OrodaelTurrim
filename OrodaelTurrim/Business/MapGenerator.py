@@ -1,28 +1,16 @@
 import os
 import random
-from typing import List, Set
+from typing import List, Set, Union
 
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Structure.Enums import TerrainType
+from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
 from OrodaelTurrim.Structure.Position import OffsetPosition, Position
 from OrodaelTurrim.Structure.Terrain import River, Field, Terrain
 from OrodaelTurrim.config import Config
 
-# Probability that river will be on the map
-RIVER_ON_MAP = 0.9
-
-# Probability of each terran type
-MOUNTAIN = 0.1
-FIELD = 1  # 0.5
-HILL = 0.1
-FOREST = 0.2
-VILLAGE = 0.01
-
 # Precision of terrain types (how many items will be in random list
 PRECISION = 100
-
-# How much items add to list for each neighbour
-NEIGHBOUR_ADD = 2
 
 
 class MapGenerator:
@@ -44,6 +32,8 @@ class MapGenerator:
         self.__game_map = GameMap(width, height)
 
         self.__border_tiles = self.__game_map.border_tiles
+
+        self.__initialize_generator_config()
 
         if not seed:
             seed = Config.MAP_RANDOM_SEED
@@ -70,19 +60,19 @@ class MapGenerator:
         """
         random_list = []
 
-        for i in range(int(MOUNTAIN * PRECISION)):
+        for i in range(int(self.mountain_frq * PRECISION)):
             random_list.append(TerrainType.MOUNTAIN)
 
-        for i in range(int(FIELD * PRECISION)):
+        for i in range(int(self.field_frq * PRECISION)):
             random_list.append(TerrainType.FIELD)
 
-        for i in range(int(HILL * PRECISION)):
+        for i in range(int(self.hill_frq * PRECISION)):
             random_list.append(TerrainType.HILL)
 
-        for i in range(int(FOREST * PRECISION)):
+        for i in range(int(self.forest_frq * PRECISION)):
             random_list.append(TerrainType.FOREST)
 
-        for i in range(int(VILLAGE * PRECISION)):
+        for i in range(int(self.village_frq * PRECISION)):
             random_list.append(TerrainType.VILLAGE)
 
         return random_list
@@ -97,7 +87,7 @@ class MapGenerator:
 
         for neigbour in neigbours:
             if self.__game_map[neigbour].terrain_type not in (TerrainType.FIELD, TerrainType.RIVER):
-                for i in range(NEIGHBOUR_ADD):
+                for i in range(int(self.neighbour_add * PRECISION)):
                     self.__base_random_list.append(self.__game_map[neigbour].terrain_type)
 
         terrain_type = random.choice(self.__base_random_list)
@@ -105,11 +95,34 @@ class MapGenerator:
         return terrain_type.value
 
 
-    def generate(self) -> GameMap:
+    def generate(self, game_map: List[List[Union[str, TerrainType]]] = None) -> GameMap:
         """ Generate map method """
-        self.__generate_river()
-        self.__generate_tiles()
+        if game_map:
+            if len(game_map) != self.__height:
+                raise IllegalArgumentException('Map configuration did not correspond with map height!')
+            if max([len(x) for x in game_map]) != min([len(x) for x in game_map]):
+                raise IllegalArgumentException('Size mismatch in map config!')
+            if len(game_map[0]) != self.__width:
+                raise IllegalArgumentException('Map configuration did not correspond with map with!')
+            self.__game_map = GameMap(self.__width, self.__height, game_map)
+        else:
+            self.__generate_river()
+            self.__generate_tiles()
+
         return self.__game_map
+
+
+    def __initialize_generator_config(self):
+
+        self.field_frq = Config.FIELD_FREQUENCY if Config.FIELD_FREQUENCY is not None else 0.5
+        self.mountain_frq = Config.MOUNTAIN_FREQUENCY if Config.MOUNTAIN_FREQUENCY is not None else 0.1
+        self.hill_frq = Config.HILL_FREQUENCY if Config.HILL_FREQUENCY is not None else 0.1
+        self.forest_frq = Config.FOREST_FREQUENCY if Config.FOREST_FREQUENCY is not None else 0.2
+        self.village_frq = Config.VILLAGE_FREQUENCY if Config.VILLAGE_FREQUENCY is not None else 0.01
+
+        self.river_prob = Config.RIVER_ON_MAP_PROBABILITY if Config.RIVER_ON_MAP_PROBABILITY is not None else 0.9
+
+        self.neighbour_add = Config.NEIGHBOUR_ADD if Config.NEIGHBOUR_ADD is not None else 0.01
 
 
     def __generate_tiles(self):
@@ -135,7 +148,7 @@ class MapGenerator:
             return True
 
 
-        if random.random() < RIVER_ON_MAP:
+        if random.random() < self.river_prob:
             current = self.__river_start_position()
             river_length = 1
             self.__game_map.set_tile(current, River())

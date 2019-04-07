@@ -28,3 +28,8 @@ class QtSingleton(pyqtWrapperType, type):
         if cls.instance is None:
             cls.instance = super().__call__(*args, **kw)
         return cls.instance
+
+
+class ClassAttributeDefault(type):
+    def __getattr__(self, item):
+        return None
