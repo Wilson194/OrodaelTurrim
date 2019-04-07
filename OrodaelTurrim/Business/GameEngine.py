@@ -808,6 +808,11 @@ class GameEngine:
         if not self.is_position_on_map(information.position):
             raise IllegalActionException('Position is not on the map!')
 
+        if information.owner.role == GameRole.DEFENDER:
+            if information.position not in self.get_player_visible_tiles(
+                    information.owner) and information.object_type != GameObjectType.BASE:
+                raise IllegalActionException('Attempt to spawn unit at not visible tile!')
+
         if self.is_position_occupied(information.position):
             raise IllegalActionException('Tile is already occupied!')
 

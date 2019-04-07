@@ -84,6 +84,7 @@ class UnitWidget(QWidget):
         """ Redraw UI of the card (disable or enable spawn button and display info why) """
 
         place_button = typing.cast(QPushButton, self.findChild(QPushButton, 'placeButton'))
+        active_player = self.__game_engine.get_game_history().active_player
 
         # No position on map selected
         if self.__selected_position is None:
@@ -98,7 +99,7 @@ class UnitWidget(QWidget):
             return
 
         # Not enough money for the unit
-        player_resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
+        player_resources = self.__game_engine.get_resources(active_player)
         if GameObjectPrototypePool[self.__object_type].cost > player_resources:
             place_button.setDisabled(True)
             place_button.setToolTip('Not enough money for this unit')
@@ -110,6 +111,13 @@ class UnitWidget(QWidget):
         if base_condition:
             place_button.setDisabled(True)
             place_button.setToolTip('You can have only 1 base')
+            return
+
+        # Place only on visible tiles
+        if self.__selected_position not in self.__game_engine.get_player_visible_tiles(
+                active_player) and self.__object_type != GameObjectType.BASE:
+            place_button.setDisabled(True)
+            place_button.setToolTip('You can spawn unit only on visible tiles!')
             return
 
         # Position is already occupied
