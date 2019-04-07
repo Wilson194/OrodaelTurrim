@@ -21,6 +21,8 @@ Are you ready to resist the hordes of Rigor Mortis servants?
 
    installation.rst
    gui.rst
+   console.rst
+   principles.rst
    defenders.rst
    attackers.rst
    effects.rst
