@@ -40,10 +40,9 @@ class MapGenerator:
 
         if not seed:
             seed = int.from_bytes(os.urandom(50), 'big')
+            Config.MAP_RANDOM_SEED = seed
 
         random.seed(seed)
-
-        print('Map random seed: ', seed)
 
         self.__base_random_list = self.create_base_random_list()
 

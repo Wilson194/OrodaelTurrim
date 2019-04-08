@@ -72,8 +72,9 @@ class IAttacker(IPlayer, ABC):
         seed = Config.AI_RANDOM_SEED
         if not seed:
             seed = int.from_bytes(os.urandom(50), 'big')
+            Config.AI_RANDOM_SEED = seed
 
-        print('AI random seed: {}'.format(seed))
+
         self.spawn_random = Random(seed)
 
 

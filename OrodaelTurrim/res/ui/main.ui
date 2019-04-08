@@ -28,7 +28,7 @@
      <string>File</string>
     </property>
     <addaction name="actionExport_log"/>
-    <addaction name="actionShow_configuration"/>
+    <addaction name="showConfigAction"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -48,7 +48,7 @@
     <string>Export game history</string>
    </property>
   </action>
-  <action name="actionShow_configuration">
+  <action name="showConfigAction">
    <property name="text">
     <string>Display configuration</string>
    </property>

@@ -3,11 +3,12 @@ from pathlib import Path
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import Qt, pyqtSlot, QObject
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox, QSystemTrayIcon
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox, QSystemTrayIcon, QAction
 
 from OrodaelTurrim import ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
+from OrodaelTurrim.Presenter.Dialogs.ConfigurationDialog import ConfigurationDialog
 from OrodaelTurrim.Presenter.Widgets.ControlWidget import ControlWidget
 from OrodaelTurrim.Presenter.Widgets.MapWidget import MapWidget
 from OrodaelTurrim.Structure.Position import Position
@@ -67,21 +68,29 @@ class MainWindow(QObject):
         super().__init__()
         self.app = QtWidgets.QApplication([])
         self.window = QtWidgets.QMainWindow()
+        self.game_engine = game_engine
 
+        Connector().subscribe('status_message', self.status_info)
+        Connector().subscribe('map_position_change', self.tile_selected)
+        Connector().subscribe('map_position_clear', self.tile_unselected)
+        Connector().subscribe('error_message', self.error_message_slot)
+
+        self.init_ui()
+
+
+    def init_ui(self):
+        """ Init main window UI """
         with open(str(PATH_RES / 'ui' / 'main.ui')) as f:
             uic.loadUi(f, self.window)
 
         central = self.window.findChild(QtWidgets.QWidget, 'centralWidget')
 
         layout = QHBoxLayout()
-        main_widget = MainWidget(self.window, game_engine)
+        main_widget = MainWidget(self.window, self.game_engine)
         layout.addWidget(main_widget)
         central.setLayout(layout)
 
-        Connector().subscribe('status_message', self.status_info)
-        Connector().subscribe('map_position_change', self.tile_selected)
-        Connector().subscribe('map_position_clear', self.tile_unselected)
-        Connector().subscribe('error_message', self.error_message_slot)
+        self.window.findChild(QAction, 'showConfigAction').triggered.connect(self.show_config_slot)
 
 
     def execute(self) -> int:
@@ -126,3 +135,8 @@ class MainWindow(QObject):
         msg.setText(error_message)
         msg.setWindowTitle('Error: ' + context)
         msg.exec_()
+
+
+    @pyqtSlot()
+    def show_config_slot(self):
+        ConfigurationDialog.execute_()
