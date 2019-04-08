@@ -15,10 +15,15 @@ from OrodaelTurrim.config import Config
 
 
 @click.command()
-@click.option('--gui/--nogui', '/gui;/nogui', 'gui', default=True, help='Disable or enable gui')
+@click.option('--gui/--nogui', 'gui', default=True, help='Disable or enable gui [default: --gui]')
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
 @click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
-def main(gui, rounds, log_output):
+@click.option('-v', '--verbose', 'verbose', type=bool, is_flag=True, help='Enable verbose info for console interface')
+def main(gui, rounds, log_output, verbose):
+    """ Welcome to Orodael Turrim game. You can start GUI application without parameters or set --nogui option for
+    console interface only. Console is faster, but you will get only limited information. Also you cannot order your
+    units from console. Everything will be handled by your lieutenant Expert System.
+    """
     # Load map configuration from config or generate random map
     height = Config.MAP_HEIGHT
     width = Config.MAP_WIDTH
@@ -74,7 +79,13 @@ def main(gui, rounds, log_output):
             if game_history.on_first_player:
                 current_round += 1
 
+        print('\nGAME OVER\n')
         print('User survive {} rounds'.format(current_round))
+        if verbose:
+            print('\nConfiguration:')
+            print('  MAP_RANDOM_SEED: ', Config.MAP_RANDOM_SEED)
+            print('  UNCERTAINTY_RANDOM_SEED: ', Config.UNCERTAINTY_RANDOM_SEED)
+            print('  AI_RANDOM_SEED: ', Config.AI_RANDOM_SEED)
 
     if log_output:
         text = game_engine.get_game_history()
