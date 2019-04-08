@@ -13,7 +13,7 @@ from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectAp
     EffectDamageAction, EffectExpireAction
 from OrodaelTurrim.Structure.Actions.Log import LogAction
 from OrodaelTurrim.Structure.Actions.Placement import DieAction, SpawnAction
-from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction
+from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction, IncomeResourcesIncrease
 from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, TerrainType, EffectType, GameRole
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
@@ -358,6 +358,10 @@ class GameEngine:
 
         income = self.__player_resources[player].income
         self.execute_action(EarnResourcesAction(self, player, income))
+
+        income_increase = self.__player_resources[player].income_increase
+        if income_increase > 0:
+            self.execute_action(IncomeResourcesIncrease(self, player, income_increase))
 
         # Check base
         if player.role == GameRole.DEFENDER and self.__game_history.in_preset and not self.player_have_base(player):
@@ -841,6 +845,17 @@ class GameEngine:
         :return: Current income of given player
         """
         return self.__player_resources.get(player, None).income
+
+
+    def increase_income(self, player: IPlayer, amount: int):
+        """
+        Raise income of given player
+
+        :param player: Player whose income should be increased
+        :param amount:
+        :return:
+        """
+        self.__player_resources[player].increase_income(amount)
 
 
     def get_game_map(self) -> GameMap:

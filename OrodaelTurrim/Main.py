@@ -52,7 +52,7 @@ def main(gui, rounds, log_output):
 
     # Register attacker
     player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(player2, PlayerResources(500, 10), [])
+    game_engine.register_player(player2, PlayerResources(500, 10, 1), [])
     player2.initialize()
 
     game_engine.start(rounds)
