@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PyQt5 import uic, QtWidgets
+from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt, pyqtSlot, QObject
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QHBoxLayout, QFrame, QSplitter, QWidget, QMessageBox, QSystemTrayIcon, QAction, QFileDialog
@@ -92,6 +92,7 @@ class MainWindow(QObject):
 
         self.window.findChild(QAction, 'showConfigAction').triggered.connect(self.show_config_slot)
         self.window.findChild(QAction, 'exportLogAction').triggered.connect(self.save_game_history_html_slot)
+        self.window.findChild(QAction, 'documentationAction').triggered.connect(self.open_documentation_slot)
 
 
     def execute(self) -> int:
@@ -158,3 +159,11 @@ class MainWindow(QObject):
                     f.write(text)
             except IOError:
                 self.error_message_slot('Export history', 'Problem with writing to target file {}'.format(file_name))
+
+
+    @pyqtSlot()
+    def open_documentation_slot(self):
+        """ Open documentation from file menu in default browser """
+        url = QtCore.QUrl('https://zns.readthedocs.io/en/latest/')
+        if not QtGui.QDesktopServices.openUrl(url):
+            QtWidgets.QMessageBox.warning(self.window, 'Open Url', 'Could not open url')
