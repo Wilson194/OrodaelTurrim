@@ -70,13 +70,18 @@ class IActionBase(ABC):
         elif isinstance(item, Expression):
             getattr(self, item.name)(*item.args)
 
+        raise ValueError('Get functions only by string of Expression')
+
 
     def __contains__(self, item: Union[str, Expression]) -> bool:
         if type(item) is str:
             if callable(getattr(self, item, None)):
                 return True
+            return False
+
         elif isinstance(item, Expression):
             if callable(getattr(self, item.name, None)):
                 return True
+            return False
 
         raise ValueError('Test only with string or Expression')
