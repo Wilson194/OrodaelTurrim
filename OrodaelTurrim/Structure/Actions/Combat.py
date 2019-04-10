@@ -70,7 +70,7 @@ class MoveAction(GameAction):
 
     @property
     def text(self) -> str:
-        return '{} moved: {} -> {}'.format(str(self.__game_object.object_type.name), self.__from.offset,
+        return '{} moved: {} -> {}'.format(str(self.__game_object.object_type.name.capitalize()), self.__from.offset,
                                            self.__to.offset)
 
 

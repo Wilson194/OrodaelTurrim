@@ -61,7 +61,8 @@ class EffectDamageAction(GameAction):
     @property
     def text(self) -> str:
         return '{} {} suffered {} damage from {}'.format(self.__owner.object_type, self.__owner.position.offset,
-                                                         str(self.__damage), self.__effect.effect_type)
+                                                         str(self.__damage),
+                                                         self.__effect.effect_type.name.capitalize())
 
 
     def xml(self, parent) -> SubElement:

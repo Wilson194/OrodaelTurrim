@@ -19,14 +19,14 @@ Are you ready to resist the hordes of Rigor Mortis servants?
    :maxdepth: 2
    :caption: Contents:
 
-   installation.rst
-   gui.rst
-   console.rst
-   principles.rst
-   defenders.rst
-   attackers.rst
-   effects.rst
-   map.rst
+   Installation.rst
+   Gui.rst
+   Console.rst
+   Principles.rst
+   Map.rst
+   Units.rst
+   ExpertSystem.rst
+   RulesLanguage.rst
 
 
 ..

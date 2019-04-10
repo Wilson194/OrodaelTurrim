@@ -32,10 +32,11 @@ class TerrainDamageAction(GameAction):
 
     @property
     def text(self) -> str:
-        return '{} {} suffered {:.2} damage from {} terrain tile'.format(self.__game_object.object_type,
-                                                                         self.__game_object.position.offset,
-                                                                         self.__damage,
-                                                                         self.__terrain_type)
+        return '{} {} suffered {:.2} damage from {} terrain tile'.format(
+            self.__game_object.object_type.name.capitalize(),
+            self.__game_object.position.offset,
+            self.__damage,
+            self.__terrain_type.name.capitalize())
 
 
     def xml(self, parent) -> SubElement:

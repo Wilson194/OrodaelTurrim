@@ -168,12 +168,8 @@ class Forest(Terrain):
             return 1
 
 
-    def affect_attack(self, original_value: float):  # TODO: Check value of multiplier
-        return original_value * 1.2
-
-
     def affect_defense(self, original_value: float):
-        return original_value * 1.1
+        return original_value * 1.2
 
 
     def get_remaining_sigh(self, current_sight: int) -> int:
@@ -219,6 +215,10 @@ class Hill(Terrain):
 
     def affect_defense(self, original_value: float):
         return original_value * 1.1
+
+
+    def affect_sight(self, original_value: int) -> int:
+        return original_value + 1
 
 
     def get_remaining_sigh(self, current_sight: int) -> int:
