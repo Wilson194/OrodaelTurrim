@@ -91,7 +91,6 @@ class MainWindow(QObject):
         central.setLayout(layout)
 
         self.window.findChild(QAction, 'showConfigAction').triggered.connect(self.show_config_slot)
-        self.window.findChild(QAction, 'exportLogAction').triggered.connect(self.save_game_history_html_slot)
         self.window.findChild(QAction, 'documentationAction').triggered.connect(self.open_documentation_slot)
 
 
@@ -143,22 +142,6 @@ class MainWindow(QObject):
     def show_config_slot(self):
         """ Display window with all configuration values """
         ConfigurationDialog.execute_()
-
-
-    @pyqtSlot()
-    def save_game_history_html_slot(self):
-        """ Display file save dialog for exporting game history to html format """
-        options = QFileDialog.Options()
-
-        file_name, _ = QFileDialog.getSaveFileName(self.window, "Export game history", "",
-                                                   "Html Files (*.html)", options=options)
-        if file_name:
-            text = str(self.game_engine.get_game_history())
-            try:
-                with open(file_name, 'w') as f:
-                    f.write(text)
-            except IOError:
-                self.error_message_slot('Export history', 'Problem with writing to target file {}'.format(file_name))
 
 
     @pyqtSlot()

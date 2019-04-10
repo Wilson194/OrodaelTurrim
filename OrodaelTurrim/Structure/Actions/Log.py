@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 
 if TYPE_CHECKING:
@@ -26,3 +28,7 @@ class LogAction(GameAction):
     @property
     def text(self) -> str:
         return self.log_message
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, msg=self.log_message)

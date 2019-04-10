@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 
@@ -30,6 +32,11 @@ class EarnResourcesAction(GameAction):
         return 'Player {} earned {} resources'.format(self.__player.name, self.__amount)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, player=str(id(self.__player)),
+                   amount=str(self.__amount))
+
+
 class SpendResourcesAction(GameAction):
     """ Represents game action of player spending resources """
 
@@ -53,6 +60,11 @@ class SpendResourcesAction(GameAction):
         return 'Player {} spent {} resources'.format(self.__player.name, self.__amount)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, player=str(id(self.__player)),
+                   amount=str(self.__amount))
+
+
 class IncomeResourcesIncrease(GameAction):
     def __init__(self, game_engine: "GameEngine", player: IPlayer, amount: Union[float, int]):
         super().__init__(game_engine)
@@ -71,3 +83,8 @@ class IncomeResourcesIncrease(GameAction):
     @property
     def text(self) -> str:
         return 'Player {} income increased by {}'.format(self.__player.name, self.__amount)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, player=str(id(self.__player)),
+                   amount=str(self.__amount))

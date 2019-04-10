@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
 
@@ -30,6 +32,10 @@ class DieAction(GameAction):
         return '{} {} has perished'.format(self.__dead_object.object_type, self.__dead_object.position.offset)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, dead_object=id(self.__dead_object))
+
+
 class SpawnAction(GameAction):
     """ Represents game action of game object being spawned """
 
@@ -52,3 +58,9 @@ class SpawnAction(GameAction):
         return 'Player {} spawned {} on {}'.format(self.__spawned_object.owner.name,
                                                    self.__spawned_object.object_type.name.capitalize(),
                                                    self.__spawned_object.position.offset)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, spawned_object=str(id(self.__spawned_object)),
+                   position=str(self.__spawned_object.position.offset),
+                   object_type=self.__spawned_object.__class__.__name__)

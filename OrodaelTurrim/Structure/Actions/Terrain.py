@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
@@ -30,6 +32,12 @@ class TerrainDamageAction(GameAction):
 
     @property
     def text(self) -> str:
-        return '{} {} suffered {} damage from {} terrain tile'.format(self.__game_object.object_type,
-                                                                      self.__game_object.position.offset, self.__damage,
-                                                                      self.__terrain_type)
+        return '{} {} suffered {:.2} damage from {} terrain tile'.format(self.__game_object.object_type,
+                                                                         self.__game_object.position.offset,
+                                                                         self.__damage,
+                                                                         self.__terrain_type)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, damage=str(self.__damage),
+                   target=str(id(self.__game_object)))

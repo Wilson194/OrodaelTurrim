@@ -27,7 +27,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="exportLogAction"/>
     <addaction name="showConfigAction"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
