@@ -340,6 +340,8 @@ class MapWidget(QWidget):
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setCacheMode(QGraphicsView.CacheBackground)
         self.view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
+        self.view.setContentsMargins(0, 0, 0, 0)
+        self.view.setViewportMargins(0, 0, 0, 0)
 
         scroll_layout.addWidget(self.view)
         self.scroll_area.setLayout(scroll_layout)

@@ -36,7 +36,7 @@
      <string>Help</string>
     </property>
     <addaction name="documentationAction"/>
-    <addaction name="actionAbout"/>
+    <addaction name="aboutAction"/>
    </widget>
    <addaction name="menuSoubor"/>
    <addaction name="menuHelp"/>
@@ -62,7 +62,7 @@
     <string>Documentation</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="aboutAction">
    <property name="text">
     <string>About</string>
    </property>

@@ -12,7 +12,7 @@ from OrodaelTurrim.Presenter.Dialogs.ConfigurationDialog import ConfigurationDia
 from OrodaelTurrim.Presenter.Widgets.ControlWidget import ControlWidget
 from OrodaelTurrim.Presenter.Widgets.MapWidget import MapWidget
 from OrodaelTurrim.Structure.Position import Position
-
+from OrodaelTurrim import __version__
 PATH_RES = Path(__file__).parent.parent / 'res'
 
 
@@ -92,6 +92,7 @@ class MainWindow(QObject):
 
         self.window.findChild(QAction, 'showConfigAction').triggered.connect(self.show_config_slot)
         self.window.findChild(QAction, 'documentationAction').triggered.connect(self.open_documentation_slot)
+        self.window.findChild(QAction, 'aboutAction').triggered.connect(self.about_slot)
 
 
     def execute(self) -> int:
@@ -150,3 +151,19 @@ class MainWindow(QObject):
         url = QtCore.QUrl('https://zns.readthedocs.io/en/latest/')
         if not QtGui.QDesktopServices.openUrl(url):
             QtWidgets.QMessageBox.warning(self.window, 'Open Url', 'Could not open url')
+
+
+    @pyqtSlot()
+    def about_slot(self):
+        QtWidgets.QMessageBox.about(self.window, 'About Orodael Turrim', """
+        <h2> Orodael turrim</h2>
+        Orodael turrim is Python framework for learning about Expert Systems. It's up to you develop your own expert 
+        system, that will  defeat Rigor Mortis and his servants. GUI application is only for debugging purpose, not 
+        developed as a standalone game. So you can get more information than in Expert system through proxy. 
+        Use GUI only for debugging you mighty full expert system.
+        
+        <br>
+        <br>
+        <b> Developers: </b> Jan Horáček <br>
+        <b> Version: </b> {}
+        """.format(__version__))
