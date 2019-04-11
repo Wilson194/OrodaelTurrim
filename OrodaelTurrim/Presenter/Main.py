@@ -66,6 +66,7 @@ class MainWindow(QObject):
 
     def __init__(self, game_engine: GameEngine):
         super().__init__()
+
         self.app = QtWidgets.QApplication([])
         self.window = QtWidgets.QMainWindow()
         self.game_engine = game_engine

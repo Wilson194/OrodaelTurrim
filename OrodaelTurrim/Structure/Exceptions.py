@@ -26,3 +26,8 @@ class IllegalLogMessage(OrodaelTurrimException):
 class IllegalConfigState(OrodaelTurrimException):
     """ Something missing in game config file """
     pass
+
+
+class IllegalRulesFormat(OrodaelTurrimException):
+    """ Problem with parsing rules file """
+    pass

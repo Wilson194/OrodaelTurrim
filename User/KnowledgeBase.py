@@ -6,7 +6,7 @@ from ExpertSystem.Business.UserFramework import IKnowledgeBase
 from ExpertSystem.Structure.RuleBase import Fact
 
 
-class KnowledgeBase(IKnowledgeBase):  # TODO: Add description of proxy
+class KnowledgeBase(IKnowledgeBase):
     """
     Class for defining known facts based on Proxy information. You can transform here any information from
     proxy to better format of Facts. Important is method `create_knowledge_base()`. Return value of this method

@@ -1,6 +1,6 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
-from qtpy import QtCore
+from PyQt5 import QtCore
 from typing import cast
 from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.config import Config
