@@ -88,18 +88,22 @@ class IAttacker(IPlayer, ABC):
     def spawn_information_list(self) -> List[List["SpawnInformation"]]:
         """
         Return list of of spawn information for next 3 rounds
+
         0 first round
             0 unit 1
             1 Unit 2
             ...
+
         1 second round
             0 unit 1
             1 Unit 2
             ...
+
         2 third round
             0 unit 1
             1 Unit 2
             ...
+
         """
         pass
 

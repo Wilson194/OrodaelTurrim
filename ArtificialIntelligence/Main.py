@@ -40,6 +40,9 @@ class AIPlayer(IAttacker):
 
     @property
     def spawn_information_list(self) -> List[List[SpawnInformation]]:
+        """
+        Get information about spawns
+        """
         return self.__spawn_information
 
 
@@ -146,7 +149,7 @@ class AIPlayer(IAttacker):
 
 
     def __spawn_unit(self, maximum_resources: int, remaining_resources: int) -> bool:
-        """ Determinate if spawn new unit or not"""
+        """ Determinate if spawn new unit or not """
         if remaining_resources > self.__most_expensive_unit.price:
             return True
 

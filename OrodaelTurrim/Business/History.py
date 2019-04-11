@@ -10,10 +10,10 @@ if TYPE_CHECKING:
 
 class GameHistory:
     """
-     Class providing methods for access to and navigation in game history.
+    | Class providing methods for access to and navigation in game history.
     |
-     Three dimensional array holding all the game history. The first level array represents turns, second
-     level array holds players and the third one holds actions of those players.
+    | Three dimensional array holding all the game history. The first level array represents turns, second
+      level array holds players and the third one holds actions of those players.
     """
 
 

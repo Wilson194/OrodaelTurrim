@@ -6,3 +6,5 @@ API documentation
 
    OrodaelTurrim
    ExpertSystem
+   ArtificialIntelligence
+   User
