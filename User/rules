@@ -4,5 +4,5 @@
 # Grammar definition is described in documentation
 
 
-IF player_dont_have_base THEN build_base 0 0
+IF player_dont_have_base THEN build_base 0 0;
 

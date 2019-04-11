@@ -166,7 +166,7 @@ class GameObjectProxy:
         return self.__get_current_hit_points(position)
 
 
-    def get_attack_effect(self, position: "Position") -> Optional[Set["EffectType"]]:
+    def get_attack_effects(self, position: "Position") -> Optional[Set["EffectType"]]:
         """
         Retrieves the types of effect to be applied to the target of attack of game object on specified position
 
