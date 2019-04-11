@@ -120,6 +120,11 @@ class UnitWidget(QWidget):
             place_button.setToolTip('You can spawn unit only on visible tiles!')
             return
 
+        if self.__game_engine.get_game_map().position_on_edge(self.__selected_position):
+            place_button.setDisabled(True)
+            place_button.setToolTip('Cannot spawn units on the map edge!')
+            return
+
         # Position is already occupied
         if self.__game_engine.is_position_occupied(self.__selected_position):
             place_button.setDisabled(True)

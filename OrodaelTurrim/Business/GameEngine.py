@@ -820,6 +820,9 @@ class GameEngine:
         if self.is_position_occupied(information.position):
             raise IllegalActionException('Tile is already occupied!')
 
+        if self.__game_map.position_on_edge(information.position) and information.owner.role == GameRole.DEFENDER:
+            raise IllegalActionException('Cannot spawn unit defender unit on the map edge.')
+
         if information.owner.role != prototype.role:
             raise IllegalActionException('Attempt to spawn unit of different role!')
 

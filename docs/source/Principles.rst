@@ -123,12 +123,13 @@ When you are planning your defence you need to place units on the map. There are
 * Spawn tile must be empty
 * You must have enough resources for that unit
 * You can spawn only unit of your role (attacker / defender)
+* As a defender, you can't spawn units on the map edge
 * `For UI control, you can't spawn unit if you are in browsing mode`
 
 When you are place unit, you must specify filters for unit (attack filters for both roles, mover filters only for
 attackers). Unit filters are unchangeable after unit spawn, so think twice before you spawn your units.
 
-Units could attack immediately after spawn, so you don't need to wait, but unit can't move until next round.
+Units could attack immediately after spawn, so you don't need to wait, also units can move immediately.
 
 .. _filters:
 
