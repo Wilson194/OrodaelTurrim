@@ -12,3 +12,16 @@ as long as possible. The expert system is fully automatic, without external user
 are provided by the framework itself.
 
 Are you ready to resist the hordes of Rigor Mortis servants?
+
+Documentation
+--------------
+
+You can find whole documentation at https://orodaelturrim.readthedocs.io.
+
+Contribution
+--------------
+
+If you find any errors or some strange parts, You can report them using Issues or creating Pull requests to the 
+repository. Your reports will help me fix all bugs or unclear parts. Thanks!
+
+
