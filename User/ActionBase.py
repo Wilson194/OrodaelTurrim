@@ -1,3 +1,5 @@
+from Business.Interface.Player import IPlayer
+from Business.Proxy import GameControlProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
 from OrodaelTurrim.Structure.Enums import GameObjectType
@@ -21,6 +23,8 @@ class ActionBase(IActionBase):
     Expression class will also pass arguments from self to your method. () operator using only args so be careful about
     order and number of arguments.
     """
+    game_control_proxy: GameControlProxy
+    player: IPlayer
 
 
     def build_base(self, position_q: int, position_r: int):

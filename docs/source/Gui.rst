@@ -130,7 +130,7 @@ position is selected on the map.
 
 **Position info**
 
- First part showing position in three types of representation. You can read about positions types at **TODO**
+ First part showing position in three types of representation. You can read about positions types at :ref:`positions`
 
   * |position_offset| - Offset position [ q r ]
   * |position_cubic| - Cubic position [ x y z ]
@@ -139,7 +139,7 @@ position is selected on the map.
 **Terrain info**
 
  Next part showing information about terrain on the selected position. You can see there some basic attributes
- of the tile. You can read more about terrain types at **TODO**
+ of the tile. You can read more about terrain types at :ref:`terrains`
 
  |info_tile|
 
@@ -147,7 +147,7 @@ position is selected on the map.
 
  Last part of the widget displaying information about unit. This part is visible only if some game object
  is on currently selected position. You can see there information about unit attributes. If you select your own unit
- you can see also attack filters of this unit. You can read about attack filters at **TODO**
+ you can see also attack filters of this unit. You can read about attack filters at :ref:`filters`
 
  Game object info also have 3 buttons
 
@@ -206,7 +206,7 @@ On the top you can see amount of resources you have. Under it there are your uni
 
 **Filter window**
  When you click on the `Filters` button, new window will open. Here you can specify which filters you want to use and
- the order of the filters. You can read about filter system here **TODO**. There are 4 control buttons for filters
+ the order of the filters. You can read about filter system here :ref:`filters`. There are 4 control buttons for filters
 
  * |filter_add| - Add filter to active filters
  * |filter_remove| - Remove filter from active filters
@@ -220,10 +220,10 @@ On the top you can see amount of resources you have. Under it there are your uni
 Spawn info tab
 -------------------
 
-In the `Spawn info tab` you can obtain information about enemy planning spawn. You can read about your scouting at **TODO**.
-For each known round there is part with list of unit and they anticipated positions. Your scouts are not so good so there
-is information about position range and probability of positions. With the |show_visibility| you can display positions
-on the map (orange borders).
+In the `Spawn info tab` you can obtain information about enemy planning spawn. You can read about your scouting at
+:ref:`spawn`. For each known round there is part with list of unit and they anticipated positions. Your scouts are not
+so good so there is information about position range and probability of positions. With the |show_visibility| you can
+display positions on the map (orange borders).
 
 Action log tab
 -------------------

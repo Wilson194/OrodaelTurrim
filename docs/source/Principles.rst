@@ -27,6 +27,9 @@ In the Orodael Turrim there are few mechanisms that are not standard for the gam
 of expert system control and some of the are designed for this game. Also game using hex tile, where tile indexing
 is not clear in the first look. So there are description of main game mechanisms.
 
+.. _positions:
+
+
 Positions types
 ------------------
 
@@ -84,7 +87,7 @@ Unit actions
 -----------------------
 
 Movement over the map depends on the source terrain type, target terrain type and number of actions of the unit.
-Some terrains are harder to cross then others. You can find table describing movements at **TODO**. Actions of the
+Some terrains are harder to cross then others. You can find table describing movements at :ref:`movement`. Actions of the
 units describing only how far unit can go, each unit could attack only once per round. Unit don't need to spend all
 the actions.
 
@@ -127,6 +130,8 @@ attackers). Unit filters are unchangeable after unit spawn, so think twice befor
 
 Units could attack immediately after spawn, so you don't need to wait, but unit can't move until next round.
 
+.. _filters:
+
 Filters
 -----------
 
@@ -143,12 +148,14 @@ on the return value
  * If in the set left more than one position after usage of all filters, framework chose on position randomly.
 
 Filters have access to game proxy, so it can use information about terrain, unit attributes and other. User
-could write own filters, this functionality is described at **TODO**. Filters for move actions and attack actions are
-same only using different starting set of positions (accessible tiles for move and tiles based on attack range for
-attack).
+could write own filters, this functionality is described at :ref:`custom_filters`. Filters for move actions and
+attack actions are same only using different starting set of positions (accessible tiles for move and tiles based
+on attack range for attack).
 
 |filters|
 
+
+.. _spawn:
 
 Attacker spawn information
 -----------------------------

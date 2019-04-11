@@ -27,6 +27,8 @@ Are you ready to resist the hordes of Rigor Mortis servants?
    Units.rst
    ExpertSystem.rst
    RulesLanguage.rst
+   Proxy.rst
+   Autodoc.rst
 
 
 ..

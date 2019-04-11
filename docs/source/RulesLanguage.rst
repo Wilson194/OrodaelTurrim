@@ -16,6 +16,8 @@ So when you try to write some rules with bad syntax, you don't need to check it 
 about it. Language is described with grammar. In the grammar you should find out, what you can write.
 Grammar definition is written in atnrl4 language.
 
+.. _grammar:
+
 Grammar
 -----------
 

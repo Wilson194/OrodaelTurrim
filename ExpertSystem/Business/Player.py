@@ -25,7 +25,7 @@ class Player(IPlayer):
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
-        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, self)
+        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
         self.interference = Interference()
         self.action_base = ActionBase(game_control_proxy, self)
 

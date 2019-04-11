@@ -19,6 +19,7 @@ Game map
 .. |v| image:: _static/tiles/village.png
     :width: 100pt
 
+.. _terrains:
 
 Map terrains
 ----------------
@@ -106,6 +107,7 @@ defense, you cannot change it.
 
        **Sight cost:** 1
 
+.. _movement:
 
 Map movement
 ----------------
