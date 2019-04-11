@@ -11,6 +11,3 @@ install:
  - sudo apt-get update
  - sudo apt-get -y install python3-pyqt5
  - python setup.py install
-
-script:
-  - python setup.py test
