@@ -53,11 +53,12 @@ def main(gui, rounds, log_output, verbose):
 
     # Register defender
     defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(defender, PlayerResources(500, 10), [])
+    game_engine.register_player(defender, PlayerResources(Config.DEFENDER_STARTING_MONEY, Config.DEFENDER_INCOME), [])
 
     # Register attacker
     player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(player2, PlayerResources(500, 10, 1), [])
+    game_engine.register_player(player2, PlayerResources(Config.ATTACKER_STARTING_MONEY, Config.ATTACKER_INCOME,
+                                                         Config.ATTACKER_INCOME_INCREASE), [])
     player2.initialize()
 
     game_engine.start(rounds)

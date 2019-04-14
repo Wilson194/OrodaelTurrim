@@ -78,7 +78,7 @@ class Druid(GameObjectPrototype):
 
 class Ent(GameObjectPrototype):
     """ Represents a giant moving tree. Now you regret that little heart you curved into me, don't you?! """
-    ATTRIBUTES = AttributeBundle(10, 50, 200, 1, 2)
+    ATTRIBUTES = AttributeBundle(10, 15, 200, 1, 2)
     COST = 50
     ASSET_NAME = "ent"
 

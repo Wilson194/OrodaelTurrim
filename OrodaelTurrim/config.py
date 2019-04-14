@@ -7,6 +7,14 @@ class Config(metaclass=ClassAttributeDefault):
     AI_RANDOM_SEED = 11210686230018916906755194379495289740658359382637268484814676532218288310878131789222
     UNCERTAINTY_RANDOM_SEED = 48933658723568478790618969458655749561435917118099381875922444158914818283903
 
+    # ----------------- Players configuration ---------------------------------
+    DEFENDER_STARTING_MONEY = 100
+    DEFENDER_INCOME = 10
+
+    ATTACKER_STARTING_MONEY = 200
+    ATTACKER_INCOME = 10
+    ATTACKER_INCOME_INCREASE = 1
+
     # ----------------- Map generator configuration ----------------------------
 
     # Probability that river will be on the map
