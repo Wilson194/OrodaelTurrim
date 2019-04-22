@@ -27,7 +27,7 @@ It is recommended to use virtual environment because of possible problem with Py
 
     git clone https://gitlab.fit.cvut.cz/bi-zns_pracovni/zna_framework_python
     cd zns_framework_python
-    pip install -r requirements.txt
+    pip install -r requirements.txt # use flag -user if your are not using virtual environment
 
 
 Documentation build

@@ -726,13 +726,16 @@ class GameEngine:
         return self.__game_map.position_on_map(position)
 
 
-    def is_position_occupied(self, position: Position) -> bool:
+    def is_position_occupied(self, position: Position) -> Optional[bool]:
         """
-        Checks whether given position is occupied or not
+        Checks whether given position is occupied or not. You can check only visible positions
 
         :param position: Position to be checked
-        :return: True in case there is game object on given position, False otherwise
+        :return: True in case there is game object on given position, False otherwise,
+                 None if user did not see the position
         """
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
         return position in self.__game_object_positions
 
 
