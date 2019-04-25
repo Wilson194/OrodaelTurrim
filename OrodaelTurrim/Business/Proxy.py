@@ -58,10 +58,11 @@ class MapProxy:
 
     def is_position_occupied(self, position: "Position") -> bool:
         """
-        Checks whether given position is occupied or not
+        Checks whether given position is occupied or not. You can check only visible positions
 
         :param position: Position to be checked
-        :return: True in case there is game object on given position, False otherwise
+        :return: True in case there is game object on given position, False otherwise,
+                 None if user did not see the position
         """
         return self.__is_position_occupied(position)
 
