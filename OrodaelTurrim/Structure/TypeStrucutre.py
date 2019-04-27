@@ -62,8 +62,14 @@ class DoubleLinkedList:
     def push_front(self, value: Any) -> None:
         """ Push value to the start of the linked list"""
         node = Node(value)
-        node.next = self.__tail
-        self.__tail = node
+
+        if self.__size == 0:
+            self.__head = node
+            self.__tail = node
+        else:
+            node.next = self.__tail
+            node.next.previous = node
+            self.__tail = node
 
         self.__size += 1
 
@@ -115,7 +121,7 @@ class DoubleLinkedList:
         self.__pointer = target
 
 
-    def __sizeof__(self):
+    def __len__(self):
         return self.__size
 
 

@@ -12,7 +12,7 @@ from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Enums import GameRole
-from Structure.Exceptions import IllegalRulesFormat
+from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat
 from User.ActionBase import ActionBase
 from User.Interference import Interference
 from User.KnowledgeBase import KnowledgeBase

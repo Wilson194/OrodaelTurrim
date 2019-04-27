@@ -1,7 +1,7 @@
 from typing import List, Set
 
-from Business.Interface.Player import IPlayer
-from Business.Proxy import MapProxy, GameObjectProxy, GameUncertaintyProxy
+from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameUncertaintyProxy
 from ExpertSystem.Business.UserFramework import IKnowledgeBase
 from ExpertSystem.Structure.RuleBase import Fact
 

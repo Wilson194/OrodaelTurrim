@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject
 from antlr4.error.ErrorListener import ErrorListener
 
 from OrodaelTurrim.Presenter.Connector import Connector
-from Structure.Exceptions import IllegalRulesFormat
+from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat
 
 
 class CustomErrorListener(ErrorListener, QObject):

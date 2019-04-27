@@ -7,8 +7,16 @@ from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer, Co
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim.Business.GameMap import GameMap
-from OrodaelTurrim.Structure.Enums import TerrainType
 from OrodaelTurrim.Structure.Position import Position
+from ArtificialIntelligence.Main import AIPlayer
+from ExpertSystem.Business.Player import Player
+from OrodaelTurrim.Business.GameEngine import GameEngine
+from OrodaelTurrim.Business.MapGenerator import MapGenerator
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
+from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
+from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
+from OrodaelTurrim.Structure.Position import OffsetPosition
+from OrodaelTurrim.Structure.Resources import PlayerResources
 
 
 @pytest.fixture
@@ -52,3 +60,50 @@ class Utils:
         walker.walk(rules_listener, tree)
 
         return rules_listener.rules
+
+
+GAME_MAP = [
+    [TerrainType.FIELD, TerrainType.FIELD, TerrainType.FIELD, TerrainType.FOREST, TerrainType.VILLAGE],
+    [TerrainType.MOUNTAIN, TerrainType.FIELD, TerrainType.MOUNTAIN, TerrainType.FIELD, TerrainType.MOUNTAIN],
+    [TerrainType.FOREST, TerrainType.MOUNTAIN, TerrainType.FIELD, TerrainType.RIVER, TerrainType.RIVER],
+    [TerrainType.VILLAGE, TerrainType.MOUNTAIN, TerrainType.HILL, TerrainType.RIVER, TerrainType.HILL],
+    [TerrainType.FIELD, TerrainType.FIELD, TerrainType.FOREST, TerrainType.RIVER, TerrainType.FOREST],
+]
+
+
+@pytest.fixture(scope='module')
+def game_instance():
+    game_map = MapGenerator(5, 5).generate(GAME_MAP)
+
+    # Initialize game engine
+    game_engine = GameEngine(game_map)
+    map_proxy = MapProxy(game_engine)
+    game_object_proxy = GameObjectProxy(game_engine)
+    game_control_proxy = GameControlProxy(game_engine)
+    game_uncertainty_proxy = GameUncertaintyProxy(game_engine)
+
+    # Register defender
+    defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
+    game_engine.register_player(defender, PlayerResources(1000, 10), [])
+
+    # Register attacker
+    attacker = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
+    game_engine.register_player(attacker, PlayerResources(1000, 10, 10), [])
+
+    game_engine.start(500)
+
+    game_engine.spawn_unit(SpawnInformation(defender, GameObjectType.BASE, OffsetPosition(0, 0), [], []))
+    game_engine.spawn_unit(SpawnInformation(attacker, GameObjectType.DEMON, OffsetPosition(0, -2), [], []))
+    game_engine.spawn_unit(SpawnInformation(attacker, GameObjectType.DEMON, OffsetPosition(-1, -1), [], []))
+
+    return map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy, defender, attacker
+
+
+@pytest.fixture()
+def defender(game_instance):
+    return game_instance[4]
+
+
+@pytest.fixture()
+def attacker(game_instance):
+    return game_instance[5]

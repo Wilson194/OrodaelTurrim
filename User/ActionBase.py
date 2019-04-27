@@ -1,5 +1,5 @@
-from Business.Interface.Player import IPlayer
-from Business.Proxy import GameControlProxy
+from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Proxy import GameControlProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
 from OrodaelTurrim.Structure.Enums import GameObjectType

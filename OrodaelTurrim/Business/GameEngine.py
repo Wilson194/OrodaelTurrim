@@ -119,6 +119,7 @@ class GameEngine:
         self.__initial_resources[player] = copy.deepcopy(resources)
 
         self.__visibility_map.register_player(player)
+
         if player.role == GameRole.ATTACKER:
             self.__spawn_uncertainty.register_attacker(player)
 
@@ -572,19 +573,27 @@ class GameEngine:
         """
         if position not in self.__game_object_positions:
             return None
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
+
         return self.__game_object_positions[position].get_attribute(attribute_type)
 
 
     def get_current_hit_points(self, position: Position) -> Optional[float]:
         """
         Retrieves amount of currently remaining hit points of game object on specified position
-        Returns None if there is no unit at the position
+        Returns None if there is no unit at the position or position is not visible
 
         :param position: Position of queried game object
         :return: Amount of currently remaining hit points
         """
         if position not in self.__game_object_positions:
             return None
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
+
         return self.__game_object_positions[position].current_hit_points
 
 
@@ -599,18 +608,24 @@ class GameEngine:
         if position not in self.__game_object_positions:
             return None
 
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
+
         return self.__game_object_positions[position].attack_effects
 
 
     def get_resistances(self, position: Position) -> Optional[Set[EffectType]]:
         """
         Retrieves the types of effect which will NOT affect game object on specified position
-        Returns None if there is no unit at the position
+        Returns None if there is no unit at the position or player don't see that position
 
         :param position: Position of queried game object
         :return: Set of resistances of game object on specified position
         """
         if position not in self.__game_object_positions:
+            return None
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
             return None
 
         return self.__game_object_positions[position].resistances
@@ -619,12 +634,15 @@ class GameEngine:
     def get_active_effects(self, position: Position) -> Optional[Dict[EffectType, int]]:
         """
         Retrieves types of currently active effects and their durations on game object on specified position
-        Returns None if there is no unit at the position
+        Returns None if there is no unit at the position or player don't see that position
 
         :param position: Position of queried game object
         :return: Dict of types of active effects and associated remaining durations
         """
         if position not in self.__game_object_positions:
+            return None
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
             return None
 
         active_effects = {}
@@ -636,30 +654,42 @@ class GameEngine:
         return active_effects
 
 
-    def get_object_type(self, position: Position) -> GameObjectType:
+    def get_object_type(self, position: Position) -> Optional[GameObjectType]:
         """
         Retrieves the type of game object on specified position
         Return GameObjectType.NONE if there is no unit at the position
 
         :param position: Position of queried game object
-        :return: Type of game object on specified position
+        :return: Type of game object on specified position,
+                 GameObjectType.NONE if there is no unit at the position,
+                 None if player don't see that position
+
         """
         if position not in self.__game_object_positions:
             return GameObjectType.NONE
 
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
+
         return self.__game_object_positions[position].object_type
 
 
-    def get_role(self, position: Position) -> GameRole:
+    def get_role(self, position: Position) -> Optional[GameRole]:
         """
         Retrieves the role of game object on specified position
         Return GameRole.NEUTRAL if there is no unit at the position
 
+
         :param position: Position of queried game object
-        :return: Role of game object on specified position
+        :return: Role of game object on specified position,
+                 GameRole.NEUTRAL if there is no unit at the position,
+                 None if player don't see that position
         """
         if position not in self.__game_object_positions:
             return GameRole.NEUTRAL
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
 
         return self.__game_object_positions[position].role
 
@@ -675,6 +705,9 @@ class GameEngine:
         if position not in self.__game_object_positions:
             return None
 
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
+
         return self.__game_object_positions[position].visible_tiles
 
 
@@ -682,11 +715,15 @@ class GameEngine:
         """
         Retrieves map of distances to currently visible enemies by game object on specified position
         Return None if there is no unit at the position
+        Return None if player don't see target position
 
         :param position: Position of queried game object
         :return:
         """
         if position not in self.__game_object_positions:
+            return None
+
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
             return None
 
         return self.__game_object_positions[position].visible_enemies
@@ -764,6 +801,15 @@ class GameEngine:
         if player not in self.__players:
             return None
         return self.__visibility_map.get_visible_tiles(player)
+
+
+    def get_current_player_visible_tiles(self) -> Set[Position]:
+        """
+        Retrieves set of visible tiles for player.
+
+        :return: Set of visible tiles of specified player
+        """
+        return self.get_player_visible_tiles(self.__game_history.active_player)
 
 
     def compute_visible_tiles(self, position: Position, sight: int) -> Optional[Set[Position]]:

@@ -370,7 +370,10 @@ class BorderTiles(metaclass=Singleton):
 
         # In the corners, there are more than one neighbor. Precedence list will chose correct one
         precedence = {OffsetPosition(self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
-                      OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius)}
+                      OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
+                      OffsetPosition(self.__game_map.horizontal_radius, -self.__game_map.vertical_radius),
+                      OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius),
+                      OffsetPosition(-self.__game_map.horizontal_radius+2, -self.__game_map.vertical_radius)}
 
         first = OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius)
         second = OffsetPosition(-self.__game_map.horizontal_radius + 1, -self.__game_map.vertical_radius)

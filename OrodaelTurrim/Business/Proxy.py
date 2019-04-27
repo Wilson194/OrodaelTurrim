@@ -18,7 +18,7 @@ class MapProxy:
         self.__is_position_occupied = game_engine.is_position_occupied
         self.__get_bases_positions = game_engine.get_bases_positions
         self.__get_border_tiles = game_engine.get_border_tiles
-        self.__get_player_visible_tiles = game_engine.get_player_visible_tiles
+        self.__get_player_visible_tiles = game_engine.get_current_player_visible_tiles
         self.__compute_visible_tiles = game_engine.compute_visible_tiles
         self.__compute_accessible_tiles = game_engine.compute_accessible_tiles
         self.__player_have_base = game_engine.player_have_base
@@ -43,7 +43,7 @@ class MapProxy:
         :param position: Position to get terrain type for
         :return: Terrain type of given position
         """
-        return self.get_terrain_type(position)
+        return self.__get_terrain_type(position)
 
 
     def is_position_on_map(self, position: "Position") -> bool:
@@ -81,15 +81,13 @@ class MapProxy:
         return self.__get_border_tiles()
 
 
-    def get_player_visible_tiles(self, player: "IPlayer") -> Optional[Set["Position"]]:
+    def get_player_visible_tiles(self) -> Set["Position"]:
         """
         Retrieves set of visible tiles for player.
-        Return None if player is not registered in GameEngine
 
-        :param player: Player to obtain vision for
-        :return:  Set of visible tiles of specified player
+        :return:  Set of visible tiles
         """
-        return self.__get_player_visible_tiles(player)
+        return self.__get_player_visible_tiles()
 
 
     def compute_visible_tiles(self, position: "Position", sight: int) -> Optional[Set["Position"]]:
@@ -162,7 +160,7 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Amount of currently remaining hit points
-                 None if there is no unit at the position
+                 None if there is no unit at the position or you don't see that position
         """
         return self.__get_current_hit_points(position)
 
@@ -173,7 +171,7 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Set of types of effect to be applied upon attacking
-                 None if there is no unit at the position
+                 None if there is no unit at the position or you don't see that position
         """
         return self.__get_attack_effects(position)
 
@@ -184,7 +182,7 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Set of resistances of game object on specified position
-                 None if there is no unit at the position
+                 None if there is no unit at the position or player don't see that position
         """
         return self.__get_resistances(position)
 
@@ -195,18 +193,19 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Dict of types of active effects and associated remaining durations
-                 None if there is no unit at the position
+                 None if there is no unit at the position or you don''t see that position
         """
         return self.__get_active_effects(position)
 
 
-    def get_object_type(self, position: "Position") -> "GameObjectType":
+    def get_object_type(self, position: "Position") -> Optional["GameObjectType"]:
         """
         Retrieves the type of game object on specified position
 
         :param position: Position of queried game object
         :return: Type of game object on specified position
                  GameObjectType.NONE if there is no unit at the position
+                 None if player don't see that position
         """
         return self.__get_object_type(position)
 
@@ -217,7 +216,8 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Role of game object on specified position
-                 GameRole.NEUTRAL if there is no unit at the position
+                 GameRole.NEUTRAL if there is no unit at the position,
+                 None if you don't see that position
         """
         return self.__get_role(position)
 
@@ -228,7 +228,8 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Set of currently visible tiles
-                 None if there is no unit at the position
+                 None if there is no unit at the position,
+                 None if you don't see target position
         """
         return self.__get_visible_tiles(position)
 
@@ -239,7 +240,8 @@ class GameObjectProxy:
 
         :param position: Position of queried game object
         :return: Dictionary of visible position with enemy as a Kye and distance as a value
-                 Return None if there is no unit at the position
+                 Return None if there is no unit at the position,
+                 None if you don't see target position
         """
         return self.__get_visible_enemies(position)
 

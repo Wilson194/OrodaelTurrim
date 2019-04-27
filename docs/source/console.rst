@@ -10,3 +10,5 @@ from the simulation, so find out why your king die so fast.
  * `-r / --rounds` - Set maximum of rounds for simulation
  * `-l / --log-output` - Save log from the game in txt format
  * `--help` - Display help message
+
+Simulation without GUI is faster and also you can automatize testing.

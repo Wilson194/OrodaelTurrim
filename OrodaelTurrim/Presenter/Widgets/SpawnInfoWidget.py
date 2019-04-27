@@ -52,7 +52,6 @@ class SpawnInfoWidget(QWidget):
 
     def redraw_ui(self) -> None:
         """ Redraw whole UI based on current information from Uncertainty module"""
-
         current_turn = self.__game_engine.get_game_history().current_turn
         self.findChild(QLabel, 'round1Label').setText('Round {}'.format(current_turn + 1))
         self.findChild(QLabel, 'round2Label').setText('Round {}'.format(current_turn + 2))

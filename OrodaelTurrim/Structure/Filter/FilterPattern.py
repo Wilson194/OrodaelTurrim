@@ -4,7 +4,7 @@ from typing import List, Union
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy
 from OrodaelTurrim.Structure.Position import Position
-from Structure.Exceptions import IllegalActionException
+from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 
 
 class TileFilter(ABC):
