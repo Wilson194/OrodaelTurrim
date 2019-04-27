@@ -12,6 +12,7 @@ from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Enums import GameRole
+from Structure.Exceptions import IllegalRulesFormat
 from User.ActionBase import ActionBase
 from User.Interference import Interference
 from User.KnowledgeBase import KnowledgeBase
@@ -25,7 +26,7 @@ class Player(IPlayer):
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
-        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, self)
+        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
         self.interference = Interference()
         self.action_base = ActionBase(game_control_proxy, self)
 
@@ -45,7 +46,7 @@ class Player(IPlayer):
             sys.stderr.write('Rules file not found! Stopping interference!\n')
             Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping interference!')
             return
-        self.interference.interfere(knowledge, self.__parse_rules(), self.action_base)
+        self.interference.interfere(knowledge, rules, self.action_base)
 
 
     @property
@@ -65,13 +66,15 @@ class Player(IPlayer):
         if not (USER_ROOT / 'rules').exists():
             return None
         input_file = FileStream(str(USER_ROOT / 'rules'))
-
         lexer = RulesLexer(input_file)
         stream = CommonTokenStream(lexer)
         parser = RulesParser(stream)
         parser.removeErrorListeners()
         parser.addErrorListener(CustomErrorListener())
-        tree = parser.rules_set()
+        try:
+            tree = parser.rules_set()
+        except IllegalRulesFormat:
+            return []
 
         rules_listener = RulesListenerImplementation()
         walker = ParseTreeWalker()

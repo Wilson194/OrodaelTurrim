@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
@@ -31,6 +33,11 @@ class EffectApplyAction(GameAction):
                                                              self.__owner.position.offset)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
+                   effect=self.__effect.__class__.__name__)
+
+
 class EffectDamageAction(GameAction):
     """ Represents game action of effect damaging its owner game object """
 
@@ -54,7 +61,13 @@ class EffectDamageAction(GameAction):
     @property
     def text(self) -> str:
         return '{} {} suffered {} damage from {}'.format(self.__owner.object_type, self.__owner.position.offset,
-                                                         self.__damage, self.__effect.effect_type)
+                                                         str(self.__damage),
+                                                         self.__effect.effect_type.name.capitalize())
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
+                   effect=self.__effect.__class__.__name__, damage=self.__damage)
 
 
 class EffectExpireAction(GameAction):
@@ -80,6 +93,11 @@ class EffectExpireAction(GameAction):
     def text(self) -> str:
         return '{} effect attached to {} {} has expired'.format(self.__effect.effect_type, self.__owner.object_type,
                                                                 self.__owner.position.offset)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
+                   effect=self.__effect.__class__.__name__)
 
 
 class EffectRefreshAction(GameAction):
@@ -110,6 +128,11 @@ class EffectRefreshAction(GameAction):
                                                                        self.__owner.position.offset)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
+                   effect=self.__effect.__class__.__name__)
+
+
 class EffectTickAction(GameAction):
     """ Represents game action of effect ticking out on game object """
 
@@ -136,3 +159,8 @@ class EffectTickAction(GameAction):
                                                                                         self.__owner.object_type,
                                                                                         self.__owner.position.offset,
                                                                                         self.__remaining_duration)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
+                   effect=self.__effect.__class__.__name__, remaining_duration=str(self.__remaining_duration))

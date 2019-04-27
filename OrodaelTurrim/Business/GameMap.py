@@ -2,11 +2,11 @@ import copy
 from collections import deque
 from typing import List, TYPE_CHECKING, Dict, Union, Set, Tuple, Optional
 
-from OrodaelTurrim.Structure.Enums import Nudge
 from OrodaelTurrim.Structure.Exceptions import IllegalArgumentException
 from OrodaelTurrim.Structure.Position import Position, OffsetPosition
 from OrodaelTurrim.Structure.TypeStrucutre import DoubleLinkedList
 from OrodaelTurrim.Structure.Utils import Singleton
+from OrodaelTurrim.Structure.Enums import Nudge, TerrainType
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Enums import Nudge, TerrainType
@@ -17,10 +17,16 @@ class GameMap:
     """ Object representing rectangular game map """
 
 
-    def __init__(self, width: int, height: int, tiles: List[List['TerrainType']] = None):
+    def __init__(self, width: int, height: int, tiles: List[List[Union['TerrainType', str]]] = None):
         self.__size = (width, height)
         if width % 2 == 0 or height % 2 == 0:
             raise IllegalArgumentException('Map size must be odd numbers')
+
+        if width < 3:
+            raise IllegalArgumentException('Map width must be greater than 2')
+
+        if height < 3:
+            raise IllegalArgumentException('Map height must be greater than 2')
 
         self.__width = width
         self.__height = height
@@ -40,7 +46,15 @@ class GameMap:
             for y, terrain_list in enumerate(tiles):
                 for x, terrain_type in enumerate(terrain_list):
                     position = OffsetPosition(x - self.__horizontal_radius, y - self.__vertical_radius)
-                    self.set_tile(position, terrain_type.value)
+                    if type(terrain_type) is TerrainType:
+                        self.set_tile(position, terrain_type.value)
+                    elif type(terrain_type) is str:
+                        _terrain_type = TerrainType.from_char(terrain_type).value
+                        if _terrain_type is None:
+                            raise IllegalArgumentException('Invalid tile character {}'.format(terrain_type))
+                        self.set_tile(position, TerrainType.from_char(terrain_type).value)
+                    else:
+                        raise IllegalArgumentException('Map tiles could be TerrainType enum or string representation!')
 
 
     def __sizeof__(self):

@@ -49,5 +49,6 @@ class GameControlWidget(QWidget):
     def redraw_available_money_slot(self) -> None:
         """ Redraw label for available money"""
 
-        self.findChild(QLabel, 'moneyLabel').setText('Available money: {}'.format(
-            self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)))
+        resources = self.__game_engine.get_resources(self.__game_engine.get_game_history().active_player)
+        income = self.__game_engine.get_income(self.__game_engine.get_game_history().active_player)
+        self.findChild(QLabel, 'moneyLabel').setText('Available money: {} ( {} income )'.format(resources, income))

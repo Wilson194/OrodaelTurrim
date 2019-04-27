@@ -2,6 +2,7 @@ from typing import List, TYPE_CHECKING
 
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Exceptions import IllegalHistoryOperation
+import xml.etree.cElementTree as et
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Actions.Abstract import GameAction
@@ -9,10 +10,10 @@ if TYPE_CHECKING:
 
 class GameHistory:
     """
-     Class providing methods for access to and navigation in game history.
+    | Class providing methods for access to and navigation in game history.
     |
-     Three dimensional array holding all the game history. The first level array represents turns, second
-     level array holds players and the third one holds actions of those players.
+    | Three dimensional array holding all the game history. The first level array represents turns, second
+      level array holds players and the third one holds actions of those players.
     """
 
 
@@ -368,6 +369,7 @@ class GameHistory:
         :param action: action number of log
         :return: True if log is in history, False if log is in the future
         """
+
         if turn < self.current_turn:
             return True
 
@@ -376,13 +378,16 @@ class GameHistory:
                 return True
 
             if player == self.current_player:
-                if action <= self.__current_action:
+                if self.__current_action == -1:
+                    return True
+                elif action <= self.__current_action:
                     return True
 
         return False
 
 
-    def __str__(self):
+    def to_html(self):
+        """ Export log to HTML format """
         result = '<ul>'
         for turn in range(self.turns_count):
             player_turn = self.__turns[turn]
@@ -394,3 +399,58 @@ class GameHistory:
         result += '</ul'
 
         return result
+
+
+    def to_xml(self) -> str:
+        """ Export log to XML format"""
+        root = et.Element('GameHistory')
+
+        for turn in range(self.turns_count):
+            _turn = et.SubElement(root, 'Turn', index=str(turn))
+            player_turn = self.__turns[turn]
+            for p_turn in range(len(player_turn)):
+                player = et.SubElement(_turn, 'Player', index=str(p_turn), name=self.__players[p_turn].name)
+                actions = player_turn[p_turn]
+                for i, action in enumerate(actions):
+                    action.xml(player)
+
+        tree = et.ElementTree(root)
+
+        return et.tostring(tree.getroot(), 'utf-8', 'xml').decode('utf-8')
+
+
+    def to_model(self):
+        """ Convert history to Model vor QTreeView """
+        from PyQt5.QtGui import QStandardItemModel, QStandardItem
+        from PyQt5.QtGui import QColor, QBrush
+
+        model = QStandardItemModel()
+        root = model.invisibleRootItem()
+
+        for turn in range(self.turns_count):
+            color = QColor(0, 0, 0) if self.is_history_log(turn, 0, 0) else QColor(255, 0, 0)
+            _round = QStandardItem('Round {}'.format(turn))
+            _round.setForeground(color)
+            root.appendRow(_round)
+            player_turn = self.__turns[turn]
+
+            for p_turn in range(len(player_turn)):
+                color = QColor(0, 0, 0) if self.is_history_log(turn, p_turn, 0) else QColor(255, 0, 0)
+                player = QStandardItem('Player {} - {}'.format(p_turn, self.__players[p_turn].name))
+                player.setForeground(color)
+                _round.appendRow(player)
+                actions = player_turn[p_turn]
+
+                for i, action in enumerate(actions):
+                    color = QColor(0, 0, 0) if self.is_history_log(turn, p_turn, i) else QColor(255, 0, 0)
+                    _action = QStandardItem(str(action))
+                    _action.setForeground(QBrush(color))
+                    _action.setToolTip(str(action))
+
+                    player.appendRow(_action)
+
+        return model
+
+
+    def __str__(self):
+        return self.to_html()

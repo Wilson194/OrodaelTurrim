@@ -50,14 +50,12 @@ class SpawnUncertainty:
         self.__scout_uncertainties = {}  # type: Dict[float]
 
         # Try to load SEED from config
-        try:
-            seed = Config.UNCERTAINTY_RANDOM_SEED
-            if not seed:
-                seed = int.from_bytes(os.urandom(50), 'big')
-        except AttributeError:
-            seed = int.from_bytes(os.urandom(50), 'big')
 
-        print('Uncertainty random seed: {}'.format(seed))
+        seed = Config.UNCERTAINTY_RANDOM_SEED
+        if not seed:
+            seed = int.from_bytes(os.urandom(50), 'big')
+            Config.UNCERTAINTY_RANDOM_SEED = seed
+
         self.__random = Random(seed)
 
 

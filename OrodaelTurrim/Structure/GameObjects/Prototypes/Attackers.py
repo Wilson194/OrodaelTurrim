@@ -70,7 +70,7 @@ class Elemental(GameObjectPrototype):
 
 class Gargoyle(GameObjectPrototype):
     """ Represents flying living status. Like frightening and stuff but have you looked at it?  """
-    ATTRIBUTES = AttributeBundle(5, 10, 60, 3, 1, 5)
+    ATTRIBUTES = AttributeBundle(5, 10, 60, 2, 5, 3)
     COST = 30
     ASSET_NAME = "gargoyle"
 

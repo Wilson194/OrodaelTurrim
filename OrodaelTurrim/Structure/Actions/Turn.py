@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
@@ -26,6 +28,10 @@ class EndTurnAction(GameAction):
         return 'Player {} finished their turn'.format(self.__player.name)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, player=str(id(self.__player)))
+
+
 class StartTurnAction(GameAction):
     """ Represents game action of player starting their turn """
 
@@ -47,3 +53,7 @@ class StartTurnAction(GameAction):
     @property
     def text(self) -> str:
         return 'Player {} started their turn'.format(self.__player.name)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, player=str(id(self.__player)))

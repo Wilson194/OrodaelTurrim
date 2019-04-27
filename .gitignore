@@ -19,3 +19,7 @@ OrodaelTurrim/Structure/__pycache__/
 OrodaelTurrim/__pycache__/
 User/__pycache__/
 docs/_build/
+.eggs/
+ExpertSystem/Business/Parser/__pycache__/
+ExpertSystem/__pycache__/
+tests/__pycache__/

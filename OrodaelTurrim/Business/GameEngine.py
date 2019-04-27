@@ -13,7 +13,7 @@ from OrodaelTurrim.Structure.Actions.Effect import EffectRefreshAction, EffectAp
     EffectDamageAction, EffectExpireAction
 from OrodaelTurrim.Structure.Actions.Log import LogAction
 from OrodaelTurrim.Structure.Actions.Placement import DieAction, SpawnAction
-from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction
+from OrodaelTurrim.Structure.Actions.Resources import EarnResourcesAction, SpendResourcesAction, IncomeResourcesIncrease
 from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, TerrainType, EffectType, GameRole
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
@@ -358,6 +358,10 @@ class GameEngine:
 
         income = self.__player_resources[player].income
         self.execute_action(EarnResourcesAction(self, player, income))
+
+        income_increase = self.__player_resources[player].income_increase
+        if income_increase > 0:
+            self.execute_action(IncomeResourcesIncrease(self, player, income_increase))
 
         # Check base
         if player.role == GameRole.DEFENDER and self.__game_history.in_preset and not self.player_have_base(player):
@@ -722,13 +726,16 @@ class GameEngine:
         return self.__game_map.position_on_map(position)
 
 
-    def is_position_occupied(self, position: Position) -> bool:
+    def is_position_occupied(self, position: Position) -> Optional[bool]:
         """
-        Checks whether given position is occupied or not
+        Checks whether given position is occupied or not. You can check only visible positions
 
         :param position: Position to be checked
-        :return: True in case there is game object on given position, False otherwise
+        :return: True in case there is game object on given position, False otherwise,
+                 None if user did not see the position
         """
+        if position not in self.__visibility_map.get_visible_tiles(self.__game_history.active_player):
+            return None
         return position in self.__game_object_positions
 
 
@@ -808,8 +815,16 @@ class GameEngine:
         if not self.is_position_on_map(information.position):
             raise IllegalActionException('Position is not on the map!')
 
+        if information.owner.role == GameRole.DEFENDER:
+            if information.position not in self.get_player_visible_tiles(
+                    information.owner) and information.object_type != GameObjectType.BASE:
+                raise IllegalActionException('Attempt to spawn unit at not visible tile!')
+
         if self.is_position_occupied(information.position):
             raise IllegalActionException('Tile is already occupied!')
+
+        if self.__game_map.position_on_edge(information.position) and information.owner.role == GameRole.DEFENDER:
+            raise IllegalActionException('Cannot spawn unit defender unit on the map edge.')
 
         if information.owner.role != prototype.role:
             raise IllegalActionException('Attempt to spawn unit of different role!')
@@ -836,6 +851,17 @@ class GameEngine:
         :return: Current income of given player
         """
         return self.__player_resources.get(player, None).income
+
+
+    def increase_income(self, player: IPlayer, amount: int):
+        """
+        Raise income of given player
+
+        :param player: Player whose income should be increased
+        :param amount:
+        :return:
+        """
+        self.__player_resources[player].increase_income(amount)
 
 
     def get_game_map(self) -> GameMap:

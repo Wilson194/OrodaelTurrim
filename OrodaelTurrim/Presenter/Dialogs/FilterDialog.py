@@ -1,5 +1,5 @@
 import typing
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
@@ -164,9 +164,12 @@ class AddFilterDialog(QDialog):
             self.list_widget.addItem(_filter.name)
 
 
-    def get_inputs(self) -> Tuple[str, List]:
-        selected = self.list_widget.selectedItems()[0]  # type: QListWidgetItem
-        return selected.text(), []
+    def get_inputs(self) -> Tuple[Optional[str], List]:
+        if self.list_widget.selectedItems():
+            selected = self.list_widget.selectedItems()[0]  # type: QListWidgetItem
+            return selected.text(), []
+
+        return None, []
 
 
     @staticmethod
@@ -176,4 +179,6 @@ class AddFilterDialog(QDialog):
 
         data = dialog.get_inputs()
 
+        if data[0] is None:
+            return False, (None, [])
         return result == QtWidgets.QDialog.Accepted, data

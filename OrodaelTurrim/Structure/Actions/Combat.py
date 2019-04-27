@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import SubElement
+
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
 from OrodaelTurrim.Structure.Enums import AttributeType
 from OrodaelTurrim.Structure.GameObjects.GameObject import GameObject
@@ -40,6 +42,11 @@ class AttackAction(GameAction):
                                                                       self.__damage)
 
 
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, attacker=str(id(self.__attacker)),
+                   target=str(id(self.__target)), damage=str(self.__damage))
+
+
 class MoveAction(GameAction):
     """ Represents game action of game object moving """
 
@@ -63,4 +70,10 @@ class MoveAction(GameAction):
 
     @property
     def text(self) -> str:
-        return '{} moved: {} -> {}'.format(str(self.__game_object.object_type), self.__from.offset, self.__to.offset)
+        return '{} moved: {} -> {}'.format(str(self.__game_object.object_type.name.capitalize()), self.__from.offset,
+                                           self.__to.offset)
+
+
+    def xml(self, parent) -> SubElement:
+        SubElement(parent, 'Action', type=self.__class__.__name__, game_object=str(id(self.__game_object)),
+                   from_position=str(self.__from.offset), to_position=str(self.__to.offset))

@@ -1,8 +1,13 @@
-from OrodaelTurrim import IMAGES_ROOT
+from OrodaelTurrim import IMAGES_ROOT, ICONS_ROOT
 from OrodaelTurrim.Structure.Enums import GameObjectType, TerrainType
+from Structure.Actions.Combat import MoveAction, AttackAction
+from Structure.Actions.Log import LogAction
+from Structure.Actions.Placement import SpawnAction
+from Structure.Actions.Resources import SpendResourcesAction, EarnResourcesAction, IncomeResourcesIncrease
+from Structure.Actions.Terrain import TerrainDamageAction
 
 
-class GetMeta(type):
+class GetMetaAssets(type):
     """ Meta class that add getitem on assets dict on static class """
 
 
@@ -13,7 +18,18 @@ class GetMeta(type):
             return ''
 
 
-class AssetsEncoder(metaclass=GetMeta):
+class GetMetaIcons(type):
+    """ Meta class that add getitem on assets dict on static class """
+
+
+    def __getitem__(self, item):
+        try:
+            return IconEncoder.assets[item.__class__.__name__]
+        except KeyError:
+            return None
+
+
+class AssetsEncoder(metaclass=GetMetaAssets):
     """ Decode GameObjectType Enum to image """
     assets = {
         GameObjectType.ARCHER: IMAGES_ROOT / 'Objects' / 'archer.png',
@@ -48,5 +64,23 @@ class AssetsEncoder(metaclass=GetMeta):
         'river_2-4': IMAGES_ROOT / 'Terrain' / 'river_2-4.png',
         'river_2-5': IMAGES_ROOT / 'Terrain' / 'river_2-5.png',
         'river_3-5': IMAGES_ROOT / 'Terrain' / 'river_3-5.png',
+
+    }
+
+
+class IconEncoder(metaclass=GetMetaIcons):
+    assets = {
+        MoveAction.__name__: ICONS_ROOT / 'log' / 'horse.png',
+        AttackAction.__name__: ICONS_ROOT / 'log' / 'sword.png',
+
+        SpendResourcesAction.__name__: ICONS_ROOT / 'log' / 'money.png',
+        EarnResourcesAction.__name__: ICONS_ROOT / 'log' / 'money.png',
+        IncomeResourcesIncrease: ICONS_ROOT / 'log' / 'money.png',
+
+        LogAction.__name__: ICONS_ROOT / 'log' / 'log.png',
+        SpawnAction.__name__: ICONS_ROOT / 'log' / 'unit.png',
+
+        TerrainDamageAction.__name__: ICONS_ROOT / 'log' / 'mountain.png',
+
 
     }

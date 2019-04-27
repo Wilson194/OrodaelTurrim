@@ -50,10 +50,11 @@ class Position(ABC):
     """
     Parent class for all positions. In framework are used 3 types of positions
 
-    * Offset
-    * Cubic
-    * Axial
-     You can anytime convert between them, but for speed optimization is good practise to use one position type.
+       * Offset
+       * Cubic
+       * Axial
+
+    You can anytime convert between them, but for speed optimization is good practise to use one position type.
     """
     # Correction for aligning along X axis
     CORRECTION_X = 1e-6

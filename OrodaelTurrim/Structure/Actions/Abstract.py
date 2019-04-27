@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import TYPE_CHECKING
+from xml.etree.ElementTree import SubElement, Element
+
+from OrodaelTurrim import DEBUG
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Business.GameEngine import GameEngine
@@ -38,5 +41,14 @@ class GameAction(ABC):
         pass
 
 
+    @abstractmethod
+    def xml(self, parent: Element) -> SubElement:
+        """ Convert action to XML tag"""
+        pass
+
+
     def __str__(self):
-        return '{} : {}'.format(self.__time_stamp.strftime(self.TIME_STAMP_FORMAT), self.text)
+        if DEBUG:
+            return '{} : {}'.format(self.__time_stamp.strftime(self.TIME_STAMP_FORMAT), self.text)
+        else:
+            return self.text

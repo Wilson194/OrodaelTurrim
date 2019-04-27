@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
-with open('README.rst') as f:
+with open('README.md') as f:
     long_description = ''.join(f.readlines())
 
 setup(
-    name='AngryTux',
+    name='OrodaelTurrim',
     version='1.1',
-    description='Simple game for linux users and windows haters.',
+    description='Expert system based tower defense',
     long_description=long_description,
     author='Jan Horáček',
     author_email='horacj10@fit.cvut.cz',

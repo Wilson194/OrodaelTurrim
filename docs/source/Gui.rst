@@ -79,27 +79,28 @@ GUI application
     :align: middle
 
 
-For the development purpose game is fully controllable from GUI application. You can start the application from the root directory
+For the development purpose game is fully controllable from GUI application. You can start the application
+from the root directory
 
 .. code-block:: python
 
-    python -m OrodaelTurrim
+    python OrodaelTurrim
 
 
 This command should open game main window and the game should be initialized.
 
 .. image:: _static/ui/main_ui.PNG
 
-Main windows is divided to two parts, `Map widget` with the game map and `Tab widget` with all control and information panels.
-You can change the sizes of each parts with central slider. Or you can also hide one of the widgets by slide the widget to one
-side.
+Main windows is divided to two parts, `Map widget` with the game map and `Tab widget` with all control and
+information panels. You can change the sizes of each parts with central slider. Or you can also hide one of the widgets
+by slide the widget to one side.
 
 
 Map widget
 -----------
 
-Map widget displaying current state of the game. You can select each tile on the map and on the ``Map info`` tab you can get
-information about that tile.
+Map widget displaying current state of the game. You can select each tile on the map and on the ``Map info`` tab you
+can get information about that tile.
 
 On the bottom of the map, there are 4 map control buttons
 
@@ -117,8 +118,8 @@ On the map there are three types of the borders
 
 .. note::
 
-   After spawn first unit you can also see that some tiles are grey and some not. Grey tiles represent positions that none
-   of your units can see.
+   After spawn first unit you can also see that some tiles are grey and some not. Grey tiles represent positions
+   that none of your units can see.
 
 
 Map info tab
@@ -129,7 +130,7 @@ position is selected on the map.
 
 **Position info**
 
- First part showing position in three types of representation. You can read about positions types at **TODO**
+ First part showing position in three types of representation. You can read about positions types at :ref:`positions`
 
   * |position_offset| - Offset position [ q r ]
   * |position_cubic| - Cubic position [ x y z ]
@@ -137,16 +138,16 @@ position is selected on the map.
 
 **Terrain info**
 
- Next part showing information about terrain on the selected position. You can see there some basic attributes of the tile.
- You can read more about terrain types at **TODO**
+ Next part showing information about terrain on the selected position. You can see there some basic attributes
+ of the tile. You can read more about terrain types at :ref:`terrains`
 
  |info_tile|
 
 **Game object info**
 
- Last part of the widget displaying information about unit. This part is visible only if some game object is on currently
- selected position. You can see there information about unit attributes. If you select your own unit you can see also
- attack filters of this unit. You can read about attack filters at **TODO**
+ Last part of the widget displaying information about unit. This part is visible only if some game object
+ is on currently selected position. You can see there information about unit attributes. If you select your own unit
+ you can see also attack filters of this unit. You can read about attack filters at :ref:`filters`
 
  Game object info also have 3 buttons
 
@@ -191,8 +192,8 @@ On the Rounds control tab you can control game rounds and history browsing. Tab 
 Game control tab
 --------------------
 
-With the `Game control tab` you can place units manually. So you can play the game with your mouse, but it is really slow
-and noob method. So you should use `Game control tab` only for testing and debug purpose.
+With the `Game control tab` you can place units manually. So you can play the game with your mouse, but it is really
+slow and noob method. So you should use `Game control tab` only for testing and debug purpose.
 
 On the top you can see amount of resources you have. Under it there are your unit cards.
 
@@ -205,24 +206,24 @@ On the top you can see amount of resources you have. Under it there are your uni
 
 **Filter window**
  When you click on the `Filters` button, new window will open. Here you can specify which filters you want to use and
- the order of the filters. You can read about filter system here **TODO**. There are 4 control buttons for filters
+ the order of the filters. You can read about filter system here :ref:`filters`. There are 4 control buttons for filters
 
  * |filter_add| - Add filter to active filters
  * |filter_remove| - Remove filter from active filters
  * |filter_up| - Move current selected filter up (or you can use drag & drop)
  * |filter_down| - Move current selected filter down (or you can use drag & drop)
 
- Settings of active attack filters are persistent in one game session. So when you set up filters for one unit, this unit
- will always born with those active filters until you change configuration. Filters are unique for each unit.
+ Settings of active attack filters are persistent in one game session. So when you set up filters for one unit, this
+ unit will always born with those active filters until you change configuration. Filters are unique for each unit.
 
 
 Spawn info tab
 -------------------
 
-In the `Spawn info tab` you can obtain information about enemy planning spawn. You can read about your scouting at **TODO**.
-For each known round there is part with list of unit and they anticipated positions. Your scouts are not so good so there
-is information about position range and probability of positions. With the |show_visibility| you can display positions
-on the map (orange borders).
+In the `Spawn info tab` you can obtain information about enemy planning spawn. You can read about your scouting at
+:ref:`spawn`. For each known round there is part with list of unit and they anticipated positions. Your scouts are not
+so good so there is information about position range and probability of positions. With the |show_visibility| you can
+display positions on the map (orange borders).
 
 Action log tab
 -------------------

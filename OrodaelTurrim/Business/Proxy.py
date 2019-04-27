@@ -58,10 +58,11 @@ class MapProxy:
 
     def is_position_occupied(self, position: "Position") -> bool:
         """
-        Checks whether given position is occupied or not
+        Checks whether given position is occupied or not. You can check only visible positions
 
         :param position: Position to be checked
-        :return: True in case there is game object on given position, False otherwise
+        :return: True in case there is game object on given position, False otherwise,
+                 None if user did not see the position
         """
         return self.__is_position_occupied(position)
 
@@ -166,7 +167,7 @@ class GameObjectProxy:
         return self.__get_current_hit_points(position)
 
 
-    def get_attack_effect(self, position: "Position") -> Optional[Set["EffectType"]]:
+    def get_attack_effects(self, position: "Position") -> Optional[Set["EffectType"]]:
         """
         Retrieves the types of effect to be applied to the target of attack of game object on specified position
 

@@ -4,6 +4,7 @@ from typing import List, Union
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy
 from OrodaelTurrim.Structure.Position import Position
+from Structure.Exceptions import IllegalActionException
 
 
 class TileFilter(ABC):
@@ -44,6 +45,9 @@ class TileFilter(ABC):
         for _filter in filters:
             # Use current filter
             filtered = _filter.filter(position, tiles)
+
+            if not set(filtered) <= set(tiles):
+                raise IllegalActionException('Filter did not return subset of original positions!')
 
             # If we have at least one positions use this filter
             if len(filtered) >= 1:

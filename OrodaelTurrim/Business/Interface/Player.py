@@ -72,8 +72,9 @@ class IAttacker(IPlayer, ABC):
         seed = Config.AI_RANDOM_SEED
         if not seed:
             seed = int.from_bytes(os.urandom(50), 'big')
+            Config.AI_RANDOM_SEED = seed
 
-        print('AI random seed: {}'.format(seed))
+
         self.spawn_random = Random(seed)
 
 
@@ -87,18 +88,22 @@ class IAttacker(IPlayer, ABC):
     def spawn_information_list(self) -> List[List["SpawnInformation"]]:
         """
         Return list of of spawn information for next 3 rounds
+
         0 first round
             0 unit 1
             1 Unit 2
             ...
+
         1 second round
             0 unit 1
             1 Unit 2
             ...
+
         2 third round
             0 unit 1
             1 Unit 2
             ...
+
         """
         pass
 

@@ -76,11 +76,11 @@ class GraphicItem(QGraphicsItem):
     def hex_corner_offset(self, corner: int) -> Tuple[float, float]:
         """
         Compute offset to the corner based on corner number
-          4 - 5
-         /     \
-        3       0
-         |     /
-          2 - 1
+        |   4 - 5
+        |  /     \
+        | 3       0
+        |  |     /
+        |   2 - 1
 
         :param corner: number of corner, start from right corner
         :return: tuple of x and y offset to corner
@@ -340,6 +340,8 @@ class MapWidget(QWidget):
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setCacheMode(QGraphicsView.CacheBackground)
         self.view.setViewportUpdateMode(QGraphicsView.BoundingRectViewportUpdate)
+        self.view.setContentsMargins(0, 0, 0, 0)
+        self.view.setViewportMargins(0, 0, 0, 0)
 
         scroll_layout.addWidget(self.view)
         self.scroll_area.setLayout(scroll_layout)
@@ -375,7 +377,7 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def click_on_map(self, event: QGraphicsSceneMouseEvent, transformation: float) -> None:
-        """ Handle click on map - try to compute position and inform about selected tile"""
+        """ Handle click on map - try to compute position and inform about selected tile """
 
         position = Position.from_pixel(event.scenePos(), transformation).offset
 
@@ -409,7 +411,7 @@ class MapWidget(QWidget):
 
     @pyqtSlot()
     def zoom_reset_slot(self):
-        """ Reset zoom to state, that whole map is visible"""
+        """ Reset zoom to state, that whole map is visible """
         rect = QtCore.QRectF(self.scene.sceneRect())
         if not rect.isNull():
             self.view.setSceneRect(rect)

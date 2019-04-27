@@ -1,26 +1,41 @@
-import threading
-
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
-from OrodaelTurrim import DEBUG
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.Logger import LogReceiver
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Main import MainWindow
+from OrodaelTurrim.Structure.Exceptions import IllegalConfigState
 from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.Resources import PlayerResources
 import click
 
+from OrodaelTurrim.config import Config
+
 
 @click.command()
-@click.option('--gui/--nogui', '/gui;/nogui', 'gui', default=True, help='Disable or enable gui')
+@click.option('--gui/--nogui', 'gui', default=True, help='Disable or enable gui [default: --gui]')
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
 @click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
-def main(gui, rounds, log_output):
-    # Generate the map
-    game_map = MapGenerator(11, 11).generate()
+@click.option('-v', '--verbose', 'verbose', type=bool, is_flag=True, help='Enable verbose info for console interface')
+def main(gui, rounds, log_output, verbose):
+    """ Welcome to Orodael Turrim game. You can start GUI application without parameters or set --nogui option for
+    console interface only. Console is faster, but you will get only limited information. Also you cannot order your
+    units from console. Everything will be handled by your lieutenant Expert System.
+    """
+    # Load map configuration from config or generate random map
+    height = Config.MAP_HEIGHT
+    width = Config.MAP_WIDTH
+
+    if (height is None or width is None) and Config.GAME_MAP:
+        height = len(Config.GAME_MAP)
+        width = len(Config.GAME_MAP[0])
+
+    if height is None or width is None:
+        raise IllegalConfigState('You must specify MAP_WIDTH and MAP_HEIGHT or GAME_MAP parameter in config file!')
+
+    game_map = MapGenerator(width, height).generate(Config.GAME_MAP)
 
     # Initialize game engine
     game_engine = GameEngine(game_map)
@@ -38,14 +53,15 @@ def main(gui, rounds, log_output):
 
     # Register defender
     defender = Player(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(defender, PlayerResources(500, 10), [])
+    game_engine.register_player(defender, PlayerResources(Config.DEFENDER_STARTING_MONEY, Config.DEFENDER_INCOME), [])
 
     # Register attacker
     player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(player2, PlayerResources(500, 10), [])
+    game_engine.register_player(player2, PlayerResources(Config.ATTACKER_STARTING_MONEY, Config.ATTACKER_INCOME,
+                                                         Config.ATTACKER_INCOME_INCREASE), [])
     player2.initialize()
 
-    game_engine.start(500)
+    game_engine.start(rounds)
 
     if gui:
         # Inicialize main widget
@@ -64,7 +80,13 @@ def main(gui, rounds, log_output):
             if game_history.on_first_player:
                 current_round += 1
 
+        print('\nGAME OVER\n')
         print('User survive {} rounds'.format(current_round))
+        if verbose:
+            print('\nConfiguration:')
+            print('  MAP_RANDOM_SEED: ', Config.MAP_RANDOM_SEED)
+            print('  UNCERTAINTY_RANDOM_SEED: ', Config.UNCERTAINTY_RANDOM_SEED)
+            print('  AI_RANDOM_SEED: ', Config.AI_RANDOM_SEED)
 
     if log_output:
         text = game_engine.get_game_history()

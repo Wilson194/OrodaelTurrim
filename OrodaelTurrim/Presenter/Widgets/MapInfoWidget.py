@@ -163,7 +163,7 @@ class MapInfoWidget(QWidget):
         move_button = typing.cast(QPushButton, self.findChild(QPushButton, 'moveButton'))
 
         display = bool(self.__selected_tile)  # Tile is selected
-        display &= self.__game_engine.is_position_occupied(self.__selected_tile)  # Position is occupied by object
+        display &= bool(self.__game_engine.is_position_occupied(self.__selected_tile))  # Position is occupied by object
 
         # Active player see that position
         visible_tiles = self.__game_engine.get_player_visible_tiles(self.__game_engine.get_game_history().active_player)

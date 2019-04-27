@@ -3,7 +3,7 @@ from typing import List, TYPE_CHECKING, Any, Set, Union
 
 from ExpertSystem.Structure.RuleBase import Rule, Expression, Fact
 from OrodaelTurrim.Business.Interface.Player import IPlayer
-from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy
+from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 
 if TYPE_CHECKING:
     from User.ActionBase import ActionBase
@@ -13,9 +13,11 @@ class IKnowledgeBase(ABC):
     """ Abstract class for User knowledge base definition """
 
 
-    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, player: IPlayer):
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy,
+                 game_uncertainty_proxy: GameUncertaintyProxy, player: IPlayer):
         self.map_proxy = map_proxy
         self.game_object_proxy = game_object_proxy
+        self.game_uncertainty_proxy = game_uncertainty_proxy
         self.player = player
 
 
@@ -69,14 +71,19 @@ class IActionBase(ABC):
             getattr(self, item)()
         elif isinstance(item, Expression):
             getattr(self, item.name)(*item.args)
+        else:
+            raise ValueError('Get functions only by string of Expression')
 
 
     def __contains__(self, item: Union[str, Expression]) -> bool:
         if type(item) is str:
             if callable(getattr(self, item, None)):
                 return True
+            return False
+
         elif isinstance(item, Expression):
             if callable(getattr(self, item.name, None)):
                 return True
+            return False
 
         raise ValueError('Test only with string or Expression')

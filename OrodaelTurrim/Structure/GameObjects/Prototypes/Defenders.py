@@ -57,7 +57,7 @@ class Druid(GameObjectPrototype):
     Represents the guardian of forest. He is usually calm but try to stomp on his favorite flower and
     his bear friends will stomp on you
     """
-    ATTRIBUTES = AttributeBundle(30, 10, 100, 2, 6)
+    ATTRIBUTES = AttributeBundle(30, 5, 100, 2, 5)
     COST = 25
     ASSET_NAME = "druid"
 
@@ -78,7 +78,7 @@ class Druid(GameObjectPrototype):
 
 class Ent(GameObjectPrototype):
     """ Represents a giant moving tree. Now you regret that little heart you curved into me, don't you?! """
-    ATTRIBUTES = AttributeBundle(10, 50, 200, 1, 2)
+    ATTRIBUTES = AttributeBundle(10, 15, 200, 1, 2)
     COST = 50
     ASSET_NAME = "ent"
 
