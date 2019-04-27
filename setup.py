@@ -32,7 +32,7 @@ setup(
     ],
     install_requires=['pyqt5', 'antlr4-python3-runtime', 'click', 'multi_key_dict'],
     setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
+    tests_require=['pytest', 'flexmock', 'pytest-ordering'],
     test_suite="tests",
     zip_safe=True,
 )
