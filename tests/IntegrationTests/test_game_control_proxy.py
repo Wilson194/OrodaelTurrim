@@ -4,18 +4,13 @@ from flexmock import flexmock
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Exceptions import IllegalActionException
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
-from OrodaelTurrim.Structure.GameObjects.Prototypes.Defenders import Ent
+from OrodaelTurrim.Structure.GameObjects.Prototypes.Defenders import Ent, Archer
 from OrodaelTurrim.Structure.Position import OffsetPosition
 
 
 @pytest.fixture(scope='module')
 def game_control_proxy(game_instance):
     return game_instance[2]
-
-
-def test_spawn_unit(game_control_proxy, defender):
-    si = SpawnInformation(defender, GameObjectType.ARCHER, OffsetPosition(0, 1), [], [])
-    assert game_control_proxy.spawn_unit(si) is None
 
 
 def test_spawn_unit_not_visible_tile(game_control_proxy, defender):

@@ -1,11 +1,13 @@
 import pytest
 
 from OrodaelTurrim.Structure.Enums import AttributeType, EffectType, GameObjectType, GameRole
+from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 from OrodaelTurrim.Structure.Position import OffsetPosition
 
 
 @pytest.fixture(scope='module')
 def game_object_proxy(game_instance):
+
     return game_instance[1]
 
 
@@ -118,9 +120,9 @@ def test_get_visible_enemies(game_object_proxy, position, value):
 
 def test_get_income(game_object_proxy, defender, attacker):
     assert game_object_proxy.get_income(defender) == 10
-    assert game_object_proxy.get_income(attacker) == 10
+    assert game_object_proxy.get_income(attacker) == 0
 
 
 def test_get_resources(game_object_proxy, defender, attacker):
     assert game_object_proxy.get_resources(defender) == 1000
-    assert game_object_proxy.get_resources(attacker) == 840
+    assert game_object_proxy.get_resources(attacker) == 40

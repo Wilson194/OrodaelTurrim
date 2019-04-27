@@ -128,7 +128,7 @@ class AIPlayer(IAttacker):
         spend = 0
         current_resources = resources
         while self.__spawn_unit(resources, current_resources):
-            spawn_info = self.__create_spawn_info(current_resources)
+            spawn_info = self.__create_spawn_info(current_resources, result)
             current_resources -= spawn_info.object_type.price
             spend += spawn_info.object_type.price
             result.append(spawn_info)
@@ -136,12 +136,15 @@ class AIPlayer(IAttacker):
         return result, spend
 
 
-    def __create_spawn_info(self, resources: int) -> SpawnInformation:
+    def __create_spawn_info(self, resources: int, planned: List[SpawnInformation]) -> SpawnInformation:
         attackers = [attacker for attacker in self.__attackers if attacker.price <= resources]
         game_object = self.spawn_random.choice(attackers)
 
+        planned_positions = [x.position for x in planned]
+
         free_border_tiles = [tile for tile in self.__border_tiles if
-                             self.game_object_proxy.get_object_type(tile) == GameObjectType.NONE]
+                             self.game_object_proxy.get_object_type(
+                                 tile) == GameObjectType.NONE and tile not in planned_positions]
 
         position = self.spawn_random.choice(tuple(free_border_tiles))
         return SpawnInformation(self, game_object, position, self.unit_filters[game_object][0],

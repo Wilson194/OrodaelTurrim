@@ -1,6 +1,7 @@
 import pytest
 
-from OrodaelTurrim.Structure.Enums import TerrainType
+from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
+from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 from OrodaelTurrim.Structure.Position import OffsetPosition
 
 

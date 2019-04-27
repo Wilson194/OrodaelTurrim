@@ -1,5 +1,5 @@
 from typing import List
-
+from flexmock import flexmock
 import pytest
 from antlr4 import InputStream
 
@@ -7,6 +7,8 @@ from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer, Co
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim.Business.GameMap import GameMap
+from OrodaelTurrim.Business.Uncertainty import SpawnUncertainty
+from OrodaelTurrim.Structure.Map import VisibilityMap
 from OrodaelTurrim.Structure.Position import Position
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
@@ -17,6 +19,7 @@ from OrodaelTurrim.Structure.Enums import TerrainType, GameObjectType
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 from OrodaelTurrim.Structure.Position import OffsetPosition
 from OrodaelTurrim.Structure.Resources import PlayerResources
+from OrodaelTurrim.config import Config
 
 
 @pytest.fixture
@@ -71,12 +74,25 @@ GAME_MAP = [
 ]
 
 
-@pytest.fixture(scope='module')
+def fake_init(cls, game_map):
+    cls.__game_map = game_map
+    cls.__players = []
+    cls.__player_resources = {}
+    cls.__player_units = {}
+    cls.__defender_bases = {}
+    cls.__game_object_positions = {}
+    cls.__initial_resources = {}
+    cls.__visibility_map = VisibilityMap()
+    cls.__spawn_uncertainty = SpawnUncertainty(cls)
+
+
+@pytest.fixture(scope='package')
 def game_instance():
     game_map = MapGenerator(5, 5).generate(GAME_MAP)
 
     # Initialize game engine
     game_engine = GameEngine(game_map)
+
     map_proxy = MapProxy(game_engine)
     game_object_proxy = GameObjectProxy(game_engine)
     game_control_proxy = GameControlProxy(game_engine)
@@ -88,7 +104,7 @@ def game_instance():
 
     # Register attacker
     attacker = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
-    game_engine.register_player(attacker, PlayerResources(1000, 10, 10), [])
+    game_engine.register_player(attacker, PlayerResources(200, 0, 0), [])
 
     game_engine.start(500)
 
@@ -96,7 +112,9 @@ def game_instance():
     game_engine.spawn_unit(SpawnInformation(attacker, GameObjectType.DEMON, OffsetPosition(0, -2), [], []))
     game_engine.spawn_unit(SpawnInformation(attacker, GameObjectType.DEMON, OffsetPosition(-1, -1), [], []))
 
-    return map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy, defender, attacker
+    attacker.initialize()
+
+    return map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy, defender, attacker, game_engine
 
 
 @pytest.fixture()

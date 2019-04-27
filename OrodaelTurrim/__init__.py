@@ -12,3 +12,4 @@ ICONS_ROOT = IMAGES_ROOT / 'icons'
 __version__ = '1.0.0'
 
 DEBUG = False
+
