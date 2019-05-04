@@ -6,7 +6,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QTextEdit
 
-from OrodaelTurrim import UI_ROOT
+from OrodaelTurrim import UI_ROOT, ICONS_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Presenter.Dialogs.FilterDialog import FilterDialog
@@ -52,8 +52,15 @@ class UnitWidget(QWidget):
 
         # Display unit attributes
         name_label = typing.cast(QLabel, self.findChild(QLabel, 'nameLabel'))
-        name_label.setText(
-            '{} ({})'.format(self.__object_type.name.capitalize(), GameObjectPrototypePool[self.__object_type].cost))
+        name_label.setText(self.__object_type.name.capitalize())
+
+        price_label = typing.cast(QLabel, self.findChild(QLabel, 'priceLabel'))
+        price_label.setText(str(GameObjectPrototypePool[self.__object_type].cost))
+
+        img_label = typing.cast(QLabel, self.findChild(QLabel, 'priceImage'))
+        img_label.setScaledContents(True)
+        img_label.setPixmap(QPixmap(str(ICONS_ROOT / 'gold.png')))
+
 
         # Place unit button - default False because position is not selected
         button = typing.cast(QPushButton, self.findChild(QPushButton, 'placeButton'))
