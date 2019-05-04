@@ -1,15 +1,14 @@
 Console interface
-=======================
+===================
 
-If you want to test your expert system, it is recommended to use console interface. It is much faster and you don't
-need to click on anything. After execute the command you will get how much turns your are survive and also you
-can save history log in text format, so you can find out what is the reason of the king dead.
+The framework have also console interface. You can use console to test you Expert system for whole simulation.
+Simulate the game without GUI is faster and you don't need to click on anything. Also you can export history log
+from the simulation, so find out why your king die so fast.
 
-Console interface have few parameters
-
-* `\\-\\-gui / \\-\\-nogui` - For disable GUI interface
-* `-r / \\-\\-round NUMBER` - Specify maximum rounds of simulation
-* `-l / \\-\\-log-output PATH` - Save history in txt format to file
-* `\\-\\-help` - Display console interface help
+**Options**
+ * `--gui / --nogui` - Disable or enable GUI
+ * `-r / --rounds` - Set maximum of rounds for simulation
+ * `-l / --log-output` - Save log from the game in txt format
+ * `--help` - Display help message
 
 Simulation without GUI is faster and also you can automatize testing.

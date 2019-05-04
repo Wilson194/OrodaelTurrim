@@ -19,15 +19,54 @@ Python 3.7.* is required because of some features and better performance
 
 
 Installation
------------------------
+-------------------------
 
-It is recommended to use virtual environment because of possible problem with PyQt version conflicts.
 
-.. code-block:: bash
+Ubuntu 18
+****************
 
-    git clone https://gitlab.fit.cvut.cz/bi-zns_pracovni/zna_framework_python
-    cd zns_framework_python
-    pip install -r requirements.txt # use flag -user if your are not using virtual environment
+On Ubuntu you have 2 possibilities to run Python 3.7. You can use system Python interpreter or Anaconda.
+
+**System python**
+
+ #. Install Python 3.7
+
+    .. code-block:: bash
+
+        sudo apt update                                 # Update apt repositories
+        sudo apt install software-properties-common     # Install program for apt adding
+        sudo add-apt-repository ppa:deadsnakes/ppa      # Add Python apt repository
+        sudo apt install python3.7                      # Install Python 3.7
+        sudo apt install python-virtualenv              # Install virtual environments support
+
+ #. At this point, Python 3.7 is installed on your Ubuntu system and ready to be used.
+    You can verify it by typing
+
+    .. code-block:: bash
+
+        python3.7 --version
+
+ #. Clone framework from the GitLab or GitHub
+
+    .. code-block:: bash
+
+        cd <your_directory>
+        # From GitLab
+        git clone https://gitlab.fit.cvut.cz/bi-zns_pracovni/zna_framework_python
+        # or from GitHub
+        git clone git@github.com:Wilson194/OrodaelTurrim.git
+
+ #. Create virtual environment for framework and activate
+
+    .. code-block:: bash
+
+        python3.7 -m venv __venv__          # Create virtual environment
+        . __venv__/bin/activate             # Activate virtual environment
+        cd zna_framework_python             # Change directory to framework
+        pip install -r requirements.txt     # Install all requirements
+        python OrodaelTurrim                # Run Framework
+
+
 
 
 Documentation build
