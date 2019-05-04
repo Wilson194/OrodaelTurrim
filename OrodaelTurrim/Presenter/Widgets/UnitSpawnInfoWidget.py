@@ -58,6 +58,6 @@ class UnitSpawnInfoWidget(QWidget):
 
         border_dict = {}
         for position in self.uncertainty_spawn.positions:
-            border_dict[position.position] = Border.full(3, QColor(255, 137, 28))
+            border_dict[position.position] = Border.full(3, QColor(255, 21, 221))
 
-        Connector().emit('display_border', border_dict, [QColor(255, 137, 28)])
+        Connector().emit('display_border', border_dict, [QColor(255, 21, 221)])
