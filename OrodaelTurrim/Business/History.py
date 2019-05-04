@@ -1,4 +1,4 @@
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Optional
 
 from OrodaelTurrim.Business.Interface.Player import IPlayer
 from OrodaelTurrim.Structure.Exceptions import IllegalHistoryOperation
@@ -360,6 +360,12 @@ class GameHistory:
         return self.__current_turn
 
 
+    @property
+    def current_action_index(self):
+        """ Return index of current action """
+        return self.__current_action
+
+
     def is_history_log(self, turn: int, player: int, action: int) -> bool:
         """
         Check if given history log is before current time or after
@@ -384,6 +390,42 @@ class GameHistory:
                     return True
 
         return False
+
+
+    def to_history_point(self, turn: int, player: Optional[int], action: Optional[int]) -> None:
+        """
+        Move history to target point
+
+        :param turn: target turn
+        :param player: target player
+        :param action:  target action
+        """
+        if action is None:
+            action = 0
+
+        if player is None:
+            player = 0
+
+        if self.current_turn < turn:
+            direction = 1
+        elif self.current_turn > turn:
+            direction = -1
+        else:
+            if self.current_player < player:
+                direction = 1
+            elif self.current_player > player:
+                direction = -1
+            else:
+                if self.current_action_index < action:
+                    direction = 1
+                else:
+                    direction = -1
+
+        while not (self.current_turn == turn and self.current_player == player and self.current_action_index == action):
+            if direction == 1:
+                self.move_action_forth()
+            else:
+                self.move_action_back()
 
 
     def to_html(self):
@@ -431,6 +473,7 @@ class GameHistory:
             color = QColor(0, 0, 0) if self.is_history_log(turn, 0, 0) else QColor(255, 0, 0)
             _round = QStandardItem('Round {}'.format(turn))
             _round.setForeground(color)
+            _round.setData((turn, None, None))
             root.appendRow(_round)
             player_turn = self.__turns[turn]
 
@@ -438,6 +481,7 @@ class GameHistory:
                 color = QColor(0, 0, 0) if self.is_history_log(turn, p_turn, 0) else QColor(255, 0, 0)
                 player = QStandardItem('Player {} - {}'.format(p_turn, self.__players[p_turn].name))
                 player.setForeground(color)
+                player.setData((turn, p_turn, None))
                 _round.appendRow(player)
                 actions = player_turn[p_turn]
 
@@ -446,6 +490,7 @@ class GameHistory:
                     _action = QStandardItem(str(action))
                     _action.setForeground(QBrush(color))
                     _action.setToolTip(str(action))
+                    _action.setData((turn, p_turn, i))
 
                     player.appendRow(_action)
 

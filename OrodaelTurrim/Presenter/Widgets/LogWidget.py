@@ -1,11 +1,10 @@
 import typing
 
 from PyQt5 import uic
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QIcon
-from PyQt5.QtWidgets import QWidget, QTextEdit, QTreeView, QPushButton, QFileDialog
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtWidgets import QWidget, QTreeView, QPushButton, QFileDialog, QMenu, QAction
 
-from OrodaelTurrim import UI_ROOT, ICONS_ROOT
+from OrodaelTurrim import UI_ROOT
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Presenter.Connector import Connector
 
@@ -33,6 +32,9 @@ class LogWidget(QWidget):
 
         self.log = typing.cast(QTreeView, self.findChild(QTreeView, 'treeView'))
 
+        self.log.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.log.customContextMenuRequested.connect(self.open_context_menu)
+
         self.log.setModel(self.__game_engine.get_game_history().to_model())
         self.log.setHeaderHidden(True)
 
@@ -47,6 +49,39 @@ class LogWidget(QWidget):
 
         export_xml_button = typing.cast(QPushButton, self.findChild(QPushButton, 'exportXmlButton'))
         export_xml_button.clicked.connect(self.export_xml_button)
+
+
+    def open_context_menu(self, position) -> None:
+        """
+        Open context menu after right click on item
+
+        :param position: position of the click
+        """
+        menu = QMenu()
+
+        index = self.log.selectedIndexes()[0]
+
+        item = index.model().itemData(index)
+
+        history_action = QAction("Browse there", self)
+        history_action.triggered.connect(lambda: self.history_point_slot(item))
+
+        menu.addAction(history_action)
+
+        menu.exec_(self.log.viewport().mapToGlobal(position))
+
+
+    @pyqtSlot(object)
+    def history_point_slot(self, item) -> None:
+        """
+        Move history to selected item
+
+        :param item: selected item
+        """
+        self.__game_engine.get_game_history().to_history_point(*item[257])
+
+        Connector().emit('redraw_map')
+        Connector().emit('redraw_ui')
 
 
     @pyqtSlot()
