@@ -29,16 +29,16 @@ class IKnowledgeBase(ABC):
         pass
 
 
-class IInterference(ABC):
+class IInference(ABC):
     """ Abstract class for interference """
 
 
     @abstractmethod
-    def interfere(self, fact_base: Set[Any], rules: List[Rule], action_base: "ActionBase") -> None:
+    def infere(self, knowledge_base: Set[Any], rules: List[Rule], action_base: "ActionBase") -> None:
         """
-        Interference method
+        Inference method
 
-        :param fact_base: - fact base created in the KnowledgeBase class by user
+        :param knowledge_base: - knowledge base created in the KnowledgeBase class by user
         :param rules: - parsed rules from rules file
         :param action_base: - instance of User defined action base
         """

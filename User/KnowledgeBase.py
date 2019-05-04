@@ -41,6 +41,10 @@ class KnowledgeBase(IKnowledgeBase):
         """
         Method for create user knowledge base. You can also have other class methods, but entry point must be this
         function. Don't change the signature of the method, you can change return value, but it is not recommended.
+
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        !!  TODO: Write implementation of your knowledge base definition HERE   !!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """
 
         facts = []

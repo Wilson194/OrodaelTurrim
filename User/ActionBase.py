@@ -19,9 +19,13 @@ class ActionBase(IActionBase):
     * self.game_control_proxy (GameControlProxy) for doing actions in game
     * self.player [IPlayer] instance of your player for identification yourself in proxy
 
-    You can uso () operator on ActionBase instance to call your function by `str` name or `Expression` class.
+    You can use () operator on ActionBase instance to call your function by `str` name or `Expression` class.
     Expression class will also pass arguments from self to your method. () operator using only args so be careful about
     order and number of arguments.
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!               TODO: Write implementation of your actions HERE                !!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     """
     game_control_proxy: GameControlProxy
     player: IPlayer

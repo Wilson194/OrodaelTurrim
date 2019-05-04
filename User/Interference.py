@@ -1,14 +1,14 @@
 from typing import List
 
-from ExpertSystem.Business.UserFramework import IInterference
+from ExpertSystem.Business.UserFramework import IInference
 from ExpertSystem.Structure.Enums import LogicalOperator
 from ExpertSystem.Structure.RuleBase import Rule, Fact, ExpressionNode, Expression
 from User import ActionBase
 
 
-class Interference(IInterference):
+class Inference(IInference):
     """
-    | User definition of the interference. You can define here you interference method (forward or backward).
+    | User definition of the inference. You can define here you interference method (forward or backward).
       You can have here as many functions as you want, but you must implement interfere with same signature
 
     |
@@ -26,13 +26,17 @@ class Interference(IInterference):
         self.action_base = None
 
 
-    def interfere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase) -> None:
+    def infere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase) -> None:
         """
         User defined interference
 
         :param knowledge_base: - list of Fact classes defined in  KnowledgeBase.create_knowledge_base()
         :param rules:  - list of rules trees defined in rules file.
         :param action_base: - instance of user action base for executing conclusions
+
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        !!    TODO: Write implementation of your inference mechanism definition HERE    !!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """
         self.knowledge_base = knowledge_base
         self.action_base = action_base

@@ -12,7 +12,10 @@ def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
     
     
 You can here define as many filters as you want. Framework fill find correct filters and load them.
- 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                  TODO: You can define your own filters HERE                  !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 """
 
 

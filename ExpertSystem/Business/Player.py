@@ -14,7 +14,7 @@ from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Enums import GameRole
 from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat
 from User.ActionBase import ActionBase
-from User.Interference import Interference
+from User.Interference import Inference
 from User.KnowledgeBase import KnowledgeBase
 
 
@@ -27,7 +27,7 @@ class Player(IPlayer):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
         self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
-        self.interference = Interference()
+        self.interference = Inference()
         self.action_base = ActionBase(game_control_proxy, self)
 
 
@@ -46,7 +46,7 @@ class Player(IPlayer):
             sys.stderr.write('Rules file not found! Stopping interference!\n')
             Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping interference!')
             return
-        self.interference.interfere(knowledge, rules, self.action_base)
+        self.interference.infere(knowledge, rules, self.action_base)
 
 
     @property
