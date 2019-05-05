@@ -23,3 +23,5 @@ docs/_build/
 ExpertSystem/Business/Parser/__pycache__/
 ExpertSystem/__pycache__/
 tests/__pycache__/
+build
+dist

@@ -149,7 +149,7 @@ class MainWindow(QObject):
     @pyqtSlot()
     def open_documentation_slot(self):
         """ Open documentation from file menu in default browser """
-        url = QtCore.QUrl('https://zns.readthedocs.io/en/latest/')
+        url = QtCore.QUrl('https://orodaelturrim.readthedocs.io/en/latest')
         if not QtGui.QDesktopServices.openUrl(url):
             QtWidgets.QMessageBox.warning(self.window, 'Open Url', 'Could not open url')
 

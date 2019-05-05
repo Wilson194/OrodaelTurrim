@@ -1,10 +1,10 @@
 from OrodaelTurrim import IMAGES_ROOT, ICONS_ROOT
 from OrodaelTurrim.Structure.Enums import GameObjectType, TerrainType
-from Structure.Actions.Combat import MoveAction, AttackAction
-from Structure.Actions.Log import LogAction
-from Structure.Actions.Placement import SpawnAction
-from Structure.Actions.Resources import SpendResourcesAction, EarnResourcesAction, IncomeResourcesIncrease
-from Structure.Actions.Terrain import TerrainDamageAction
+from OrodaelTurrim.Structure.Actions.Combat import MoveAction, AttackAction
+from OrodaelTurrim.Structure.Actions.Log import LogAction
+from OrodaelTurrim.Structure.Actions.Placement import SpawnAction
+from OrodaelTurrim.Structure.Actions.Resources import SpendResourcesAction, EarnResourcesAction, IncomeResourcesIncrease
+from OrodaelTurrim.Structure.Actions.Terrain import TerrainDamageAction
 
 
 class GetMetaAssets(type):
