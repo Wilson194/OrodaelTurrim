@@ -1,7 +1,7 @@
 from typing import List
 
-from Business.Logger import Logger
-from Business.Proxy import GameObjectProxy, MapProxy
+from OrodaelTurrim.Business.Logger import Logger
+from OrodaelTurrim.Business.Proxy import GameObjectProxy, MapProxy
 from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter
 from OrodaelTurrim.Structure.Position import Position
 

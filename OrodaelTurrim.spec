@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['OrodaelTurrim\\Main.py'],
-             pathex=['C:\\skola\\Diplomka\\Framework'],
+a = Analysis(['OrodaelTurrim/Main.py'],
+             pathex=['C:/skola/Diplomka/Framework'],
              binaries=[],
              datas=[('OrodaelTurrim/res', 'OrodaelTurrim/res'), ('User', 'User')],
              hiddenimports=[],
@@ -29,4 +29,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False , icon='OrodaelTurrim\\res\\images\\icons\\game_icon.ico')
+          console=False , icon='OrodaelTurrim/res/images/icons/game_icon.ico')
