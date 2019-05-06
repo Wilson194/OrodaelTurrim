@@ -12,7 +12,7 @@ class Config(metaclass=ClassAttributeDefault):
     DEFENDER_INCOME = 10
 
     ATTACKER_STARTING_MONEY = 200
-    ATTACKER_INCOME = 10
+    ATTACKER_INCOME = 20
     ATTACKER_INCOME_INCREASE = 1
 
     # ----------------- Map generator configuration ----------------------------
