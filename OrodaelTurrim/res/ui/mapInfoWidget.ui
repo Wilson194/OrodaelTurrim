@@ -659,6 +659,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QTextEdit" name="objectAttributesText">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
