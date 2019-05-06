@@ -104,7 +104,7 @@ class FilterFactory(metaclass=Singleton):
 
     def attack_filter(self, name: Union[str, type], *args, **kwargs) -> Optional[AttackFilter]:
         """
-        Get attack filter by name or class
+        Get instance of attack filter by name or class
 
         :param name: str name of the class or Class type itself
         :param args: extra arguments that filter need (don't pass proxy arguments)
@@ -121,7 +121,7 @@ class FilterFactory(metaclass=Singleton):
 
     def move_filter(self, name: Union[str, type], *args, **kwargs) -> Optional[MoveFilter]:
         """
-        Get move filter by name or class
+        Get instance of move filter by name or class
 
         :param name: str name of the class or Class type itself
         :param args: extra arguments that filter need (don't pass proxy arguments)
@@ -146,3 +146,11 @@ class FilterFactory(metaclass=Singleton):
     def move_filters(self) -> List[FilterClassInfo]:
         """ Get list of FilterClassInfo of all founded move filters """
         return self.__move_filters.values()
+
+
+    def get_attack_filter_by_name(self, name: str) -> FilterClassInfo:
+        return self.__attack_filters.get(name)
+
+
+    def get_move_filter_by_name(self, name: str) -> FilterClassInfo:
+        return self.__move_filters.get(name)

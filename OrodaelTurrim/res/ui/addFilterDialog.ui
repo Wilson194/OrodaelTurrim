@@ -18,9 +18,7 @@
     <widget class="QListWidget" name="listWidget"/>
    </item>
    <item row="0" column="1">
-    <widget class="QWidget" name="parametersWidget" native="true">
-     <layout class="QFormLayout" name="formLayout"/>
-    </widget>
+    <widget class="QWidget" name="parametersWidget" native="true"/>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">

@@ -1,5 +1,7 @@
 from typing import List
 
+from Business.Logger import Logger
+from Business.Proxy import GameObjectProxy, MapProxy
 from OrodaelTurrim.Structure.Filter.FilterPattern import AttackFilter
 from OrodaelTurrim.Structure.Position import Position
 
@@ -23,5 +25,11 @@ class DummyAttackFilter(AttackFilter):
     """ Example of custom filter """
 
 
+    def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, log_text: str):
+        super().__init__(map_proxy, game_object_proxy)
+        self.log_text = log_text
+
+
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
+        Logger.log(self.log_text)
         return tiles

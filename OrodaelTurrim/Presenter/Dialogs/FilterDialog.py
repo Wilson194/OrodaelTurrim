@@ -1,10 +1,11 @@
 import typing
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 
 from PyQt5 import uic, QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QDialog, QPushButton, QListWidget, QListWidgetItem, QAbstractItemView
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtWidgets import QDialog, QPushButton, QListWidget, QListWidgetItem, QAbstractItemView, QWidget, \
+    QVBoxLayout, QLabel, QLineEdit
 
 from OrodaelTurrim import UI_ROOT, ICONS_ROOT
 from OrodaelTurrim.Structure.Enums import GameObjectType
@@ -16,7 +17,7 @@ class ListWidgetItem(QListWidgetItem):
     """ Overload QListWidgetItem for store arguments of the filter"""
 
 
-    def __init__(self, name: str, arguments: List):
+    def __init__(self, name: str, arguments: Dict):
         super().__init__()
         self.name = name
         self.arguments = arguments
@@ -142,12 +143,14 @@ class AddFilterDialog(QDialog):
     """ Add new filter from the list """
 
     list_widget: QListWidget
+    parameters_layout: QVBoxLayout
 
 
     def __init__(self):
         super().__init__()
 
         self.init_ui()
+        self.parameter_inputs = {}
 
 
     def init_ui(self) -> None:
@@ -155,8 +158,15 @@ class AddFilterDialog(QDialog):
             uic.loadUi(f, self)
 
         self.list_widget = typing.cast(QListWidget, self.findChild(QListWidget, 'listWidget'))
+        self.list_widget.itemSelectionChanged.connect(self.on_click_slot)
 
         self.list_widget.itemDoubleClicked.connect(self.accept)
+
+        parameters_widget = typing.cast(QListWidget, self.findChild(QWidget, 'parametersWidget'))
+
+        self.parameters_layout = QVBoxLayout()
+        self.parameters_layout.setAlignment(Qt.AlignTop)
+        parameters_widget.setLayout(self.parameters_layout)
 
         # Load filters and set one item for each
         filters = FilterFactory().attack_filters
@@ -164,12 +174,41 @@ class AddFilterDialog(QDialog):
             self.list_widget.addItem(_filter.name)
 
 
-    def get_inputs(self) -> Tuple[Optional[str], List]:
+    @pyqtSlot()
+    def on_click_slot(self):
+        """ Check if filter have extra parameters """
+        a_filter = FilterFactory().get_attack_filter_by_name(self.list_widget.selectedItems()[0].text())
+
+        # Clear layout
+        for i in reversed(range(self.parameters_layout.count())):
+            self.parameters_layout.itemAt(i).widget().deleteLater()
+            self.parameter_inputs = {}
+
+        if a_filter.arguments:
+            for text in a_filter.arguments:
+                font = QFont()
+                font.setBold(True)
+                label = QLabel()
+                label.setFont(font)
+                label.setText(text)
+
+                _input = QLineEdit()
+                self.parameter_inputs[text] = _input
+                self.parameters_layout.addWidget(label)
+                self.parameters_layout.addWidget(_input)
+
+
+    def get_inputs(self) -> Tuple[Optional[str], typing.Dict[str, str]]:
         if self.list_widget.selectedItems():
             selected = self.list_widget.selectedItems()[0]  # type: QListWidgetItem
-            return selected.text(), []
 
-        return None, []
+            parameters = {}
+            for name, _input in self.parameter_inputs.items():
+                parameters[name] = _input.text()
+
+            return selected.text(), parameters
+
+        return None, {}
 
 
     @staticmethod

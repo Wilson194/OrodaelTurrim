@@ -155,7 +155,7 @@ class UnitWidget(QWidget):
         # Prepare move filters
         filter_instances = []
         for _filter in self.__filters:
-            instance = FilterFactory().attack_filter(_filter.name, *_filter.arguments)
+            instance = FilterFactory().attack_filter(_filter.name, **_filter.arguments)
             filter_instances.append(instance)
 
         # Spawn unit
