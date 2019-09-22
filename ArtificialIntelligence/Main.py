@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 from OrodaelTurrim.Business.Interface.Player import IAttacker
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
@@ -129,6 +129,8 @@ class AIPlayer(IAttacker):
         current_resources = resources
         while self.__spawn_unit(resources, current_resources):
             spawn_info = self.__create_spawn_info(current_resources, result)
+            if spawn_info is None:
+                break
             current_resources -= spawn_info.object_type.price
             spend += spawn_info.object_type.price
             result.append(spawn_info)
@@ -136,7 +138,7 @@ class AIPlayer(IAttacker):
         return result, spend
 
 
-    def __create_spawn_info(self, resources: int, planned: List[SpawnInformation]) -> SpawnInformation:
+    def __create_spawn_info(self, resources: int, planned: List[SpawnInformation]) -> Optional[SpawnInformation]:
         attackers = [attacker for attacker in self.__attackers if attacker.price <= resources]
         game_object = self.spawn_random.choice(attackers)
 
@@ -145,6 +147,9 @@ class AIPlayer(IAttacker):
         free_border_tiles = [tile for tile in self.__border_tiles if
                              self.game_object_proxy.get_object_type(
                                  tile) == GameObjectType.NONE and tile not in planned_positions]
+
+        if not free_border_tiles:
+            return None
 
         position = self.spawn_random.choice(tuple(free_border_tiles))
         return SpawnInformation(self, game_object, position, self.unit_filters[game_object][0],
