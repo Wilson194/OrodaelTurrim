@@ -34,7 +34,7 @@ environment.
 
         cd <your_directory>
         # From GitLab
-        git clone https://gitlab.fit.cvut.cz/bi-zns_pracovni/zna_framework_python
+        git clone git@gitlab.fit.cvut.cz:hajkokla/orodaelturrim.git
         # or from GitHub
         git clone git@github.com:Wilson194/OrodaelTurrim.git
 
