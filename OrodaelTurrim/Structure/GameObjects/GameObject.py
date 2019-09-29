@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import List, TYPE_CHECKING, Dict, Set, Union
 
-
 from OrodaelTurrim.Structure.Enums import AttributeType, GameObjectType, EffectType, GameRole
 from OrodaelTurrim.Structure.Filter.FilterPattern import TileFilter, MoveFilter, AttackFilter
 from OrodaelTurrim.Structure.GameObjects.Effect import Effect
@@ -49,7 +48,8 @@ class GameObject:
                 AttributeType.ACTIONS) == 0:
             return
 
-        free_accessible_tiles = [x for x in self.__accessible_tiles if not self.__game_engine.is_position_occupied(x)]
+        free_accessible_tiles = [x for x in self.__accessible_tiles if
+                                 self.__game_engine.is_position_occupied(x) is False]
 
         if free_accessible_tiles:
             self.__game_engine.create_move_action(self, TileFilter.use_filter(self.position, self.__move_filters,
