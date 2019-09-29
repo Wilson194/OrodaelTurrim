@@ -25,3 +25,4 @@ ExpertSystem/__pycache__/
 tests/__pycache__/
 build
 dist
+__venv__
