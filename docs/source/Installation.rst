@@ -87,6 +87,7 @@ On Ubuntu you have 2 possibilities to run Python 3.7. You can use system Python 
         sudo add-apt-repository ppa:deadsnakes/ppa      # Add Python apt repository
         sudo apt install python3.7                      # Install Python 3.7
         sudo apt install python-virtualenv              # Install virtual environments support
+        sudo apt install python3.7-venv                 # Install require packages for Python 3.7
 
  #. At this point, Python 3.7 is installed on your Ubuntu system and ready to be used.
     You can verify it by typing
