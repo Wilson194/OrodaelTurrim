@@ -33,9 +33,9 @@ environment.
     .. code-block:: bash
 
         cd <your_directory>
-        # From GitLab
+        # From GitLab for FIT CTU Prague
         git clone git@gitlab.fit.cvut.cz:hajkokla/orodaelturrim.git
-        # or from GitHub
+        # or from GitHub for others
         git clone git@github.com:Wilson194/OrodaelTurrim.git
 
  #. Create virtual environment for framework and install all dependencies
