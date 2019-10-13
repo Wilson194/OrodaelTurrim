@@ -56,10 +56,10 @@ class Inference(IInference):
         :param root_node: root node of the rule tree
         :return: True if rules is satisfiable, False in case of not satisfiable or missing Facts
         """
-        if root_node.value == LogicalOperator.AND:
+        if root_node.operator == LogicalOperator.AND:
             return self.rule_evaluation(root_node.left) and self.rule_evaluation(root_node.right)
 
-        elif root_node.value == LogicalOperator.OR:
+        elif root_node.operator == LogicalOperator.OR:
             return self.rule_evaluation(root_node.left) or self.rule_evaluation(root_node.right)
 
         elif isinstance(root_node.value, Expression):
