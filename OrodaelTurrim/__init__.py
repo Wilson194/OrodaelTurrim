@@ -9,7 +9,8 @@ UI_ROOT = RESOURCES_ROOT / 'ui'
 IMAGES_ROOT = RESOURCES_ROOT / 'images'
 ICONS_ROOT = IMAGES_ROOT / 'icons'
 
-__version__ = '1.1.2'
+__version__ = '1.1.3'
 
 DEBUG = False
+GENERATE_BUG_REPORTS = True
 

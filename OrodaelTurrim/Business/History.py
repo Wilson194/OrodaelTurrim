@@ -438,7 +438,7 @@ class GameHistory:
                 for i, action in enumerate(actions):
                     color = 'black' if self.is_history_log(turn, p_turn, i) else 'red'
                     result += '<li style="color: {}">Turn {} - Player {}- {}</li>'.format(color, turn, p_turn, action)
-        result += '</ul'
+        result += '</ul>'
 
         return result
 

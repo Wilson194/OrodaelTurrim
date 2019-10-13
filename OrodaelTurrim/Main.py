@@ -1,5 +1,6 @@
 from ArtificialIntelligence.Main import AIPlayer
 from ExpertSystem.Business.Player import Player
+from OrodaelTurrim import GENERATE_BUG_REPORTS
 from OrodaelTurrim.Business.GameEngine import GameEngine
 from OrodaelTurrim.Business.Logger import LogReceiver
 from OrodaelTurrim.Business.MapGenerator import MapGenerator
@@ -10,7 +11,9 @@ from OrodaelTurrim.Structure.Exceptions import IllegalConfigState
 from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.Resources import PlayerResources
 import click
+import sys
 
+from OrodaelTurrim.Utils import bug_report
 from OrodaelTurrim.config import Config
 
 
@@ -24,6 +27,7 @@ def main(gui, rounds, log_output, verbose):
     console interface only. Console is faster, but you will get only limited information. Also you cannot order your
     units from console. Everything will be handled by your lieutenant Expert System.
     """
+
     # Load map configuration from config or generate random map
     height = Config.MAP_HEIGHT
     width = Config.MAP_WIDTH
@@ -39,6 +43,10 @@ def main(gui, rounds, log_output, verbose):
 
     # Initialize game engine
     game_engine = GameEngine(game_map)
+
+    # Enable bug reporting
+    if GENERATE_BUG_REPORTS:
+        sys.excepthook = lambda x, y, z: bug_report(game_engine, x, y, z)
 
     map_proxy = MapProxy(game_engine)
     game_object_proxy = GameObjectProxy(game_engine)
