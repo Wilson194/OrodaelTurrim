@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 from PyQt5 import QtWidgets
 from OrodaelTurrim.config import Config
+from OrodaelTurrim import __version__
 
 html_template = """
 <html>
@@ -12,6 +13,7 @@ html_template = """
 <body>
 <h1> Meta info </h1>
 Datetime: {datetime}
+Orodael Turrim version: {version}
 <h1> Exception </h1>
 <pre>
 {traceback}
@@ -58,7 +60,8 @@ def bug_report(game_engine, exc_type, exc_value, exc_traceback):
         file_name = f'bug_report_{uuid.uuid4()[0:7]}.html'
 
     with open(bug_reports_path / file_name, 'w') as f:
-        text = html_template.format(traceback=exception, config=config, history=history, datetime=time)
+        text = html_template.format(traceback=exception, config=config, history=history, datetime=time,
+                                    version=__version__)
         f.write(text)
 
     QtWidgets.QApplication.quit()
