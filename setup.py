@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='OrodaelTurrim',
-    version='1.1.4',
+    version='1.1.5',
     description='Expert system based tower defense',
     long_description=long_description,
     author='Jan Horáček',

@@ -368,7 +368,7 @@ class AxialPosition(Position):
 
 
     def __eq__(self, other: 'AxialPosition') -> bool:
-        return self.q == other.q and self.r == other.r
+        return self.q == other.axial.q and self.r == other.axial.r
 
 
     def __hash__(self):
