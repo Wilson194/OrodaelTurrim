@@ -29,6 +29,7 @@ Are you ready to resist the hordes of Rigor Mortis servants?
    RulesLanguage.rst
    Proxy.rst
    apidoc/modules.rst
+   ReleaseNotes.rst
 
 
 ..
