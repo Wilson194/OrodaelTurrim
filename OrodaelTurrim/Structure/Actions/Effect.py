@@ -67,7 +67,7 @@ class EffectDamageAction(GameAction):
 
     def xml(self, parent) -> SubElement:
         SubElement(parent, 'Action', type=self.__class__.__name__, owner=str(id(self.__owner)),
-                   effect=self.__effect.__class__.__name__, damage=self.__damage)
+                   effect=self.__effect.__class__.__name__, damage=str(self.__damage))
 
 
 class EffectExpireAction(GameAction):

@@ -76,4 +76,4 @@ class MoveAction(GameAction):
 
     def xml(self, parent) -> SubElement:
         SubElement(parent, 'Action', type=self.__class__.__name__, game_object=str(id(self.__game_object)),
-                   from_position=str(self.__from.offset), to_position=str(self.__to.offset))
+                   from_position=self.__from.offset.xml_string(), to_position=self.__to.offset.xml_string())

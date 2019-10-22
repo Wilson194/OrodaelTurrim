@@ -33,7 +33,7 @@ class DieAction(GameAction):
 
 
     def xml(self, parent) -> SubElement:
-        SubElement(parent, 'Action', type=self.__class__.__name__, dead_object=id(self.__dead_object))
+        SubElement(parent, 'Action', type=self.__class__.__name__, dead_object=str(id(self.__dead_object)))
 
 
 class SpawnAction(GameAction):
@@ -62,5 +62,5 @@ class SpawnAction(GameAction):
 
     def xml(self, parent) -> SubElement:
         SubElement(parent, 'Action', type=self.__class__.__name__, spawned_object=str(id(self.__spawned_object)),
-                   position=str(self.__spawned_object.position.offset),
+                   position=self.__spawned_object.position.offset.xml_string(),
                    object_type=self.__spawned_object.__class__.__name__)

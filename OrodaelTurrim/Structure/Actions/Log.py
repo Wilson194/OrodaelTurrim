@@ -31,4 +31,4 @@ class LogAction(GameAction):
 
 
     def xml(self, parent) -> SubElement:
-        SubElement(parent, 'Action', type=self.__class__.__name__, msg=self.log_message)
+        SubElement(parent, 'Action', type=self.__class__.__name__, msg=str(self.log_message))

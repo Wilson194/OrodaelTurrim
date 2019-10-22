@@ -306,6 +306,10 @@ class CubicPosition(Position):
         return '<Cubic> {}, {}, {}'.format(self.x, self.y, self.z)
 
 
+    def xml_string(self):
+        return 'Cubic {} {} {}'.format(self.x, self.y, self.z)
+
+
     @property
     def string(self):
         return '{} {} {}'.format(self.x, self.y, self.z)
@@ -385,6 +389,10 @@ class AxialPosition(Position):
 
     def __sub__(self, other: Position):
         return AxialPosition(self.q - other.axial.q, self.r - other.axial.r)
+
+
+    def xml_string(self):
+        return 'Axial {} {}'.format(self.q, self.r)
 
 
     @property
@@ -486,6 +494,10 @@ class OffsetPosition(Position):
 
     def __repr__(self):
         return '<Offset> {}, {}'.format(self.q, self.r)
+
+
+    def xml_string(self):
+        return 'Offset {} {}'.format(self.q, self.r)
 
 
     @property

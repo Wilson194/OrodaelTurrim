@@ -20,9 +20,10 @@ from OrodaelTurrim.config import Config
 @click.command()
 @click.option('--gui/--nogui', 'gui', default=True, help='Disable or enable gui [default: --gui]')
 @click.option('-r', '--round', 'rounds', type=int, default=1000, help='Specify maximum number of rounds')
-@click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output')
+@click.option('-l', '--log-output', 'log_output', type=click.Path(), help='Log file output in HTML format')
+@click.option('-x', '--log-output-xml', 'log_output_xml', type=click.Path(), help='Log file output in XML format')
 @click.option('-v', '--verbose', 'verbose', type=bool, is_flag=True, help='Enable verbose info for console interface')
-def main(gui, rounds, log_output, verbose):
+def main(gui, rounds, log_output, log_output_xml, verbose):
     """ Welcome to Orodael Turrim game. You can start GUI application without parameters or set --nogui option for
     console interface only. Console is faster, but you will get only limited information. Also you cannot order your
     units from console. Everything will be handled by your lieutenant Expert System.
@@ -97,9 +98,14 @@ def main(gui, rounds, log_output, verbose):
             print('  AI_RANDOM_SEED: ', Config.AI_RANDOM_SEED)
 
     if log_output:
-        text = game_engine.get_game_history()
+        game_history = game_engine.get_game_history()
         with open(log_output, 'w') as f:
-            f.write(str(text))
+            f.write(game_history.to_html())
+
+    if log_output_xml:
+        game_history = game_engine.get_game_history()
+        with open(log_output_xml, 'w') as f:
+            f.write(game_history.to_xml())
 
 
 if __name__ == '__main__':
