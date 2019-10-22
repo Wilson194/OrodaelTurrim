@@ -55,7 +55,7 @@ class IActionBase(ABC):
     """
 
 
-    def __init__(self, game_control_proxy: GameControlProxy, player: IPlayer):
+    def __init__(self, game_control_proxy: GameControlProxy, map_proxy: MapProxy, player: IPlayer):
         """
         Constructor of Action base
 
@@ -63,6 +63,7 @@ class IActionBase(ABC):
         :param player: Instance of your player
         """
         self.game_control_proxy = game_control_proxy
+        self.map_proxy = map_proxy
         self.player = player
 
 

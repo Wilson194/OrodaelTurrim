@@ -28,7 +28,7 @@ class Player(IPlayer):
 
         self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
         self.interference = Inference()
-        self.action_base = ActionBase(game_control_proxy, self)
+        self.action_base = ActionBase(game_control_proxy, map_proxy, self)
 
 
     def act(self) -> None:

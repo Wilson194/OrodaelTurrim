@@ -1,5 +1,5 @@
 from OrodaelTurrim.Business.Interface.Player import IPlayer
-from OrodaelTurrim.Business.Proxy import GameControlProxy
+from OrodaelTurrim.Business.Proxy import GameControlProxy, MapProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
 from OrodaelTurrim.Structure.Enums import GameObjectType
@@ -16,8 +16,22 @@ class ActionBase(IActionBase):
 
     **This class provides:**
 
-    * self.game_control_proxy (GameControlProxy) for doing actions in game
+    * self.game_control_proxy [GameControlProxy] for doing actions in game
+    * self.map_proxy [MapProxy] for finding places on map
     * self.player [IPlayer] instance of your player for identification yourself in proxy
+
+    MapProxy should be used there only for finding right place on the map. For example functions like:
+    * spawn_knight_on_nearest_mountain(x,y)
+    * spawn_unit_near_to_base(amount_of_units, unit_type)
+    * spawn_unit_far_in_direction(direction)
+    * etc...
+
+    It is forbidden, to create whole login in those functions. Whole behaviour logic must be editable without,
+    touching code in ActionBase (login must mainly depend on rules). So it's forbidden to use functions like:
+    * prepare_defence()
+    * spawn_ideal_amount_of_units_at_ideal_places()
+    * defend_my_base()
+    * etc...
 
     You can use () operator on ActionBase instance to call your function by `str` name or `Expression` class.
     Expression class will also pass arguments from self to your method. () operator using only args so be careful about
@@ -28,6 +42,7 @@ class ActionBase(IActionBase):
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     """
     game_control_proxy: GameControlProxy
+    map_proxy: MapProxy
     player: IPlayer
 
 
