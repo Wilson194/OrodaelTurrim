@@ -49,7 +49,12 @@ class KnowledgeBase(IKnowledgeBase):
 
         facts = []
 
+        # Add bool fact
         if not self.map_proxy.player_have_base(self.player):
             facts.append(Fact('player_dont_have_base'))
+
+        # Add numerical fact
+        user_resources = self.game_object_proxy.get_resources(self.player)
+        facts.append(Fact("money", lambda: user_resources))
 
         return facts

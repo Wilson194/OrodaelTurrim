@@ -3,8 +3,11 @@ from OrodaelTurrim.Business.Proxy import GameControlProxy, MapProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
 from OrodaelTurrim.Structure.Enums import GameObjectType
+from OrodaelTurrim.Structure.Filter.AttackFilter import AttackStrongestFilter
+from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 from OrodaelTurrim.Structure.Position import OffsetPosition
+from User.AttackFilter import DummyAttackFilter, EmptyAttackFilter
 
 
 class ActionBase(IActionBase):
@@ -47,9 +50,18 @@ class ActionBase(IActionBase):
 
 
     def build_base(self, position_q: int, position_r: int):
+        # Custom log messages
         Logger.log('Building base')
+
+        # Create instance of custom filter
+        empty_filter = FilterFactory().attack_filter(EmptyAttackFilter)
+        dummy_filter = FilterFactory().attack_filter(DummyAttackFilter, 'Base attacking')
+
+        # Create instance of default filter
+        strongest_filter = FilterFactory().attack_filter(AttackStrongestFilter)
+
         self.game_control_proxy.spawn_unit(
             SpawnInformation(self.player,
                              GameObjectType.BASE,
                              OffsetPosition(int(position_q), int(position_r)),
-                             [], []))
+                             [empty_filter, dummy_filter, strongest_filter], []))

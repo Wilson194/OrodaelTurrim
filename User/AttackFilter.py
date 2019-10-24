@@ -21,8 +21,22 @@ You can here define as many filters as you want. Framework fill find correct fil
 """
 
 
+class EmptyAttackFilter(AttackFilter):
+    """ Example of empty custom filter. Method filter is only method, you need to implement """
+
+
+    def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
+        """ This method must always return a subset of given positions (tiles parameter) """
+        return tiles
+
+
 class DummyAttackFilter(AttackFilter):
-    """ Example of custom filter """
+    """
+    Example of custom filter with parameter.
+    If you want to have a filter with a parameter, you must overload __init__ function. You must call parent __init__.
+
+    Parameters map_proxy and game_object_proxy will be passed by FilterFactory.
+    """
 
 
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, log_text: str):
