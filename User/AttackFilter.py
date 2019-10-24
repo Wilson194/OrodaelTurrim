@@ -7,7 +7,7 @@ from OrodaelTurrim.Structure.Position import Position
 
 """ 
 In this file you can define your ow attack filters if default filters are not enough for your. 
-Filter must be subclass of class `AttaclFilter` and must implement filter method with same signature
+Filter must be subclass of class `AttackFilter` and must implement filter method with same signature
 
 def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
     pass
@@ -31,5 +31,10 @@ class DummyAttackFilter(AttackFilter):
 
 
     def filter(self, position: Position, tiles: List[Position]) -> List[Position]:
+        """
+        :param position: Current positions of game object
+        :param tiles: List of all tiles, where unit could attack (based on visibility, attack range, etc.)
+        :return: List of position, that left after filtering
+        """
         Logger.log(self.log_text)
         return tiles
