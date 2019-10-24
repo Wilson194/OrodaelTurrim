@@ -92,7 +92,7 @@ class EvenOffsetDirection(Enum):
     RIGHT_UPPER = OffsetPosition(+1, 0)
     RIGHT_LOWER = OffsetPosition(+1, +1)
     LOWER = OffsetPosition(0, 1)
-    LEFT_LOWER = OffsetPosition(-1, 0)
+    LEFT_LOWER = OffsetPosition(-1, 1)
     LEFT_UPPER = OffsetPosition(-1, 0)
 
 
