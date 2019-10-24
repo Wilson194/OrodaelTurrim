@@ -8,7 +8,7 @@ from User import ActionBase
 
 class Inference(IInference):
     """
-    | User definition of the inference. You can define here you interference method (forward or backward).
+    | User definition of the inference. You can define here you inference method (forward or backward).
       You can have here as many functions as you want, but you must implement interfere with same signature
 
     |
@@ -16,7 +16,7 @@ class Inference(IInference):
     |
 
     | Method `interfere` will be called each turn or manually with `Interference` button.
-    | Class have no class parameters, you can use only interference parameters
+    | Class have no class parameters, you can use only inference parameters
 
     """
 
@@ -28,7 +28,7 @@ class Inference(IInference):
 
     def infere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase) -> None:
         """
-        User defined interference
+        User defined inference
 
         :param knowledge_base: - list of Fact classes defined in  KnowledgeBase.create_knowledge_base()
         :param rules:  - list of rules trees defined in rules file.
@@ -51,7 +51,7 @@ class Inference(IInference):
     def rule_evaluation(self, root_node: ExpressionNode) -> bool:
         """
         Example of rule tree evaluation. This implementation did not check comparision operators and uncertainty.
-        For usage in interference extend this function
+        For usage in inference extend this function
 
         :param root_node: root node of the rule tree
         :return: True if rules is satisfiable, False in case of not satisfiable or missing Facts

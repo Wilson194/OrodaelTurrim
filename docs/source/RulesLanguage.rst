@@ -30,7 +30,7 @@ Examples
 Here you can find some examples, about what can be written in the language. It is make no sense to write all
 possibilities, because there are infinity number of possibilities. It is recommended to look at grammar definition
 and lear what is possible by that. Here you can find some inspiration. All examples are correct so you can copy them
-to ``rule`` file and execute interference, but you probably don't get any output, because of missing action definition.
+to ``rule`` file and execute inference, but you probably don't get any output, because of missing action definition.
 
 
 **Rule with no condition**

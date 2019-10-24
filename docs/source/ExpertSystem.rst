@@ -11,11 +11,11 @@ with the original modules, only with you ``User`` module, so any other changes w
 Structure of the expert system is divided to 3 parts:
 
 * ``KnowledgeBase.py`` - part of module for creating knowledge based on game state
-* ``Interference.py`` - part of module for interference mechanism
+* ``Interference.py`` - part of module for inference mechanism
 * ``ActionBase.py`` - part of module for defining conclusions and actions of conclusions
 
 You need to implement all three parts to achieve working expert system. As an example, there is already implemented
-basic version of interference, but did not support all necessary function, so use that example only for
+basic version of inference, but did not support all necessary function, so use that example only for
 inspiration.
 
 .. warning::
@@ -29,7 +29,7 @@ Knowledge base
 -----------------
 
 First part that your should implement is ``KnowledgeBase``. In this part of module you should get all necessary
-information from proxy and transform those information to Facts. Those fact you will use in interference mechanism.
+information from proxy and transform those information to Facts. Those fact you will use in inference mechanism.
 
 It is recommended to use ``ExpertSystem.Structure.RuleBase.Fact`` class to represent facts. Class ``Fact`` have
 ``name`` attribute for identification, ``probability`` parameter for save uncertainty of a fact and ``eval_function``.
@@ -87,12 +87,12 @@ instances. Each list item represent one rule. You can read about rule structure 
 **Interference method**
 
 In the ``User`` module is example of basic inference method. This is very simple and useless implementation of
-interference. Use it only as example. As the result of the interference you should call some action from ``ActionBase``.
+inference. Use it only as example. As the result of the inference you should call some action from ``ActionBase``.
 
 **Action base calls**
 
-In the interference method you have access to ``ActionBase`` instance. First you need to have some actions defined in
-``ActionBase``. Then you can call them from the interference module. You can use overloaded __getitem__ method for
+In the inference method you have access to ``ActionBase`` instance. First you need to have some actions defined in
+``ActionBase``. Then you can call them from the inference module. You can use overloaded __getitem__ method for
 call methods. If you pass ``str`` value, function will be called if exists without any parameters. If you use
 ``Expression`` class, name of the expression will be used as name and also arguments will be passed to the
 call of method. You can also call methods directly with your own method.
@@ -104,7 +104,7 @@ Action base
 
 In the action base, you can specify your own conclusions with your own implementation. Just write new method to
 ``ActionBase``. Your methods could have as many parameters as you want, but you need to provide values of the
-parameters in the interference. ``ActionBase`` class provides access to ``GameControlProxy`` and instance of
+parameters in the inference. ``ActionBase`` class provides access to ``GameControlProxy`` and instance of
 ``IPLayer`` that represent your player (you need it because of identification). ``ActionBase`` also have
 overloaded ``__getitem__`` and ``__contains__`` methods for easy method calling. You can also overload
 ``__init__`` method, but don't change signature, you will never call initialization of this class.

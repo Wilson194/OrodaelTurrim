@@ -19,7 +19,7 @@ from User.KnowledgeBase import KnowledgeBase
 
 
 class Player(IPlayer):
-    """ Override IPlayer for interference player """
+    """ Override IPlayer for inference player """
 
 
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
@@ -27,7 +27,7 @@ class Player(IPlayer):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
         self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
-        self.interference = Inference()
+        self.inference = Inference()
         self.action_base = ActionBase(game_control_proxy, map_proxy, self)
 
 
@@ -37,16 +37,16 @@ class Player(IPlayer):
 
         * Call create_knowledge_base from user knowledge base
         * Parse rules from rules file
-        * Run user interference method with knowledge, parsed rules and action base
+        * Run user inference method with knowledge, parsed rules and action base
         """
         knowledge = self.knowledge_base.create_knowledge_base()
         rules = self.__parse_rules()
 
         if rules is None:
-            sys.stderr.write('Rules file not found! Stopping interference!\n')
-            Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping interference!')
+            sys.stderr.write('Rules file not found! Stopping inference!\n')
+            Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping inference!')
             return
-        self.interference.infere(knowledge, rules, self.action_base)
+        self.inference.infere(knowledge, rules, self.action_base)
 
 
     @property

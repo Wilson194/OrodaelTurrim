@@ -24,13 +24,13 @@ class IKnowledgeBase(ABC):
     @abstractmethod
     def create_knowledge_base(self) -> List[Fact]:
         """
-        This method will be called every time before interference. This method should return List of created Facts
+        This method will be called every time before inference. This method should return List of created Facts
         """
         pass
 
 
 class IInference(ABC):
-    """ Abstract class for interference """
+    """ Abstract class for inference """
 
 
     @abstractmethod
