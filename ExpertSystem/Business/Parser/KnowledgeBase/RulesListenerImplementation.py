@@ -163,10 +163,6 @@ class RulesListenerImplementation(RulesListener):
         elif len(ctx.IDENTIFIER()) > 1:
             expression.value = ctx.IDENTIFIER(1).getText()
 
-        # Expression have arguments
-        if ctx.args():
-            expression.args = [x.getText() for x in ctx.args().getChildren()]
-
         self.context.value = expression
 
 
@@ -222,10 +218,6 @@ class RulesListenerImplementation(RulesListener):
         # Get text of identifier
         expression.name = ctx.IDENTIFIER(0).getText()
 
-        # Check arguments of identifier
-        if ctx.args():
-            expression.args = [x.getText() for x in ctx.args().getChildren()]
-
         # Check if there is assign operator
         if ctx.ASSIGN():
             expression.comparator = ':='
@@ -246,3 +238,8 @@ class RulesListenerImplementation(RulesListener):
             self.context.parent.right = ExpressionNode()
             self.context.parent.right.parent = self.context.parent
             self.context = self.context.parent.right
+
+
+    def enterArg(self, ctx: RulesParser.ArgContext):
+        """ Enter arg and add arg tu current context """
+        self.context.value.args.append(ctx.getText())
