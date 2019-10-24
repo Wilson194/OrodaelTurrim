@@ -1,6 +1,13 @@
 Release Notes
 ==============
 
+* **1.1.8**
+    * Fix bug with more than two arguments in rules (more arguments were squeezed)
+    * Fix bug with bad definition of ``LEFT_LOWER`` constant for ``OffsetPosition``
+    * Add some example implementation to ``User`` module
+    * Fix random exception at operation with gui log widget
+    * Some changes in documentation
+
 * **1.1.7**
     * **Add** ``MapProxy`` **to** ``ActionBase``
     * Updated class doc in ``ActionBase``
