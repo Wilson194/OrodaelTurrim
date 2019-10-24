@@ -248,7 +248,7 @@ class Fact:
     Fact is defined with name (name must be unique). Also Fact could hold information about probability.
 
     User must define evaluate functions which get parameters and must return some value:
-    * bool - True / False simple way to verify fact  (by default Fat return True)
+    * bool - True / False simple way to verify fact  (by default Fact return True)
     * int / float - for purpose to use comp operator ( >, >=, <, <=, ==, != )
     * str - for Fuzzy
 
