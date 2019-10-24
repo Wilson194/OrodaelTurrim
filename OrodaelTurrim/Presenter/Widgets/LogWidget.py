@@ -59,7 +59,10 @@ class LogWidget(QWidget):
         """
         menu = QMenu()
 
-        index = self.log.selectedIndexes()[0]
+        try:
+            index = self.log.selectedIndexes()[0]
+        except IndexError:
+            return
 
         item = index.model().itemData(index)
 
