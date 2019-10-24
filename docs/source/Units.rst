@@ -6,7 +6,7 @@ Units
 Defenders
 -------------
 
-You can you any of this units. Some of them are really help full, some of them not really.
+You can you any of this units. Some of them are really helpful, some of them not really.
 But you will use them probably.
 
 .. |wizard| image:: _static/units/mage.png
