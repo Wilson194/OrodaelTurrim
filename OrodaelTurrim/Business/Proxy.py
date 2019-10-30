@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Optional, Set, Dict, List
 
-
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Position import Position
     from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType, EffectType, GameObjectType, GameRole
@@ -200,7 +199,8 @@ class GameObjectProxy:
 
     def get_object_type(self, position: "Position") -> Optional["GameObjectType"]:
         """
-        Retrieves the type of game object on specified position
+        Retrieves the type of game object on the specified position. The player must see that position.
+        This function could be used to get enemy types.
 
         :param position: Position of queried game object
         :return: Type of game object on specified position
