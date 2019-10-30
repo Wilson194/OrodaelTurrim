@@ -367,6 +367,7 @@ class GameEngine:
         # Check base
         if player.role == GameRole.DEFENDER and self.__game_history.in_preset and not self.player_have_base(player):
             Connector().emit('game_over')
+            Connector().set_variable('game_over', True)
             return
 
         self.__game_history.end_turn()
