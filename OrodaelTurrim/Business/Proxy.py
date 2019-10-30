@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType, EffectType, GameObjectType, GameRole
     from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation, UncertaintySpawn
     from OrodaelTurrim.Business.GameEngine import GameEngine
-    from OrodaelTurrim.Business.Interface.Player import IPlayer
+    from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 
 
 class MapProxy:
@@ -114,7 +114,7 @@ class MapProxy:
         return self.__compute_accessible_tiles(position, actions)
 
 
-    def player_have_base(self, player: "IPlayer") -> bool:
+    def player_have_base(self, player: "PlayerTag") -> bool:
         """
         Check if player already have a base
 
@@ -246,7 +246,7 @@ class GameObjectProxy:
         return self.__get_visible_enemies(position)
 
 
-    def get_income(self, player: "IPlayer") -> int:
+    def get_income(self, player: "PlayerTag") -> int:
         """
         Retrieves income of given player
 
@@ -257,7 +257,7 @@ class GameObjectProxy:
         return self.__get_income(player)
 
 
-    def get_resources(self, player: "IPlayer") -> int:
+    def get_resources(self, player: "PlayerTag") -> int:
         """
         Retrieves current resources of given player
 

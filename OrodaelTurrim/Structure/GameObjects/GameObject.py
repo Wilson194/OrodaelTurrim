@@ -8,7 +8,7 @@ from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectP
 from OrodaelTurrim.Structure.Position import Position
 
 if TYPE_CHECKING:
-    from OrodaelTurrim.Business.Interface.Player import IPlayer
+    from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
     from OrodaelTurrim.Business.GameEngine import GameEngine
 
 
@@ -331,7 +331,7 @@ class SpawnInformation:
     """ Holds all necessary information for spawning unit """
 
 
-    def __init__(self, owner: "IPlayer", object_type: GameObjectType, position: Position,
+    def __init__(self, owner: Union["IPlayer", "PlayerTag"], object_type: GameObjectType, position: Position,
                  attack_filters: List[TileFilter], move_filters: List[TileFilter]):
         """
         :param owner: Owning player of spawned object

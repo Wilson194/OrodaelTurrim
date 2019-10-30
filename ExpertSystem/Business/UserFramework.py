@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, TYPE_CHECKING, Any, Set, Union
 
 from ExpertSystem.Structure.RuleBase import Rule, Expression, Fact
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 
 if TYPE_CHECKING:
@@ -14,7 +14,7 @@ class IKnowledgeBase(ABC):
 
 
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy,
-                 game_uncertainty_proxy: GameUncertaintyProxy, player: IPlayer):
+                 game_uncertainty_proxy: GameUncertaintyProxy, player: PlayerTag):
         self.map_proxy = map_proxy
         self.game_object_proxy = game_object_proxy
         self.game_uncertainty_proxy = game_uncertainty_proxy

@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameUncertaintyProxy
 from ExpertSystem.Business.UserFramework import IKnowledgeBase
 from ExpertSystem.Structure.RuleBase import Fact
@@ -25,11 +25,11 @@ class KnowledgeBase(IKnowledgeBase):
     map_proxy: MapProxy
     game_object_proxy: GameObjectProxy
     game_uncertainty_proxy: GameUncertaintyProxy
-    player: IPlayer
+    player: PlayerTag
 
 
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy,
-                 game_uncertainty_proxy: GameUncertaintyProxy, player: IPlayer):
+                 game_uncertainty_proxy: GameUncertaintyProxy, player: PlayerTag):
         """
         You can add some code to __init__ function, but don't change the signature. You cannot initialize
         KnowledgeBase class manually so, it is make no sense to change signature.

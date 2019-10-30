@@ -8,7 +8,7 @@ from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
 from OrodaelTurrim import USER_ROOT
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Enums import GameRole
@@ -26,9 +26,10 @@ class Player(IPlayer):
                  game_uncertainty_proxy: GameUncertaintyProxy):
         super().__init__(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
 
-        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, self)
+        player_tag = PlayerTag(self)
+        self.knowledge_base = KnowledgeBase(map_proxy, game_object_proxy, game_uncertainty_proxy, player_tag)
         self.inference = Inference()
-        self.action_base = ActionBase(game_control_proxy, map_proxy, self)
+        self.action_base = ActionBase(game_control_proxy, map_proxy, player_tag)
 
 
     def act(self) -> None:

@@ -1,7 +1,7 @@
 import os
 from abc import ABC, abstractmethod
 from random import Random
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Union
 
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Structure.Enums import GameRole
@@ -9,6 +9,18 @@ from OrodaelTurrim.config import Config
 
 if TYPE_CHECKING:
     from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
+
+
+class PlayerTag:
+    def __init__(self, player: "IPlayer"):
+        self.hash = hash(player)
+        self.name = player.name
+        self.role = player.role
+        del player
+
+
+    def __hash__(self):
+        return self.hash
 
 
 class IPlayer(ABC):
@@ -52,7 +64,7 @@ class IPlayer(ABC):
         pass
 
 
-    def __eq__(self, other: "IPlayer"):
+    def __eq__(self, other: Union["IPlayer", "PlayerTag"]):
         return self.name == other.name and self.role == other.role
 
 
@@ -73,7 +85,6 @@ class IAttacker(IPlayer, ABC):
         if not seed:
             seed = int.from_bytes(os.urandom(50), 'big')
             Config.AI_RANDOM_SEED = seed
-
 
         self.spawn_random = Random(seed)
 

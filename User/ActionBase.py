@@ -1,4 +1,4 @@
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import GameControlProxy, MapProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
@@ -46,7 +46,7 @@ class ActionBase(IActionBase):
     """
     game_control_proxy: GameControlProxy
     map_proxy: MapProxy
-    player: IPlayer
+    player: PlayerTag
 
 
     def build_base(self, position_q: int, position_r: int):

@@ -1,10 +1,10 @@
 import copy
-from typing import List, Dict, Set, Optional
+from typing import List, Dict, Set, Optional, Union
 
 from OrodaelTurrim.Business.Factory import EffectFactory
 from OrodaelTurrim.Business.GameMap import GameMap
 from OrodaelTurrim.Business.History import GameHistory
-from OrodaelTurrim.Business.Interface.Player import IPlayer
+from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Uncertainty import SpawnUncertainty
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Actions.Abstract import GameAction
@@ -46,7 +46,7 @@ class GameEngine:
 
     __game_map: GameMap
     __players: List[IPlayer]
-    __player_resources: Dict[IPlayer, PlayerResources]
+    __player_resources: Dict[Union[IPlayer, PlayerTag], PlayerResources]
     __player_units: Dict[IPlayer, List[GameObject]]
 
     __defender_bases: Dict[IPlayer, GameObject]
@@ -879,7 +879,7 @@ class GameEngine:
         self.execute_action(SpawnAction(self, self.create_unit(information)))
 
 
-    def get_resources(self, player: IPlayer) -> int:
+    def get_resources(self, player: Union[PlayerTag, IPlayer]) -> int:
         """
         Retrieves current resources of given player
 
@@ -889,7 +889,7 @@ class GameEngine:
         return self.__player_resources.get(player, None).resources
 
 
-    def get_income(self, player: IPlayer) -> int:
+    def get_income(self, player: Union[IPlayer, PlayerTag]) -> int:
         """
         Retrieves income of given player
 
@@ -945,7 +945,7 @@ class GameEngine:
         return self.__game_history
 
 
-    def player_have_base(self, player: IPlayer) -> bool:
+    def player_have_base(self, player: Union[PlayerTag, IPlayer]) -> bool:
         """
         Check if player already have a base
 
