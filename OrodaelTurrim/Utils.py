@@ -9,19 +9,75 @@ from OrodaelTurrim import __version__
 
 html_template = """
 <html>
-<head></head>
+<head>
+<style>
+
+.collapsible {{
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 20%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}}
+
+
+.active, .collapsible:hover {{
+  background-color: #ccc;
+}}
+
+
+.content {{
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}}
+</style>
+
+</head>
 <body>
-<h1> Meta info </h1>
-Datetime: {datetime}
-Orodael Turrim version: {version}
-<h1> Exception </h1>
-<pre>
+    <h1> Meta info </h1>
+        Datetime: {datetime} <br>
+        Orodael Turrim version: {version}
+        
+    <h1> Exception </h1>
+        <pre>
 {traceback}
-</pre>
-<h1> Config </h1>
+        </pre>
+        
+    <h1> Config </h1>
 {config}
-<h1> History </h1>
-{history}
+
+    <h1> History </h1>
+        <button type="button" class="collapsible">Show history</button>
+        <div class="content">{history}</div>
+                
+    <h1> Implementation </h1>
+        <button type="button" class="collapsible">Show implementation</button>
+        <div class="content">{implementation}</div>
+
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {{
+        coll[i].addEventListener("click", function() {{
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {{
+                content.style.display = "none";
+            }} else {{
+                content.style.display = "block";
+            }}
+        }});
+    }}
+</script>
+
 </body>
 </html>
 """
@@ -45,6 +101,15 @@ def bug_report(game_engine, exc_type, exc_value, exc_traceback):
     # Create timestamp text
     time = datetime.now().strftime("%d. %m. %Y, %H:%M:%S")
 
+    # create user implementation
+    implementation = ''
+    for file in (Path(__file__).parent.parent / 'User').iterdir():
+        if not file.is_dir():
+            with open(file, 'r') as f:
+                data = f.read()
+
+            implementation += '<h2>{name}</h2> <pre>{code}</pre>'.format(name=file.name, code=data)
+
     bug_reports_path = Path(__file__).absolute().parent.parent / 'bug_reports'
 
     if not bug_reports_path.exists():
@@ -61,7 +126,7 @@ def bug_report(game_engine, exc_type, exc_value, exc_traceback):
 
     with open(bug_reports_path / file_name, 'w') as f:
         text = html_template.format(traceback=exception, config=config, history=history, datetime=time,
-                                    version=__version__)
+                                    version=__version__, implementation=implementation)
         f.write(text)
 
     QtWidgets.QApplication.quit()
