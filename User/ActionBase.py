@@ -14,7 +14,7 @@ class ActionBase(IActionBase):
     """
     You can define here your custom actions. Methods must be public (not starting with __ or _) and must have unique
     names. Methods could have as many arguments as you want. Instance of this class will be available in
-    Interference class.
+    Inference class.
 
     **This class provides:**
 

@@ -20,10 +20,10 @@ User.AttackFilter module
     :undoc-members:
     :show-inheritance:
 
-User.Interference module
+User.Inference module
 ------------------------
 
-.. automodule:: User.Interference
+.. automodule:: User.Inference
     :members:
     :undoc-members:
     :show-inheritance:

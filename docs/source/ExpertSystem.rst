@@ -11,7 +11,7 @@ with the original modules, only with you ``User`` module, so any other changes w
 Structure of the expert system is divided into 3 parts:
 
 * ``KnowledgeBase.py`` - part of the module for creating knowledge based on game state
-* ``Interference.py`` - part of the module for inference mechanism
+* ``Inference.py`` - part of the module for inference mechanism
 * ``ActionBase.py`` - part of the module for defining conclusions and actions of conclusions
 
 You need to implement all three parts to achieve a working expert system. As an example, there is already implemented
@@ -106,7 +106,7 @@ You need to return a list of facts from the method.
 
     For creating facts use only proxy! Don't try to get more information from the GameEngine itself!
 
-Interference
+Inference
 --------------
 
 In the inference part of the User module, you should define your inference method. You could use forward or backward
@@ -129,7 +129,7 @@ all data variables are wiped out. The passing of data variables are described be
 Framework will parse rules file for you. You will get rules as a list of the ``ExpertSystem.Structure.RuleBase.Rule``
 instances. Each list item represents one rule. You can read about rule structure at :ref:`rules`.
 
-**Interference method**
+**Inference method**
 
 In the ``User`` module you can find an example of basic inference method. This is a very simple and useless implementation of
 inference. Use it only as an example. As a result of the inference, you should call some action from ``ActionBase``.

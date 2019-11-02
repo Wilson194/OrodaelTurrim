@@ -51,7 +51,7 @@ class Player(IPlayer):
 
         if rules is None:
             sys.stderr.write('Rules file not found! Stopping inference!\n')
-            Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping inference!')
+            Connector().emit('error_message', 'Inference error', 'Rules file not found! Stopping inference!')
             return
 
         knowledge = self.__check_and_clear_facts(knowledge)

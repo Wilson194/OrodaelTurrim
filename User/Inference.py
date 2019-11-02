@@ -14,7 +14,7 @@ class Inference(IInference):
     | `def interfere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase):`
     |
 
-    | Method `interfere` will be called each turn or manually with `Interference` button.
+    | Method `interfere` will be called each turn or manually with `Inference` button.
     | Class have no class parameters, you can use only inference parameters
 
     """
