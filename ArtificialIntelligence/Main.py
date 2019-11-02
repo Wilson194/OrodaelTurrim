@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple, Optional
 
+from OrodaelTurrim import AI_CONSOLE_OUTPUT
 from OrodaelTurrim.Business.Interface.Player import IAttacker
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Structure.Enums import GameRole, GameObjectType
@@ -27,7 +28,8 @@ class AIPlayer(IAttacker):
 
 
     def act(self) -> None:
-        print('Rigor Mortis doing his stuff')
+
+        self.__printer('Rigor Mortis doing his stuff')
 
         for spawn in self.spawn_information_list[0]:
             try:
@@ -73,6 +75,11 @@ class AIPlayer(IAttacker):
         self.__initialize_spawn_list()
 
 
+    def __printer(self, text):
+        if AI_CONSOLE_OUTPUT:
+            print(text)
+
+
     def __prepare_units_filters(self):
         nearest_enemy = FilterFactory().move_filter(MoveToNearestEnemyFilter)
         to_range = FilterFactory().move_filter(MoveToRangeFilter)
@@ -86,14 +93,14 @@ class AIPlayer(IAttacker):
         strongest = FilterFactory().attack_filter(AttackStrongestFilter)
 
         self.unit_filters = {
-            GameObjectType.CYCLOPS    : ([vulnerable], [nearest_enemy, to_base]),
-            GameObjectType.DEMON      : ([no_resistance, strongest], [to_range]),
-            GameObjectType.ELEMENTAL  : ([strongest, vulnerable], [safe_dist]),
-            GameObjectType.GARGOYLE   : ([base], [to_base]),
-            GameObjectType.MINOTAUR   : ([vulnerable], [nearest_enemy, to_base]),
+            GameObjectType.CYCLOPS: ([vulnerable], [nearest_enemy, to_base]),
+            GameObjectType.DEMON: ([no_resistance, strongest], [to_range]),
+            GameObjectType.ELEMENTAL: ([strongest, vulnerable], [safe_dist]),
+            GameObjectType.GARGOYLE: ([base], [to_base]),
+            GameObjectType.MINOTAUR: ([vulnerable], [nearest_enemy, to_base]),
             GameObjectType.NECROMANCER: ([], [safe_dist]),
-            GameObjectType.ORC        : ([nearest, base], [nearest_enemy, to_base]),
-            GameObjectType.SKELETON   : ([nearest, base], [nearest_enemy, to_base]),
+            GameObjectType.ORC: ([nearest, base], [nearest_enemy, to_base]),
+            GameObjectType.SKELETON: ([nearest, base], [nearest_enemy, to_base]),
         }  # type: Dict[GameObjectType,Tuple[List[AttackFilter], List[MoveFilter]]]
 
 

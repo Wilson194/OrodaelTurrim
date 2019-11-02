@@ -13,4 +13,4 @@ __version__ = '1.1.8'
 
 DEBUG = False
 GENERATE_BUG_REPORTS = True
-
+AI_CONSOLE_OUTPUT = True
