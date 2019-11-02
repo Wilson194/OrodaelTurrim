@@ -19,7 +19,7 @@ from OrodaelTurrim.Structure.Enums import GameRole
 from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat, BadFactDataValue
 from OrodaelTurrim.Structure.Position import OffsetPosition, CubicPosition, AxialPosition
 from User.ActionBase import ActionBase
-from User.Interference import Inference
+from User.Inference import Inference
 from User.KnowledgeBase import KnowledgeBase
 
 

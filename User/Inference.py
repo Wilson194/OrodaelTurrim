@@ -70,6 +70,5 @@ class Inference(IInference):
 
 
     def conclusion_evaluation(self, root_node: ExpressionNode):
-        print(root_node.value)
         if self.action_base.has_method(root_node.value):
             self.action_base.call(root_node.value)
