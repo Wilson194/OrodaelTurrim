@@ -31,3 +31,13 @@ class IllegalConfigState(OrodaelTurrimException):
 class IllegalRulesFormat(OrodaelTurrimException):
     """ Problem with parsing rules file """
     pass
+
+
+class BadActionBaseParameters(OrodaelTurrimException):
+    """ ActionBase method has bad parameters """
+    pass
+
+
+class BadFactDataValue(OrodaelTurrimException):
+    """ Fact contain bad value type """
+    pass

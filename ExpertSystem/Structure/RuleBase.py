@@ -1,6 +1,7 @@
 from typing import Union, List, Callable, Optional
 
 from ExpertSystem.Structure.Enums import Operator, LogicalOperator
+from OrodaelTurrim.Structure.Position import Position
 
 
 class Expression:
@@ -25,6 +26,7 @@ class Expression:
         self.__comparator = None
         self.__value = None
         self.__uncertainty = None
+        self.__data_holder_mark = None
 
 
     @property
@@ -83,6 +85,16 @@ class Expression:
     @uncertainty.setter
     def uncertainty(self, value: float):
         self.__uncertainty = value
+
+
+    @property
+    def data_holder_mark(self) -> bool:
+        return self.__data_holder_mark
+
+
+    @data_holder_mark.setter
+    def data_holder_mark(self, value: bool):
+        self.__data_holder_mark = value
 
 
     def evaluate(self):  # TODO: What to do whit this
@@ -256,9 +268,11 @@ class Fact:
     """
 
 
-    def __init__(self, name: str, eval_function: Callable = None, probability: float = 1):
+    def __init__(self, name: str, eval_function: Callable = None, probability: float = 1,
+                 data: Union[Position, List[Position], None] = None):
         self.name = name
         self.probability = probability
+        self.__data = data
         if eval_function:
             self.evaluate = eval_function
 
@@ -266,6 +280,16 @@ class Fact:
     def evaluate(self, *args, **kwargs) -> Union[str, int, float, bool]:
         """ Evaluate method -> for advance purpose overload this method """
         return True
+
+
+    @property
+    def data(self):
+        return self.__data
+
+
+    @data.setter
+    def data(self, value: Union[Position, List[Position], None]):
+        self.__data = value
 
 
     def __call__(self, *args, **kwargs):

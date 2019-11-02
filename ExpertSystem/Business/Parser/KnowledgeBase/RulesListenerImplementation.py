@@ -147,11 +147,14 @@ class RulesListenerImplementation(RulesListener):
         if self.expression_uncertainty:
             expression.uncertainty = float(self.expression_uncertainty.getText())
 
-        # Expression have identifier or only TRUE / False
+        # Expression have identifier or only TRUE / FALSE
         if ctx.IDENTIFIER():
             expression.name = ctx.IDENTIFIER(0).getText()
         else:
             expression.name = 'TRUE' if ctx.TRUE() else 'FALSE'
+
+        # Set data holder mark bool
+        expression.data_holder_mark = True if ctx.DHM() else False
 
         # Expression have comparator (<,>,==,!=,<=,>=)
         if ctx.comp_operator():

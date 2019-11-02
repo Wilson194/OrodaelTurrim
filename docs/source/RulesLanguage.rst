@@ -63,6 +63,12 @@ to ``rule`` file and execute inference, but you probably don't get any output, b
 
    IF object_count base == 0 THEN build_base 2 2;
 
+**Expression with data holder mark and arguments**
+
+.. code-block:: none
+
+   IF free_position* mountain THAT build_archer free_position;
+
 **Logical operators in condition**
 
 .. code-block:: none

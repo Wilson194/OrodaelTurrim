@@ -32,6 +32,9 @@ RPAREN : ')';
 LSPAREN : '[';
 RSPAREN : ']';
 
+// Data holder mark
+DHM : '*';
+
 // Float number
 DECIMAL : '-'?[0-9]+('.'[0-9]+)? ;
 
@@ -69,12 +72,12 @@ left_logical_expr
 
 // One condition expression format
 function_expr
-            : IDENTIFIER args
-            | IDENTIFIER args comp_operator DECIMAL
-            | IDENTIFIER
-            | IDENTIFIER comp_operator DECIMAL
-            | IDENTIFIER comp_operator IDENTIFIER
-            | IDENTIFIER args comp_operator IDENTIFIER
+            : IDENTIFIER DHM? args
+            | IDENTIFIER DHM? args comp_operator DECIMAL
+            | IDENTIFIER DHM?
+            | IDENTIFIER DHM? comp_operator DECIMAL
+            | IDENTIFIER DHM? comp_operator IDENTIFIER
+            | IDENTIFIER DHM? args comp_operator IDENTIFIER
             | (TRUE | FALSE);
 
 args : arg args | arg;

@@ -7,57 +7,67 @@ import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31")
-        buf.write("\u0094\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\32")
+        buf.write("\u00a6\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\3\2\7\2\32")
         buf.write("\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3")
         buf.write("\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3/\n\3\3\4\3\4\3\5")
         buf.write("\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6@")
         buf.write("\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6H\n\6\f\6\16\6K\13\6\3")
-        buf.write("\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7")
-        buf.write("\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7c\n\7\3\b\3\b\3\b")
-        buf.write("\3\b\5\bi\n\b\3\t\3\t\3\n\3\n\3\13\3\13\3\13\3\13\3\13")
-        buf.write("\3\13\5\13u\n\13\3\13\3\13\3\13\7\13z\n\13\f\13\16\13")
-        buf.write("}\13\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3")
-        buf.write("\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0092\n\f\3\f\2\4\n")
-        buf.write("\24\r\2\4\6\b\n\f\16\20\22\24\26\2\5\3\2\b\t\3\2\25\26")
-        buf.write("\3\2\13\20\2\u009c\2\33\3\2\2\2\4.\3\2\2\2\6\60\3\2\2")
-        buf.write("\2\b\62\3\2\2\2\n?\3\2\2\2\fb\3\2\2\2\16h\3\2\2\2\20j")
-        buf.write("\3\2\2\2\22l\3\2\2\2\24t\3\2\2\2\26\u0091\3\2\2\2\30\32")
-        buf.write("\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33")
-        buf.write("\34\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3")
-        buf.write("\37\3\3\2\2\2 !\7\3\2\2!\"\5\6\4\2\"#\7\4\2\2#$\5\b\5")
-        buf.write("\2$%\7\27\2\2%/\3\2\2\2&\'\7\3\2\2\'(\5\6\4\2()\7\4\2")
-        buf.write("\2)*\5\b\5\2*+\7\5\2\2+,\7\25\2\2,-\7\27\2\2-/\3\2\2\2")
-        buf.write(". \3\2\2\2.&\3\2\2\2/\5\3\2\2\2\60\61\5\n\6\2\61\7\3\2")
-        buf.write("\2\2\62\63\5\24\13\2\63\t\3\2\2\2\64\65\b\6\1\2\65@\5")
-        buf.write("\f\7\2\66\67\5\f\7\2\678\7\23\2\289\7\25\2\29:\7\24\2")
-        buf.write("\2:@\3\2\2\2;<\7\21\2\2<=\5\n\6\2=>\7\22\2\2>@\3\2\2\2")
-        buf.write("?\64\3\2\2\2?\66\3\2\2\2?;\3\2\2\2@I\3\2\2\2AB\f\7\2\2")
-        buf.write("BC\7\6\2\2CH\5\n\6\bDE\f\6\2\2EF\7\7\2\2FH\5\n\6\7GA\3")
-        buf.write("\2\2\2GD\3\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2J\13\3\2")
-        buf.write("\2\2KI\3\2\2\2LM\7\26\2\2Mc\5\16\b\2NO\7\26\2\2OP\5\16")
-        buf.write("\b\2PQ\5\22\n\2QR\7\25\2\2Rc\3\2\2\2Sc\7\26\2\2TU\7\26")
-        buf.write("\2\2UV\5\22\n\2VW\7\25\2\2Wc\3\2\2\2XY\7\26\2\2YZ\5\22")
-        buf.write("\n\2Z[\7\26\2\2[c\3\2\2\2\\]\7\26\2\2]^\5\16\b\2^_\5\22")
-        buf.write("\n\2_`\7\26\2\2`c\3\2\2\2ac\t\2\2\2bL\3\2\2\2bN\3\2\2")
-        buf.write("\2bS\3\2\2\2bT\3\2\2\2bX\3\2\2\2b\\\3\2\2\2ba\3\2\2\2")
-        buf.write("c\r\3\2\2\2de\5\20\t\2ef\5\16\b\2fi\3\2\2\2gi\5\20\t\2")
-        buf.write("hd\3\2\2\2hg\3\2\2\2i\17\3\2\2\2jk\t\3\2\2k\21\3\2\2\2")
-        buf.write("lm\t\4\2\2m\23\3\2\2\2no\b\13\1\2op\7\21\2\2pq\5\24\13")
-        buf.write("\2qr\7\22\2\2ru\3\2\2\2su\5\26\f\2tn\3\2\2\2ts\3\2\2\2")
-        buf.write("u{\3\2\2\2vw\f\5\2\2wx\7\6\2\2xz\5\24\13\6yv\3\2\2\2z")
-        buf.write("}\3\2\2\2{y\3\2\2\2{|\3\2\2\2|\25\3\2\2\2}{\3\2\2\2~\u0092")
-        buf.write("\7\26\2\2\177\u0080\7\26\2\2\u0080\u0092\5\16\b\2\u0081")
-        buf.write("\u0082\7\26\2\2\u0082\u0083\5\16\b\2\u0083\u0084\7\n\2")
-        buf.write("\2\u0084\u0085\7\25\2\2\u0085\u0092\3\2\2\2\u0086\u0087")
-        buf.write("\7\26\2\2\u0087\u0088\5\16\b\2\u0088\u0089\7\n\2\2\u0089")
-        buf.write("\u008a\7\26\2\2\u008a\u0092\3\2\2\2\u008b\u008c\7\26\2")
-        buf.write("\2\u008c\u008d\7\n\2\2\u008d\u0092\7\25\2\2\u008e\u008f")
-        buf.write("\7\26\2\2\u008f\u0090\7\n\2\2\u0090\u0092\7\26\2\2\u0091")
-        buf.write("~\3\2\2\2\u0091\177\3\2\2\2\u0091\u0081\3\2\2\2\u0091")
-        buf.write("\u0086\3\2\2\2\u0091\u008b\3\2\2\2\u0091\u008e\3\2\2\2")
-        buf.write("\u0092\27\3\2\2\2\f\33.?GIbht{\u0091")
+        buf.write("\7\3\7\5\7O\n\7\3\7\3\7\3\7\5\7T\n\7\3\7\3\7\3\7\3\7\3")
+        buf.write("\7\3\7\5\7\\\n\7\3\7\3\7\5\7`\n\7\3\7\3\7\3\7\3\7\3\7")
+        buf.write("\5\7g\n\7\3\7\3\7\3\7\3\7\3\7\5\7n\n\7\3\7\3\7\3\7\3\7")
+        buf.write("\3\7\5\7u\n\7\3\b\3\b\3\b\3\b\5\b{\n\b\3\t\3\t\3\n\3\n")
+        buf.write("\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u0087\n\13\3\13\3")
+        buf.write("\13\3\13\7\13\u008c\n\13\f\13\16\13\u008f\13\13\3\f\3")
+        buf.write("\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f")
+        buf.write("\3\f\3\f\3\f\3\f\5\f\u00a4\n\f\3\f\2\4\n\24\r\2\4\6\b")
+        buf.write("\n\f\16\20\22\24\26\2\5\3\2\b\t\3\2\26\27\3\2\13\20\2")
+        buf.write("\u00b4\2\33\3\2\2\2\4.\3\2\2\2\6\60\3\2\2\2\b\62\3\2\2")
+        buf.write("\2\n?\3\2\2\2\ft\3\2\2\2\16z\3\2\2\2\20|\3\2\2\2\22~\3")
+        buf.write("\2\2\2\24\u0086\3\2\2\2\26\u00a3\3\2\2\2\30\32\5\4\3\2")
+        buf.write("\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2")
+        buf.write("\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2")
+        buf.write("\2\2 !\7\3\2\2!\"\5\6\4\2\"#\7\4\2\2#$\5\b\5\2$%\7\30")
+        buf.write("\2\2%/\3\2\2\2&\'\7\3\2\2\'(\5\6\4\2()\7\4\2\2)*\5\b\5")
+        buf.write("\2*+\7\5\2\2+,\7\26\2\2,-\7\30\2\2-/\3\2\2\2. \3\2\2\2")
+        buf.write(".&\3\2\2\2/\5\3\2\2\2\60\61\5\n\6\2\61\7\3\2\2\2\62\63")
+        buf.write("\5\24\13\2\63\t\3\2\2\2\64\65\b\6\1\2\65@\5\f\7\2\66\67")
+        buf.write("\5\f\7\2\678\7\23\2\289\7\26\2\29:\7\24\2\2:@\3\2\2\2")
+        buf.write(";<\7\21\2\2<=\5\n\6\2=>\7\22\2\2>@\3\2\2\2?\64\3\2\2\2")
+        buf.write("?\66\3\2\2\2?;\3\2\2\2@I\3\2\2\2AB\f\7\2\2BC\7\6\2\2C")
+        buf.write("H\5\n\6\bDE\f\6\2\2EF\7\7\2\2FH\5\n\6\7GA\3\2\2\2GD\3")
+        buf.write("\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2J\13\3\2\2\2KI\3\2")
+        buf.write("\2\2LN\7\27\2\2MO\7\25\2\2NM\3\2\2\2NO\3\2\2\2OP\3\2\2")
+        buf.write("\2Pu\5\16\b\2QS\7\27\2\2RT\7\25\2\2SR\3\2\2\2ST\3\2\2")
+        buf.write("\2TU\3\2\2\2UV\5\16\b\2VW\5\22\n\2WX\7\26\2\2Xu\3\2\2")
+        buf.write("\2Y[\7\27\2\2Z\\\7\25\2\2[Z\3\2\2\2[\\\3\2\2\2\\u\3\2")
+        buf.write("\2\2]_\7\27\2\2^`\7\25\2\2_^\3\2\2\2_`\3\2\2\2`a\3\2\2")
+        buf.write("\2ab\5\22\n\2bc\7\26\2\2cu\3\2\2\2df\7\27\2\2eg\7\25\2")
+        buf.write("\2fe\3\2\2\2fg\3\2\2\2gh\3\2\2\2hi\5\22\n\2ij\7\27\2\2")
+        buf.write("ju\3\2\2\2km\7\27\2\2ln\7\25\2\2ml\3\2\2\2mn\3\2\2\2n")
+        buf.write("o\3\2\2\2op\5\16\b\2pq\5\22\n\2qr\7\27\2\2ru\3\2\2\2s")
+        buf.write("u\t\2\2\2tL\3\2\2\2tQ\3\2\2\2tY\3\2\2\2t]\3\2\2\2td\3")
+        buf.write("\2\2\2tk\3\2\2\2ts\3\2\2\2u\r\3\2\2\2vw\5\20\t\2wx\5\16")
+        buf.write("\b\2x{\3\2\2\2y{\5\20\t\2zv\3\2\2\2zy\3\2\2\2{\17\3\2")
+        buf.write("\2\2|}\t\3\2\2}\21\3\2\2\2~\177\t\4\2\2\177\23\3\2\2\2")
+        buf.write("\u0080\u0081\b\13\1\2\u0081\u0082\7\21\2\2\u0082\u0083")
+        buf.write("\5\24\13\2\u0083\u0084\7\22\2\2\u0084\u0087\3\2\2\2\u0085")
+        buf.write("\u0087\5\26\f\2\u0086\u0080\3\2\2\2\u0086\u0085\3\2\2")
+        buf.write("\2\u0087\u008d\3\2\2\2\u0088\u0089\f\5\2\2\u0089\u008a")
+        buf.write("\7\6\2\2\u008a\u008c\5\24\13\6\u008b\u0088\3\2\2\2\u008c")
+        buf.write("\u008f\3\2\2\2\u008d\u008b\3\2\2\2\u008d\u008e\3\2\2\2")
+        buf.write("\u008e\25\3\2\2\2\u008f\u008d\3\2\2\2\u0090\u00a4\7\27")
+        buf.write("\2\2\u0091\u0092\7\27\2\2\u0092\u00a4\5\16\b\2\u0093\u0094")
+        buf.write("\7\27\2\2\u0094\u0095\5\16\b\2\u0095\u0096\7\n\2\2\u0096")
+        buf.write("\u0097\7\26\2\2\u0097\u00a4\3\2\2\2\u0098\u0099\7\27\2")
+        buf.write("\2\u0099\u009a\5\16\b\2\u009a\u009b\7\n\2\2\u009b\u009c")
+        buf.write("\7\27\2\2\u009c\u00a4\3\2\2\2\u009d\u009e\7\27\2\2\u009e")
+        buf.write("\u009f\7\n\2\2\u009f\u00a4\7\26\2\2\u00a0\u00a1\7\27\2")
+        buf.write("\2\u00a1\u00a2\7\n\2\2\u00a2\u00a4\7\27\2\2\u00a3\u0090")
+        buf.write("\3\2\2\2\u00a3\u0091\3\2\2\2\u00a3\u0093\3\2\2\2\u00a3")
+        buf.write("\u0098\3\2\2\2\u00a3\u009d\3\2\2\2\u00a3\u00a0\3\2\2\2")
+        buf.write("\u00a4\27\3\2\2\2\22\33.?GINS[_fmtz\u0086\u008d\u00a3")
         return buf.getvalue()
 
 
@@ -74,11 +84,11 @@ class RulesParser ( Parser ):
     literalNames = [ "<INVALID>", "'IF'", "'THEN'", "'WITH'", "'AND'", "'OR'", 
                      "'TRUE'", "'FALSE'", "':='", "'>='", "'>'", "'<='", 
                      "'<'", "'=='", "'!='", "'('", "')'", "'['", "']'", 
-                     "<INVALID>", "<INVALID>", "';'" ]
+                     "'*'", "<INVALID>", "<INVALID>", "';'" ]
 
     symbolicNames = [ "<INVALID>", "IF", "THEN", "WITH", "AND", "OR", "TRUE", 
                       "FALSE", "ASSIGN", "GE", "GT", "LE", "LT", "EQ", "NE", 
-                      "LPAREN", "RPAREN", "LSPAREN", "RSPAREN", "DECIMAL", 
+                      "LPAREN", "RPAREN", "LSPAREN", "RSPAREN", "DHM", "DECIMAL", 
                       "IDENTIFIER", "SEMI", "COMMENT", "WS" ]
 
     RULE_rules_set = 0
@@ -116,11 +126,12 @@ class RulesParser ( Parser ):
     RPAREN=16
     LSPAREN=17
     RSPAREN=18
-    DECIMAL=19
-    IDENTIFIER=20
-    SEMI=21
-    COMMENT=22
-    WS=23
+    DHM=19
+    DECIMAL=20
+    IDENTIFIER=21
+    SEMI=22
+    COMMENT=23
+    WS=24
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -586,6 +597,9 @@ class RulesParser ( Parser ):
             return self.getTypedRuleContext(RulesParser.ArgsContext,0)
 
 
+        def DHM(self):
+            return self.getToken(RulesParser.DHM, 0)
+
         def comp_operator(self):
             return self.getTypedRuleContext(RulesParser.Comp_operatorContext,0)
 
@@ -619,70 +633,118 @@ class RulesParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_function_expr)
         self._la = 0 # Token type
         try:
-            self.state = 96
+            self.state = 114
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 74
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 75
+                self.state = 76
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==RulesParser.DHM:
+                    self.state = 75
+                    self.match(RulesParser.DHM)
+
+
+                self.state = 78
                 self.args()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 76
-                self.match(RulesParser.IDENTIFIER)
-                self.state = 77
-                self.args()
-                self.state = 78
-                self.comp_operator()
                 self.state = 79
+                self.match(RulesParser.IDENTIFIER)
+                self.state = 81
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==RulesParser.DHM:
+                    self.state = 80
+                    self.match(RulesParser.DHM)
+
+
+                self.state = 83
+                self.args()
+                self.state = 84
+                self.comp_operator()
+                self.state = 85
                 self.match(RulesParser.DECIMAL)
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 81
+                self.state = 87
                 self.match(RulesParser.IDENTIFIER)
+                self.state = 89
+                self._errHandler.sync(self)
+                la_ = self._interp.adaptivePredict(self._input,7,self._ctx)
+                if la_ == 1:
+                    self.state = 88
+                    self.match(RulesParser.DHM)
+
+
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 82
+                self.state = 91
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 83
+                self.state = 93
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==RulesParser.DHM:
+                    self.state = 92
+                    self.match(RulesParser.DHM)
+
+
+                self.state = 95
                 self.comp_operator()
-                self.state = 84
+                self.state = 96
                 self.match(RulesParser.DECIMAL)
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 86
+                self.state = 98
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 87
+                self.state = 100
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==RulesParser.DHM:
+                    self.state = 99
+                    self.match(RulesParser.DHM)
+
+
+                self.state = 102
                 self.comp_operator()
-                self.state = 88
+                self.state = 103
                 self.match(RulesParser.IDENTIFIER)
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 90
+                self.state = 105
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 91
+                self.state = 107
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==RulesParser.DHM:
+                    self.state = 106
+                    self.match(RulesParser.DHM)
+
+
+                self.state = 109
                 self.args()
-                self.state = 92
+                self.state = 110
                 self.comp_operator()
-                self.state = 93
+                self.state = 111
                 self.match(RulesParser.IDENTIFIER)
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 95
+                self.state = 113
                 _la = self._input.LA(1)
                 if not(_la==RulesParser.TRUE or _la==RulesParser.FALSE):
                     self._errHandler.recoverInline(self)
@@ -733,20 +795,20 @@ class RulesParser ( Parser ):
         localctx = RulesParser.ArgsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_args)
         try:
-            self.state = 102
+            self.state = 120
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,6,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,12,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 98
+                self.state = 116
                 self.arg()
-                self.state = 99
+                self.state = 117
                 self.args()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 101
+                self.state = 119
                 self.arg()
                 pass
 
@@ -792,7 +854,7 @@ class RulesParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 104
+            self.state = 122
             _la = self._input.LA(1)
             if not(_la==RulesParser.DECIMAL or _la==RulesParser.IDENTIFIER):
                 self._errHandler.recoverInline(self)
@@ -852,7 +914,7 @@ class RulesParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 106
+            self.state = 124
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << RulesParser.GE) | (1 << RulesParser.GT) | (1 << RulesParser.LE) | (1 << RulesParser.LT) | (1 << RulesParser.EQ) | (1 << RulesParser.NE))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -958,7 +1020,7 @@ class RulesParser ( Parser ):
         self.enterRecursionRule(localctx, 18, self.RULE_right_logical_expr, _p)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 114
+            self.state = 132
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [RulesParser.LPAREN]:
@@ -966,27 +1028,27 @@ class RulesParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
 
-                self.state = 109
+                self.state = 127
                 self.match(RulesParser.LPAREN)
-                self.state = 110
+                self.state = 128
                 self.right_logical_expr(0)
-                self.state = 111
+                self.state = 129
                 self.match(RulesParser.RPAREN)
                 pass
             elif token in [RulesParser.IDENTIFIER]:
                 localctx = RulesParser.RLogicalExpressionContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 113
+                self.state = 131
                 self.r_function_expr()
                 pass
             else:
                 raise NoViableAltException(self)
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 121
+            self.state = 139
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,14,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
@@ -994,17 +1056,17 @@ class RulesParser ( Parser ):
                     _prevctx = localctx
                     localctx = RulesParser.RLogicalExpressionAndContext(self, RulesParser.Right_logical_exprContext(self, _parentctx, _parentState))
                     self.pushNewRecursionContext(localctx, _startState, self.RULE_right_logical_expr)
-                    self.state = 116
+                    self.state = 134
                     if not self.precpred(self._ctx, 3):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
-                    self.state = 117
+                    self.state = 135
                     self.match(RulesParser.AND)
-                    self.state = 118
+                    self.state = 136
                     self.right_logical_expr(4) 
-                self.state = 123
+                self.state = 141
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,14,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1055,64 +1117,64 @@ class RulesParser ( Parser ):
         localctx = RulesParser.R_function_exprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_r_function_expr)
         try:
-            self.state = 143
+            self.state = 161
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,9,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,15,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 124
+                self.state = 142
                 self.match(RulesParser.IDENTIFIER)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 125
+                self.state = 143
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 126
+                self.state = 144
                 self.args()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 127
+                self.state = 145
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 128
+                self.state = 146
                 self.args()
-                self.state = 129
+                self.state = 147
                 self.match(RulesParser.ASSIGN)
-                self.state = 130
+                self.state = 148
                 self.match(RulesParser.DECIMAL)
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 132
+                self.state = 150
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 133
+                self.state = 151
                 self.args()
-                self.state = 134
+                self.state = 152
                 self.match(RulesParser.ASSIGN)
-                self.state = 135
+                self.state = 153
                 self.match(RulesParser.IDENTIFIER)
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 137
+                self.state = 155
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 138
+                self.state = 156
                 self.match(RulesParser.ASSIGN)
-                self.state = 139
+                self.state = 157
                 self.match(RulesParser.DECIMAL)
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 140
+                self.state = 158
                 self.match(RulesParser.IDENTIFIER)
-                self.state = 141
+                self.state = 159
                 self.match(RulesParser.ASSIGN)
-                self.state = 142
+                self.state = 160
                 self.match(RulesParser.IDENTIFIER)
                 pass
 

@@ -4,5 +4,6 @@
 # Grammar definition is described in documentation
 
 
-IF player_dont_have_base THEN build_base 0 0;
+IF player_dont_have_base AND free_tile* AND money > 0 THEN build_base free_tile;
+
 

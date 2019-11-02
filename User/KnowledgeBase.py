@@ -4,6 +4,8 @@ from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameUncertaintyProxy
 from ExpertSystem.Business.UserFramework import IKnowledgeBase
 from ExpertSystem.Structure.RuleBase import Fact
+from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType
+from OrodaelTurrim.Structure.Position import OffsetPosition
 
 
 class KnowledgeBase(IKnowledgeBase):
@@ -19,7 +21,7 @@ class KnowledgeBase(IKnowledgeBase):
     - **map_proxy [MapProxy]** - Proxy for access to map information
     - **game_object_proxy [GameObjectProxy]** - Proxy for access to all game object information
     - **uncertainty_proxy [UncertaintyProxy]** - Proxy for access to all uncertainty information in game
-    - **player [IPlayer]** - instance of user player for identification in proxy methods
+    - **player [PlayerTag]** - class that serve as instance of user player for identification in proxy methods
 
     """
     map_proxy: MapProxy
@@ -53,8 +55,11 @@ class KnowledgeBase(IKnowledgeBase):
         if not self.map_proxy.player_have_base(self.player):
             facts.append(Fact('player_dont_have_base'))
 
+        # Add fact with data holder
+        target_position = OffsetPosition(0, 0)
+        facts.append(Fact('free_tile', data=target_position))
+
         # Add numerical fact
-        user_resources = self.game_object_proxy.get_resources(self.player)
-        facts.append(Fact("money", lambda: user_resources))
+        facts.append(Fact("money", lambda: self.game_object_proxy.get_resources(self.player)))
 
         return facts

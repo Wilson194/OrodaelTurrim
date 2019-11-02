@@ -1,6 +1,6 @@
 from typing import List
 
-from ExpertSystem.Business.UserFramework import IInference
+from ExpertSystem.Business.UserFramework import IInference, ActionBaseCaller
 from ExpertSystem.Structure.Enums import LogicalOperator
 from ExpertSystem.Structure.RuleBase import Rule, Fact, ExpressionNode, Expression
 from User import ActionBase
@@ -19,14 +19,11 @@ class Inference(IInference):
     | Class have no class parameters, you can use only inference parameters
 
     """
+    knowledge_base: List[Fact]
+    action_base: ActionBaseCaller
 
 
-    def __init__(self):
-        self.knowledge_base = None
-        self.action_base = None
-
-
-    def infere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBase) -> None:
+    def infere(self, knowledge_base: List[Fact], rules: List[Rule], action_base: ActionBaseCaller) -> None:
         """
         User defined inference
 
@@ -44,8 +41,8 @@ class Inference(IInference):
         for rule in rules:
             condition = self.rule_evaluation(rule.condition)
 
-            if condition and rule.conclusion.value in self.action_base:
-                _ = self.action_base[rule.conclusion.value]
+            if condition:
+                self.conclusion_evaluation(rule.conclusion)
 
 
     def rule_evaluation(self, root_node: ExpressionNode) -> bool:
@@ -70,3 +67,9 @@ class Inference(IInference):
 
         else:
             return bool(root_node.value)
+
+
+    def conclusion_evaluation(self, root_node: ExpressionNode):
+        print(root_node.value)
+        if self.action_base.has_method(root_node.value):
+            self.action_base.call(root_node.value)

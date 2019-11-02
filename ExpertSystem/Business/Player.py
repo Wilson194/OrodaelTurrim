@@ -1,4 +1,6 @@
 import sys
+import time
+from typing import List
 
 from PyQt5.QtCore import QObject
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
@@ -7,12 +9,15 @@ from ExpertSystem.Business.Parser.KnowledgeBase.ErrorListener import CustomError
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesLexer import RulesLexer
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesListenerImplementation import RulesListenerImplementation
 from ExpertSystem.Business.Parser.KnowledgeBase.RulesParser import RulesParser
+from ExpertSystem.Business.UserFramework import ActionBaseCaller
+from ExpertSystem.Structure.RuleBase import Fact
 from OrodaelTurrim import USER_ROOT
 from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 from OrodaelTurrim.Presenter.Connector import Connector
 from OrodaelTurrim.Structure.Enums import GameRole
-from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat
+from OrodaelTurrim.Structure.Exceptions import IllegalRulesFormat, BadFactDataValue
+from OrodaelTurrim.Structure.Position import OffsetPosition, CubicPosition, AxialPosition
 from User.ActionBase import ActionBase
 from User.Interference import Inference
 from User.KnowledgeBase import KnowledgeBase
@@ -42,12 +47,15 @@ class Player(IPlayer):
         """
         knowledge = self.knowledge_base.create_knowledge_base()
         rules = self.__parse_rules()
+        action_caller = ActionBaseCaller(knowledge, self.action_base, rules)
 
         if rules is None:
             sys.stderr.write('Rules file not found! Stopping inference!\n')
             Connector().emit('error_message', 'Interference error', 'Rules file not found! Stopping inference!')
             return
-        self.inference.infere(knowledge, rules, self.action_base)
+
+        knowledge = self.__check_and_clear_facts(knowledge)
+        self.inference.infere(knowledge, rules, action_caller)
 
 
     @property
@@ -84,3 +92,22 @@ class Player(IPlayer):
         rules = rules_listener.rules
 
         return rules
+
+
+    def __check_and_clear_facts(self, facts: List[Fact]) -> List[Fact]:
+        cleared_facts = []
+
+        for fact in facts:
+            if isinstance(fact.data, (OffsetPosition, CubicPosition, AxialPosition)):
+                fact.data = None
+                cleared_facts.append(fact)
+            elif type(fact.data) in (list, tuple, set) and all(
+                    [isinstance(item, (OffsetPosition, CubicPosition, AxialPosition)) for item in fact.data]):
+                fact.data = None
+                cleared_facts.append(fact)
+            elif fact.data is None:
+                cleared_facts.append(fact)
+            else:
+                raise BadFactDataValue(f'Fact {fact.name} contains unsupported data type')
+
+        return cleared_facts

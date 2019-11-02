@@ -207,9 +207,10 @@ class CubicPosition(Position):
 
 
     def __init__(self, x_position, y_position, z_position):
-        self.__x_position = x_position
-        self.__y_position = y_position
-        self.__z_position = z_position
+
+        self.__x_position = int(x_position) if type(x_position) is str else x_position
+        self.__y_position = int(y_position) if type(y_position) is str else y_position
+        self.__z_position = int(z_position) if type(z_position) is str else z_position
 
 
     @property
@@ -321,8 +322,8 @@ class AxialPosition(Position):
 
 
     def __init__(self, q: Union[int, float], r: Union[int, float]):
-        self.__q = q
-        self.__r = r
+        self.__q = int(q) if type(q) is str else q
+        self.__r = int(r) if type(r) is str else r
 
 
     @property
@@ -406,8 +407,8 @@ class OffsetPosition(Position):
 
 
     def __init__(self, q: int, r: int):
-        self.__q = q
-        self.__r = r
+        self.__q = int(q) if type(q) is str else q
+        self.__r = int(r) if type(r) is str else r
 
 
     @property
