@@ -1,11 +1,10 @@
-from typing import List, Set
-
-from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
+from typing import List
+from OrodaelTurrim.Business.Interface.Player import PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameUncertaintyProxy
 from ExpertSystem.Business.UserFramework import IKnowledgeBase
 from ExpertSystem.Structure.RuleBase import Fact
-from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType
-from OrodaelTurrim.Structure.Position import OffsetPosition
+from OrodaelTurrim.Structure.Enums import TerrainType, AttributeType, EffectType, GameRole
+from OrodaelTurrim.Structure.Position import OffsetPosition, CubicPosition, AxialPosition
 
 
 class KnowledgeBase(IKnowledgeBase):

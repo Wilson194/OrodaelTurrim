@@ -3,7 +3,6 @@ from typing import List
 from ExpertSystem.Business.UserFramework import IInference, ActionBaseCaller
 from ExpertSystem.Structure.Enums import LogicalOperator
 from ExpertSystem.Structure.RuleBase import Rule, Fact, ExpressionNode, Expression
-from User import ActionBase
 
 
 class Inference(IInference):

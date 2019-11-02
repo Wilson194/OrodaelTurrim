@@ -1,12 +1,12 @@
-from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
-from OrodaelTurrim.Business.Proxy import GameControlProxy, MapProxy
+from OrodaelTurrim.Business.Interface.Player import PlayerTag
+from OrodaelTurrim.Business.Proxy import GameControlProxy
 from ExpertSystem.Business.UserFramework import IActionBase
 from OrodaelTurrim.Business.Logger import Logger
 from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Filter.AttackFilter import AttackStrongestFilter
 from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
-from OrodaelTurrim.Structure.Position import OffsetPosition
+
 from User.AttackFilter import DummyAttackFilter, EmptyAttackFilter
 
 
