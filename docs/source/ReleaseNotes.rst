@@ -1,6 +1,19 @@
 Release Notes
 ==============
 
+* **1.2.0**
+    .. warning:: This version is incompatible with 1.1.* versions
+
+   * **Implement variable passing from knowledge base to action base**
+   * Rename Interference.py to Inference.py in User module
+   * Add more details and examples to User module documentation
+   * Update documentation of proxy classes
+   * Replace ``Player`` object with ``PlayerTag`` object in ``User`` module
+   * Fix bug with console simulation works without base
+   * Improve bug reports - add user implementation to report
+   * Unit balancing
+   * Add option to disable AI console output (AI_CONSOLE_OUTPUT)
+
 * **1.1.8**
     * Fix bug with more than two arguments in rules (more arguments were squeezed)
     * Fix bug with bad definition of ``LEFT_LOWER`` constant for ``OffsetPosition``
