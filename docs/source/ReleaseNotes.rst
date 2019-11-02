@@ -5,6 +5,8 @@ Release Notes
     .. warning:: This version is incompatible with 1.1.* versions
 
    * **Implement variable passing from knowledge base to action base**
+   * Change method, how to call ActionBase methods from inference
+   * Removed MapProxy from ActionBase
    * Rename Interference.py to Inference.py in User module
    * Add more details and examples to User module documentation
    * Update documentation of proxy classes
