@@ -10,7 +10,7 @@ class Archer(GameObjectPrototype):
     Represents an elf archer with pointy ears and even pointier arrows. There used to be a lot adventurers,
     but then all of them got an arrow to the knee ...
     """
-    ATTRIBUTES = AttributeBundle(10, 5, 50, 3, 4)
+    ATTRIBUTES = AttributeBundle(10, 1, 30, 3, 4)
     COST = 5
     ASSET_NAME = "archer"
 
@@ -78,7 +78,7 @@ class Druid(GameObjectPrototype):
 
 class Ent(GameObjectPrototype):
     """ Represents a giant moving tree. Now you regret that little heart you curved into me, don't you?! """
-    ATTRIBUTES = AttributeBundle(10, 15, 200, 1, 2)
+    ATTRIBUTES = AttributeBundle(10, 15, 250, 1, 2)
     COST = 50
     ASSET_NAME = "ent"
 
@@ -99,8 +99,8 @@ class Ent(GameObjectPrototype):
 
 class Knight(GameObjectPrototype):
     """ Represents a knight in shining armor. That shine? Mr. Proper! """
-    ATTRIBUTES = AttributeBundle(20, 20, 100, 1, 2)
-    COST = 10
+    ATTRIBUTES = AttributeBundle(15, 12, 80, 1, 2)
+    COST = 12
     ASSET_NAME = "knight"
 
 
@@ -120,7 +120,7 @@ class Knight(GameObjectPrototype):
 
 class Magician(GameObjectPrototype):
     """ Represents a powerful battle caster. You´re wizard ... uhm ... MAGICIAN, Harry! """
-    ATTRIBUTES = AttributeBundle(50, 5, 75, 2, 3)
+    ATTRIBUTES = AttributeBundle(40, 5, 75, 2, 3)
     COST = 30
     ASSET_NAME = "magician"
 

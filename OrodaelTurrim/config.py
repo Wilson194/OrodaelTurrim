@@ -12,7 +12,7 @@ class Config(metaclass=ClassAttributeDefault):
     DEFENDER_INCOME = 10
 
     ATTACKER_STARTING_MONEY = 200
-    ATTACKER_INCOME = 20
+    ATTACKER_INCOME = 30
     ATTACKER_INCOME_INCREASE = 1
 
     # ----------------- Map generator configuration ----------------------------
@@ -30,6 +30,6 @@ class Config(metaclass=ClassAttributeDefault):
     # Percentage bonus for neighbour with same type
     NEIGHBOUR_ADD = 0.01
 
-    MAP_HEIGHT = 11
-    MAP_WIDTH = 11
+    MAP_HEIGHT = 13
+    MAP_WIDTH = 13
     GAME_MAP = None
