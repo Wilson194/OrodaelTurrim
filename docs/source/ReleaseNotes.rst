@@ -1,5 +1,12 @@
 Release Notes
 ==============
+* **1.2.1**
+   * Data variable in Fact change from variable to callable
+   * Remove option to call actions from action base directly (you need to you call method)
+   * Remove option to call actions from action base by string (you need to use Expression)
+   * Add method ``get_inner_tiles`` to map proxy. Method returns all non border tiles
+   * Documentation update
+   * Extended example implementation
 
 * **1.2.0**
     .. warning:: This version is incompatible with 1.1.* versions
