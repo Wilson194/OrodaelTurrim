@@ -199,6 +199,7 @@ arguments must be after positional arguments. Last thing, don't try to pass the 
 Everything is done by dependency injection.
 
 Example of usage
+
 .. code-block:: python
 
    # KnowledgeBase.py
