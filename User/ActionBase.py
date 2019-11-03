@@ -6,6 +6,7 @@ from OrodaelTurrim.Structure.Enums import GameObjectType
 from OrodaelTurrim.Structure.Filter.AttackFilter import AttackStrongestFilter
 from OrodaelTurrim.Structure.Filter.Factory import FilterFactory
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
+from OrodaelTurrim.Structure.Position import OffsetPosition
 
 from User.AttackFilter import DummyAttackFilter, EmptyAttackFilter
 
@@ -48,3 +49,11 @@ class ActionBase(IActionBase):
                              GameObjectType.BASE,
                              free_tile,
                              [empty_filter, dummy_filter, strongest_filter], []))
+
+
+    def build_archer(self, visible_free_tile):
+        self.game_control_proxy.spawn_unit(
+            SpawnInformation(self.player,
+                             GameObjectType.ARCHER,
+                             visible_free_tile,
+                             [], []))

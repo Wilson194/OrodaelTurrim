@@ -34,6 +34,14 @@ class TerrainType(Enum):
         return None
 
 
+    @staticmethod
+    def from_string(string: str) -> Optional['TerrainType']:
+        for terrain_type in TerrainType:
+            if str(terrain_type.name).lower() == string.lower():
+                return terrain_type
+        return None
+
+
 class Nudge(Enum):
     """ Nudge position to one direction for line draw purpose """
     POSITIVE = 1

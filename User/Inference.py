@@ -28,7 +28,7 @@ class Inference(IInference):
 
         :param knowledge_base: - list of Fact classes defined in  KnowledgeBase.create_knowledge_base()
         :param rules:  - list of rules trees defined in rules file.
-        :param action_base: - instance of user action base for executing conclusions
+        :param action_base: - instance of ActionBaseCaller for executing conclusions
 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         !!    TODO: Write implementation of your inference mechanism definition HERE    !!

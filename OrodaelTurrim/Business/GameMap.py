@@ -290,6 +290,16 @@ class GameMap:
         return border_tiles
 
 
+    @property
+    def inner_tiles(self) -> Set[Position]:
+        inner_tiles = set()
+        for x in range(-self.__horizontal_radius, self.__horizontal_radius + 1):
+            for y in range(-self.__vertical_radius, self.__vertical_radius + 1):
+                inner_tiles.add(OffsetPosition(x, y))
+
+        return inner_tiles
+
+
     def __repr__(self):
         map_repr = ''
         for i, row in enumerate(self.__tiles):
@@ -373,7 +383,7 @@ class BorderTiles(metaclass=Singleton):
                       OffsetPosition(-self.__game_map.horizontal_radius, self.__game_map.vertical_radius),
                       OffsetPosition(self.__game_map.horizontal_radius, -self.__game_map.vertical_radius),
                       OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius),
-                      OffsetPosition(-self.__game_map.horizontal_radius+2, -self.__game_map.vertical_radius)}
+                      OffsetPosition(-self.__game_map.horizontal_radius + 2, -self.__game_map.vertical_radius)}
 
         first = OffsetPosition(-self.__game_map.horizontal_radius, -self.__game_map.vertical_radius)
         second = OffsetPosition(-self.__game_map.horizontal_radius + 1, -self.__game_map.vertical_radius)

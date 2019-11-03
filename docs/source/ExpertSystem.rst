@@ -86,9 +86,52 @@ It using standard float numbers, so there is no magic.
 
 The last instance variable is data. This variable is used for passing parameters from condition to conclusion.
 If you mark fact in your rule file with data handle mark (*) then you must specify ``data`` variable of that fact.
-This variable could be used only for positions. So ``data`` variable could be only subclass of Position
-or list of Position subclasses. It is a standard variable, so no magic there. Passing of this variable is
-described in the inference section.
+TYpe of this variable is also callable (pointer to function). This function could return only a position or
+list of positions. It is forbidden to return any other value types. If you didn't mark fact with handle mark,
+you don't need to specify data variable. Example of usage:
+
+
+.. code-block:: python
+
+   # KnowledgeBase.py
+   def free_tile():
+      return self.map_proxy.get_player_visible_tiles()[0]
+
+   Fact('free_tile', data=free_tile)
+
+   # rules
+   IF free_tile* THEN build_base free_tile;
+
+
+Function defined by data variable will be evaluated when you call build_base from inference. So the result will be
+up to date with the game state.
+
+Framework also tries to pass arguments to data function. Evaluation tries pass all arguments to data function and if
+there is conflict, the framework tries evaluate data function without parameters. So if your eval function needs
+parameters but your data function not, it is no problem. Here is an example of data function with parameters
+
+
+.. code-block:: python
+
+   # KnowledgeBase.py
+   def free_tile(terrain_type):
+      tiles = self.map_proxy.get_player_visible_tiles()
+        border_tiles = self.map_proxy.get_border_tiles()
+
+        for position in tiles:
+            terrain = self.map_proxy.get_terrain_type(position) == TerrainType.from_string(terrain_type)
+            occupied = self.map_proxy.is_position_occupied(position)
+            if terrain and not occupied and position not in border_tiles:
+                return position
+        return None
+
+   Fact('free_tile', data=free_tile)
+
+   # rules
+   IF free_tile* mountain THEN build_base free_tile;
+
+
+
 
 
 For creating knowledge base you could use 3 types of proxy:
@@ -137,48 +180,30 @@ inference. Use it only as an example. As a result of the inference, you should c
 **Action base calls**
 
 In the inference method, you have a ``ActionBaseCaller`` instance, that represent your action base.
-Class ``ActionBaseCaller`` has all method that you define at ``ActionBase``, so you can use this class
-for standard calling your methods:
 
-.. code-block:: python
+If you want to call your function from ActionBase, you need to use the method ``call`` from ``ActionBaseCaller``.
+Method call get parameter of type ``Expression`` (conclusion Expression node). You must use ``Expression`` class
+from given rules, don't try to create a new one. If you call method ``call``, all parameters from ``Expression`` are
+passed to ``ActionBase`` method and also all parameters from facts are injected. So basically you don't need
+to worry about nothing. Just be sure, that you have a method in action base with the correct signature.
 
-   action_base.build_base()
-
-Don't worry, that there is no type hints. All methods are injected to ``ActionBaseCaller`` during runtime.
-That is because of fact data injection. It works very simple. If you mark some fact in rule file as data holder
-and you use the same identifier as a parameter in the conclusion part of the rule, this parameter will be injected.
-Example for a better understanding:
-
-.. code-block:: python
-
-   # KnowledgeBase.py
-   target_position = OffsetPosition(0, 0)
-   facts.append(Fact('free_tile', data=target_position))
-
-   # rules
-   IF free_tile* THEN build_base free_tile;
-
-   # ActionBase.py
-   def build_base(self, free_tile):
-      pass
-
-   # Inference.py
-   self.action_base.build_base()
+``ActionBaseCaller`` has also method ``has_method`` that check, if correspond method exist in ``ActionBase``.
 
 
-There are important things that need to be done. First, you need to mark your fact as data holder with ``*`` in the rules file.
-Otherwise, the data variables will not be injected. Your ActionBase method must contain argument with the same name as the
+**Recapitulation**
+
+There are important things that need to be done. First, you need to mark your fact as a data holder with ``*`` in the rules file.
+Otherwise, the data variables will not be injected. Your ActionBase method must contain an argument with the same name as the
 fact name. There could be more than one data facts. You can combine this also with standard arguments, but data holder
 arguments must be after positional arguments. Last thing, don't try to pass the data holder fact (parameter) manually.
 Everything is done by dependency injection.
 
-There is another example with injected arguments and standard arguments
-
+Example of usage
 .. code-block:: python
 
    # KnowledgeBase.py
    target_position = OffsetPosition(0, 0)
-   facts.append(Fact('free_tile', data=target_position))
+   facts.append(Fact('free_tile', data=lambda: target_position))
 
    # rules
    IF free_tile* THEN build_base 1 1 free_tile;
@@ -188,31 +213,50 @@ There is another example with injected arguments and standard arguments
       pass
 
    # Inference.py
-   self.action_base.build_base(*rule.args)
+   def conclusion_evaluation(self, root_node: ExpressionNode):
+       if self.action_base.has_method(root_node.value):
+             self.action_base.call(root_node.value)
+          else:
+             pass # Add to facts
 
 
-Class ``ActionBaseCaller`` also has two methods, for an easy way to call action methods.
-
-``has_method(method: Union[str, Expression] )``
-
-   This method will check if the action base contains the given method. You can ask with a string name or with an
-   ``Expression`` node. Method returns True, if the method exists.
-
-``call(method: Union[str, Expression] )``
-
-   This method will call the method from ``ActionBase``. If you use a string name, you can't pass any arguments. With Expression
-   object, arguments will be passed automatically.
-
-So there is a basic example of conclusion processing
+Complex example with proxy call
 
 .. code-block:: python
 
-   def conclusion_evaluation(self, root_node: ExpressionNode):
-      if self.action_base.has_method(root_node.value):
-         self.action_base.call(root_node.value)
-      else:
-         pass # Add to facts
+   # KnowledgeBase.py
+   def visible_free_tile(self, terrain_type: str):
+    """ Find random free tile with given terrain type """
+    tiles = self.map_proxy.get_player_visible_tiles()
+    border_tiles = self.map_proxy.get_border_tiles()
 
+    for position in tiles:
+        terrain = self.map_proxy.get_terrain_type(position) == TerrainType.from_string(terrain_type)
+        occupied = self.map_proxy.is_position_occupied(position)
+        if terrain and not occupied and position not in border_tiles:
+            return position
+    return None
+
+   facts.append(Fact('free_tile', data=visible_free_tile, eval_function=visible_free_tile))
+
+   # rules
+   IF free_tile* mountain THEN build_base awesome_text free_tile;
+
+   # ActionBase.py
+   def build_base(self, log_text, free_tile):
+      pass
+
+   # Inference.py
+   def conclusion_evaluation(self, root_node: ExpressionNode):
+       if self.action_base.has_method(root_node.value):
+             self.action_base.call(root_node.value)
+          else:
+             pass # Add to facts
+
+
+As you can see in the example, same function is used for data and eval_function. That because our ``visible_free_tiles``
+function returns None, if there is no such position. Boolean value of None is False and boolean value of position is True.
+Of course, data function and eval_function could be different functions.
 
 Action base
 --------------

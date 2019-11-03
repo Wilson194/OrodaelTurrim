@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING, Any, Set, Union, Dict
+from typing import List, TYPE_CHECKING, Any, Set, Union, Dict, Callable, Tuple
 from collections import deque
 
 from ExpertSystem.Structure.Enums import LogicalOperator
-from ExpertSystem.Structure.RuleBase import Rule, Expression, Fact
+from ExpertSystem.Structure.RuleBase import Rule, Expression, Fact, DataHolderFact
 from OrodaelTurrim.Business.Interface.Player import IPlayer, PlayerTag
 from OrodaelTurrim.Business.Proxy import MapProxy, GameObjectProxy, GameControlProxy, GameUncertaintyProxy
 import inspect
 
-from OrodaelTurrim.Structure.Exceptions import BadActionBaseParameters
+from OrodaelTurrim.Structure.Exceptions import BadActionBaseParameters, BadFactDataValue
+from OrodaelTurrim.Structure.Position import OffsetPosition, CubicPosition, AxialPosition
 
 if TYPE_CHECKING:
     from User.ActionBase import ActionBase
@@ -72,60 +73,6 @@ class IActionBase(ABC):
         self.player = player
 
 
-def get_data_holder_facts(rules: List[Rule], facts: List[Fact]) -> Dict[str, Fact]:
-    """
-    Get list of facts, that are marked as data holder.
-
-    :param rules: list of rules
-    :param facts: list of facts from KnowledgeBase
-    :return: Dictionary (name of fact, fact object)
-    """
-    data_process = deque([rule.condition for rule in rules])
-
-    fact_dictionary = {}
-    for fact in facts:
-        fact_dictionary[fact.name] = fact
-
-    data_holder_facts = {}
-    while data_process:
-        current = data_process.pop()
-        if current.operator in (LogicalOperator.AND, LogicalOperator.OR):
-            data_process.append(current.left)
-            data_process.append(current.right)
-        elif isinstance(current.value, Expression):
-            if current.value.data_holder_mark and current.value.name in fact_dictionary:
-                data_holder_facts[current.value.name] = fact_dictionary[current.value.name]
-
-    return data_holder_facts
-
-
-def get_actions_with_data_holder_parameter(data_holder_facts: Dict[str, Fact], rules: List[Rule]) -> Dict[str, Set]:
-    """
-    Get list of actions, that have data holder parameter ( parameter with same name as data holder fact)
-
-    :param data_holder_facts: Dictionary of data holder Facts
-    :param rules: List of rules
-    :return: Dictionary of action from ActionBase, which have data holder fact parameter
-    """
-    data_process = deque([rule.conclusion for rule in rules])
-
-    keys = set(data_holder_facts.keys())
-
-    actions = {}
-
-    while data_process:
-        current = data_process.pop()
-        if current.operator == LogicalOperator.AND:
-            data_process.append(current.left)
-            data_process.append(current.right)
-        elif isinstance(current.value, Expression):
-            data_holder_parameters = set(current.value.args).intersection(keys)
-            if data_holder_parameters:
-                actions[current.value.name] = data_holder_parameters
-
-    return actions
-
-
 def check_method_parameters(method_parameters: inspect.FullArgSpec, parameters_injection: List[str],
                             function_name: str) -> bool:
     """
@@ -153,17 +100,105 @@ def check_method_parameters(method_parameters: inspect.FullArgSpec, parameters_i
     return True
 
 
-def create_virtual_function(target_method, parameter_to_inject):
+def check_return_values(injections: Dict) -> bool:
+    """
+    Check return values of data facts. Supported is only Position or iterable of Position
+    :param injections: injected parameters
+    :return: True if everything is fine, Raise exception otherwise
+    """
+    for name, argument in injections.items():
+        if isinstance(argument, (OffsetPosition, CubicPosition, AxialPosition)):
+            return True
+        elif type(argument) in (list, tuple, set) and all(
+                [isinstance(item, (OffsetPosition, CubicPosition, AxialPosition)) for item in argument]):
+            return True
+        elif argument is None:
+            return True
+        else:
+            raise BadFactDataValue(f'Fact {name} returns unsupported data type')
+
+
+def create_virtual_function(target_method: Callable, injection: Dict[str, DataHolderFact]) -> Callable:
+    """
+    This function will create virtual function, that is used for call method from ActionBase.
+    Virtual method evaluate inject parameters when it's executed.
+    """
+
+
     def virtual_function(*args, **kwargs):
+        parameter_to_inject = {}
+        for key, value in injection.items():
+            try:
+                parameter_to_inject[key] = value.fact.data(*value.arguments)
+            except TypeError:
+                parameter_to_inject[key] = value.fact.data()
+
+        check_method_parameters(inspect.getfullargspec(target_method), list(parameter_to_inject.keys()),
+                                target_method.__name__)
+        check_return_values(parameter_to_inject)
         target_method(*args, **dict(parameter_to_inject, **kwargs))
 
 
     return virtual_function
 
 
+def create_data_holder_callable(rule: Rule, facts: List[Fact], action_base: IActionBase) -> Tuple[
+    Dict[Expression, Callable], List[str]]:
+    """
+    This method will create dictionary, where keys are Expressions and values are methods with injected parameters.
+    Method from action base and also injected parameters are executed with action call.
+
+    :param rule: rule to parse
+    :param facts: list of all facts
+    :param action_base: user defined action base
+    :return:
+    """
+    data_process = deque((rule.condition,))
+
+    fact_dictionary = {}
+    for fact in facts:
+        fact_dictionary[fact.name] = fact
+
+    # Find all fact with data holder mark
+    data_holder_facts = {}
+    while data_process:
+        current = data_process.pop()
+        if current.operator in (LogicalOperator.AND, LogicalOperator.OR):
+            data_process.append(current.left)
+            data_process.append(current.right)
+        elif isinstance(current.value, Expression):
+            # Marked as data holder and defined in facts
+            if current.value.data_holder_mark and current.value.name in fact_dictionary:
+                fact_object = fact_dictionary[current.value.name]
+                arguments = current.value.args
+                data_holder_facts[current.value.name] = DataHolderFact(fact_object, arguments)
+
+    # Find all actions with data holder parameters
+    virtual_functions = {}
+    data_process = deque((rule.conclusion,))
+    while data_process:
+        current = data_process.pop()
+        if current.operator == LogicalOperator.AND:
+            data_process.append(current.left)
+            data_process.append(current.right)
+        elif isinstance(current.value, Expression):
+            parameter_injection = {}
+            # Check all parameters of action and prepare injection for data holder ones
+            for parameter in current.value.args:
+                if parameter in data_holder_facts:
+                    parameter_injection[parameter] = data_holder_facts[parameter]
+
+            original_method = getattr(action_base, current.value.name)
+            # Create virtual function defined by Expression object
+            virtual_functions[current.value] = create_virtual_function(original_method, parameter_injection)
+
+    return virtual_functions, list(data_holder_facts.keys())
+
+
 class ActionBaseCaller:
     def __init__(self, facts: List[Fact], action_base: IActionBase, rules: List[Rule]):
         self.__data_holder_parameters = []
+        self.__virtual_functions = {}
         self.__create_callable(facts, action_base, rules)
         del action_base
         del facts
@@ -177,25 +212,15 @@ class ActionBaseCaller:
         :param action_base: User ActionBase implementation object
         :param rules: list of rules
         """
-        data_holder_facts = get_data_holder_facts(rules, facts)
-        self.__data_holder_parameters = list(data_holder_facts.keys())
-        target_actions = get_actions_with_data_holder_parameter(data_holder_facts, rules)
+        self.virtual_functions = {}
 
-        for name, method in inspect.getmembers(action_base, predicate=inspect.ismethod):
-            if not name.startswith('_'):
-                if name in target_actions:
-                    parameters_injection = {}
-                    for parameter_name in target_actions[name]:
-                        parameters_injection[parameter_name] = data_holder_facts[parameter_name].data
-
-                    check_method_parameters(inspect.getfullargspec(method), list(parameters_injection.keys()), name)
-
-                    setattr(self, name, create_virtual_function(method, parameters_injection))
-                else:
-                    setattr(self, name, method)
+        for rule in rules:
+            virtual_function, data_holder_parameters = create_data_holder_callable(rule, facts, action_base)
+            self.__virtual_functions.update(virtual_function)
+            self.__data_holder_parameters.extend(data_holder_parameters)
 
 
-    def call(self, method: Union[str, Expression]) -> None:
+    def call(self, method: Union[Expression]) -> None:
         """
         Call method from action base. You can define method with string name or Expression object.
         With string name, you cannot pass the parameters.
@@ -203,16 +228,17 @@ class ActionBaseCaller:
 
         :param method: string name or expression node defining Action
         """
-        if type(method) is str:
-            getattr(self, method)()
-        elif isinstance(method, Expression):
+        if isinstance(method, Expression):
             parameters = [parameter for parameter in method.args if parameter not in self.__data_holder_parameters]
-            getattr(self, method.name)(*parameters)
+            if method in self.__virtual_functions:
+                self.__virtual_functions[method](*parameters)
+            else:
+                raise ValueError('There is no function that is defined by this Expression')
         else:
-            raise ValueError('Get functions only by string of Expression')
+            raise ValueError('Get functions only by Expression')
 
 
-    def has_method(self, method: Union[str, Expression]) -> bool:
+    def has_method(self, method: Expression) -> bool:
         """
         This method check, if ActionBase contains given method.
         You can define method with string name or Expression object.
@@ -223,15 +249,10 @@ class ActionBaseCaller:
         return self.__contains__(method)
 
 
-    def __contains__(self, item: Union[str, Expression]) -> bool:
-        if type(item) is str:
-            if callable(getattr(self, item, None)):
+    def __contains__(self, item: Expression) -> bool:
+        if isinstance(item, Expression):
+            if item in self.__virtual_functions:
                 return True
             return False
 
-        elif isinstance(item, Expression):
-            if callable(getattr(self, item.name, None)):
-                return True
-            return False
-
-        raise ValueError('Test only with string or Expression')
+        raise ValueError('Test only with Expression')

@@ -791,6 +791,11 @@ class GameEngine:
         return self.__game_map.border_tiles
 
 
+    def get_inner_tiles(self) -> Set[Position]:
+        """ Retrieves set of tiles which are not on the map edge"""
+        return self.__game_map.inner_tiles
+
+
     def get_player_visible_tiles(self, player: IPlayer) -> Optional[Set[Position]]:
         """
         Retrieves set of visible tiles for player.
@@ -858,6 +863,9 @@ class GameEngine:
 
         if resources < prototype.cost:
             raise IllegalActionException('Insufficient resources!')
+
+        if not issubclass(type(information.position), Position):
+            raise TypeError('Invalid parameter type information position!')
 
         if not self.is_position_on_map(information.position):
             raise IllegalActionException('Position is not on the map!')

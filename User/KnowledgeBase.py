@@ -55,10 +55,38 @@ class KnowledgeBase(IKnowledgeBase):
             facts.append(Fact('player_dont_have_base'))
 
         # Add fact with data holder
-        target_position = OffsetPosition(0, 0)
-        facts.append(Fact('free_tile', data=target_position))
+        # We can use there eval function same as data function
+        # because if first_free_tile return None, bool value of None is False, otherwise bool value is True
+        # You can use different functions for eval and data
+        facts.append(Fact('free_tile', eval_function=self.first_free_tile, data=self.first_free_tile))
+        facts.append(Fact('visible_free_tile', eval_function=self.visible_free_tile, data=self.visible_free_tile))
 
         # Add numerical fact
         facts.append(Fact("money", lambda: self.game_object_proxy.get_resources(self.player)))
 
         return facts
+
+
+    def first_free_tile(self, terrain_type: str):
+        """ Find random tile with given terrain type """
+        tiles = self.map_proxy.get_inner_tiles()
+        border_tiles = self.map_proxy.get_border_tiles()
+
+        for position in tiles:
+            terrain = self.map_proxy.get_terrain_type(position) == TerrainType.from_string(terrain_type)
+            if terrain and position not in border_tiles:
+                return position
+        return None
+
+
+    def visible_free_tile(self, terrain_type: str):
+        """ Find random free tile with given terrain type """
+        tiles = self.map_proxy.get_player_visible_tiles()
+        border_tiles = self.map_proxy.get_border_tiles()
+
+        for position in tiles:
+            terrain = self.map_proxy.get_terrain_type(position) == TerrainType.from_string(terrain_type)
+            occupied = self.map_proxy.is_position_occupied(position)
+            if terrain and not occupied and position not in border_tiles:
+                return position
+        return None

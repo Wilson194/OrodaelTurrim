@@ -17,6 +17,7 @@ class MapProxy:
         self.__is_position_occupied = game_engine.is_position_occupied
         self.__get_bases_positions = game_engine.get_bases_positions
         self.__get_border_tiles = game_engine.get_border_tiles
+        self.__get_inner_tiles = game_engine.get_inner_tiles
         self.__get_player_visible_tiles = game_engine.get_current_player_visible_tiles
         self.__compute_visible_tiles = game_engine.compute_visible_tiles
         self.__compute_accessible_tiles = game_engine.compute_accessible_tiles
@@ -78,6 +79,11 @@ class MapProxy:
     def get_border_tiles(self) -> Set["Position"]:
         """ Retrieves set of tiles on the edge of game map """
         return self.__get_border_tiles()
+
+
+    def get_inner_tiles(self) -> Set['Position']:
+        """ Retrieves set of tiles which are not on the map edge """
+        return self.__get_inner_tiles()
 
 
     def get_player_visible_tiles(self) -> Set["Position"]:

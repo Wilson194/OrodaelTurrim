@@ -269,10 +269,12 @@ class Fact:
 
 
     def __init__(self, name: str, eval_function: Callable = None, probability: float = 1,
-                 data: Union[Position, List[Position], None] = None):
+                 data: Callable = None):
         self.name = name
         self.probability = probability
-        self.__data = data
+        if self.data:
+            self.data = data
+
         if eval_function:
             self.evaluate = eval_function
 
@@ -282,14 +284,8 @@ class Fact:
         return True
 
 
-    @property
-    def data(self):
-        return self.__data
-
-
-    @data.setter
-    def data(self, value: Union[Position, List[Position], None]):
-        self.__data = value
+    def data(self, *args, **kwargs) -> Union[Position, List[Position], None]:
+        return None
 
 
     def __call__(self, *args, **kwargs):
@@ -300,5 +296,15 @@ class Fact:
         return hash(self.name)
 
 
+    def __deepcopy__(self, memodict={}):
+        return Fact(self.name, self.evaluate, self.probability, self.data)
+
+
     def __eq__(self, other):
         return self.name == other
+
+
+class DataHolderFact:
+    def __init__(self, fact, arguments):
+        self.fact = fact
+        self.arguments = arguments
