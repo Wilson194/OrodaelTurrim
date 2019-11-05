@@ -144,6 +144,8 @@ class GameObjectProxy:
 
         self.__get_income = game_engine.get_income
         self.__get_resources = game_engine.get_resources
+
+        self.__get_current_round = game_engine.get_current_round
         del game_engine
 
 
@@ -272,6 +274,14 @@ class GameObjectProxy:
                  None if player not registered
         """
         return self.__get_resources(player)
+
+
+    def get_current_round(self) -> int:
+        """
+
+        :return:
+        """
+        return self.__get_current_round()
 
 
 class GameControlProxy:

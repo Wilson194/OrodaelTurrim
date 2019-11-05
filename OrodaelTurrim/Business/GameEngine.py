@@ -919,6 +919,13 @@ class GameEngine:
         self.__player_resources[player].increase_income(amount)
 
 
+    def get_current_round(self) -> int:
+        """
+        Get current round of the game
+        """
+        return self.get_game_history().current_turn
+
+
     def get_game_map(self) -> GameMap:
         """ Get game map instance """
         return self.__game_map

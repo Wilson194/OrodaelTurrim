@@ -160,23 +160,23 @@ class GameObjectType(Enum):
     """
     Enum for all units. Enum is tuple of GameRole, place cost and ID
     """
-    NONE = (GameRole.NEUTRAL, 0, 1)
-    BASE = (GameRole.DEFENDER, 0, 2)
+    NONE = (GameRole.NEUTRAL, 1)
+    BASE = (GameRole.DEFENDER, 2)
 
-    ARCHER = (GameRole.DEFENDER, 5, 3)
-    DRUID = (GameRole.DEFENDER, 25, 4)
-    ENT = (GameRole.DEFENDER, 50, 5)
-    KNIGHT = (GameRole.DEFENDER, 10, 6)
-    MAGICIAN = (GameRole.DEFENDER, 30, 7)
+    ARCHER = (GameRole.DEFENDER, 3)
+    DRUID = (GameRole.DEFENDER, 4)
+    ENT = (GameRole.DEFENDER, 5)
+    KNIGHT = (GameRole.DEFENDER, 6)
+    MAGICIAN = (GameRole.DEFENDER, 7)
 
-    CYCLOPS = (GameRole.ATTACKER, 60, 8)
-    DEMON = (GameRole.ATTACKER, 80, 9)
-    ELEMENTAL = (GameRole.ATTACKER, 35, 10)
-    GARGOYLE = (GameRole.ATTACKER, 30, 11)
-    MINOTAUR = (GameRole.ATTACKER, 50, 12)
-    NECROMANCER = (GameRole.ATTACKER, 50, 13)
-    ORC = (GameRole.ATTACKER, 8, 14)
-    SKELETON = (GameRole.ATTACKER, 5, 15)
+    CYCLOPS = (GameRole.ATTACKER, 8)
+    DEMON = (GameRole.ATTACKER, 9)
+    ELEMENTAL = (GameRole.ATTACKER, 10)
+    GARGOYLE = (GameRole.ATTACKER, 11)
+    MINOTAUR = (GameRole.ATTACKER, 12)
+    NECROMANCER = (GameRole.ATTACKER, 13)
+    ORC = (GameRole.ATTACKER, 14)
+    SKELETON = (GameRole.ATTACKER, 15)
 
 
     @staticmethod

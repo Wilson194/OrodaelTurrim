@@ -68,9 +68,10 @@ def main(gui, rounds, log_output, log_output_xml, verbose):
     player2 = AIPlayer(map_proxy, game_object_proxy, game_control_proxy, game_uncertainty_proxy)
     game_engine.register_player(player2, PlayerResources(Config.ATTACKER_STARTING_MONEY, Config.ATTACKER_INCOME,
                                                          Config.ATTACKER_INCOME_INCREASE), [])
-    player2.initialize()
 
     game_engine.start(rounds)
+
+    player2.initialize()
 
     if gui:
         # Inicialize main widget

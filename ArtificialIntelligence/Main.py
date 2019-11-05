@@ -13,6 +13,10 @@ from OrodaelTurrim.Structure.Filter.MoveFilter import MoveToNearestEnemyFilter, 
     MoveToSafeDistanceFilter
 from OrodaelTurrim.Structure.GameObjects.GameObject import SpawnInformation
 
+BOSS_ROUNDS = 5
+BOSS_UNITS = lambda turn: max(1, turn // 20)
+BOSS_UNIT = GameObjectType.NECROMANCER
+
 
 class AIPlayer(IAttacker):
     def __init__(self, map_proxy: MapProxy, game_object_proxy: GameObjectProxy, game_control_proxy: GameControlProxy,
@@ -108,9 +112,9 @@ class AIPlayer(IAttacker):
         resources = self.game_object_proxy.get_resources(self)
         income = self.game_object_proxy.get_income(self)
 
-        for round_list in self.spawn_information_list:
+        for i, round_list in enumerate(self.spawn_information_list):
             # Generate list of spawn info for one round
-            round_spawn, spend = self.__create_round_list(resources)
+            round_spawn, spend = self.__create_round_list(resources, i + 1)
 
             # Set list to the spawn info
             round_list.extend(round_spawn)
@@ -123,30 +127,55 @@ class AIPlayer(IAttacker):
 
     def __update_spawn_list(self):
         self.spawn_information_list.pop(0)
+        current_round = self.game_object_proxy.get_current_round()
 
-        _round, spend = self.__create_round_list(self.__resources_left)
+        _round, spend = self.__create_round_list(self.__resources_left,
+                                                 len(self.spawn_information_list) + current_round + 2)
 
         self.spawn_information_list.append(_round)
         self.__resources_left = self.__resources_left + self.game_object_proxy.get_income(self) - spend
 
 
-    def __create_round_list(self, resources: int) -> Tuple[List[SpawnInformation], int]:
+    def __create_round_list(self, resources: int, _round: int) -> Tuple[List[SpawnInformation], int]:
         result = []
         spend = 0
         current_resources = resources
-        while self.__spawn_unit(resources, current_resources):
-            spawn_info = self.__create_spawn_info(current_resources, result)
-            if spawn_info is None:
-                break
-            current_resources -= spawn_info.object_type.price
-            spend += spawn_info.object_type.price
-            result.append(spawn_info)
+
+        if _round % BOSS_ROUNDS == 0:
+            for i in range(BOSS_UNITS(_round)):
+                spawn_info = self.__create_spawn_info_boos()
+
+                if spawn_info:
+                    current_resources -= spawn_info.object_type.price
+                    spend += spawn_info.object_type.price
+                    result.append(spawn_info)
+
+        else:
+            while self.__spawn_unit(resources, current_resources):
+                spawn_info = self.__create_spawn_info(current_resources, result)
+                if spawn_info is None:
+                    break
+                current_resources -= spawn_info.object_type.price
+                spend += spawn_info.object_type.price
+                result.append(spawn_info)
 
         return result, spend
 
 
+    def __create_spawn_info_boos(self):
+        free_border_tiles = [tile for tile in self.__border_tiles if
+                             self.game_object_proxy.get_object_type(tile) == GameObjectType.NONE]
+
+        if not free_border_tiles:
+            return None
+
+        position = self.spawn_random.choice(tuple(free_border_tiles))
+        return SpawnInformation(self, BOSS_UNIT, position, self.unit_filters[BOSS_UNIT][0],
+                                self.unit_filters[BOSS_UNIT][1])
+
+
     def __create_spawn_info(self, resources: int, planned: List[SpawnInformation]) -> Optional[SpawnInformation]:
-        attackers = [attacker for attacker in self.__attackers if attacker.price <= resources]
+        attackers = [attacker for attacker in self.__attackers if attacker.price <= resources and attacker != BOSS_UNIT]
         game_object = self.spawn_random.choice(attackers)
 
         planned_positions = [x.position for x in planned]

@@ -1,5 +1,9 @@
 Release Notes
 ==============
+* **1.2.2**
+   * Implement bss units to AI player
+   * Add ``get_current_turn`` to ``GameObjectProxy``
+
 * **1.2.1**
    * Data variable in Fact change from variable to callable
    * Remove option to call actions from action base directly (you need to you call method)
