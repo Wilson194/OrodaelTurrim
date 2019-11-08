@@ -4,7 +4,7 @@
 # Grammar definition is described in documentation
 
 
-IF player_dont_have_base AND free_tile* mountain AND money > 0 THEN build_base free_tile;
-IF visible_free_tile* mountain AND money > 10 THEN build_archer visible_free_tile;
+IF player_dont_have_base AND free_tile* mountain THEN build_base free_tile;
+# IF visible_free_tile* mountain AND money > 10 THEN build_archer visible_free_tile;
 
 
