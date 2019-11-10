@@ -1,5 +1,10 @@
 Release Notes
 ==============
+* **1.2.3**
+   * Fix bug with fact at conclusion in rules
+   * Update documentation based on unit balance
+   * Update default rules files
+
 * **1.2.2**
    * Implement bss units to AI player
    * Add ``get_current_turn`` to ``GameObjectProxy``
