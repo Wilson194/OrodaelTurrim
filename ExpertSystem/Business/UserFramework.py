@@ -188,7 +188,10 @@ def create_data_holder_callable(rule: Rule, facts: List[Fact], action_base: IAct
                 if parameter in data_holder_facts:
                     parameter_injection[parameter] = data_holder_facts[parameter]
 
-            original_method = getattr(action_base, current.value.name)
+            try:
+                original_method = getattr(action_base, current.value.name)
+            except AttributeError:
+                continue
             # Create virtual function defined by Expression object
             virtual_functions[current.value] = create_virtual_function(original_method, parameter_injection)
 
