@@ -30,15 +30,15 @@ But you will use them probably.
    :widths: 50 150
 
    * - |knight|
-     - **Attack:** 20
+     - **Attack:** 15
 
-       **Defense:** 20
+       **Defense:** 12
 
        **Sight:** 2
 
-       **Price:** 10
+       **Price:** 12
 
-       **Lives:** 100
+       **Lives:** 80
 
        **Attack range:** 1
 
@@ -51,7 +51,7 @@ But you will use them probably.
    :widths: 50 150
 
    * - |wizard|
-     - **Attack:** 50
+     - **Attack:** 40
 
        **Defense:** 5
 
@@ -73,13 +73,13 @@ But you will use them probably.
    * - |archer|
      - **Attack:** 10
 
-       **Defense:** 5
+       **Defense:** 1
 
        **Sight:** 4
 
        **Price:** 5
 
-       **Lives:** 50
+       **Lives:** 30
 
        **Attack range:** 3
 
@@ -99,7 +99,7 @@ But you will use them probably.
 
        **Price:** 50
 
-       **Lives:** 200
+       **Lives:** 250
 
        **Attack range:** 1
 
@@ -187,9 +187,9 @@ Rigor Mortis servants. You need to show them who is the King here.
    :widths: 50 150
 
    * - |d|
-     - **Attack:** 25
+     - **Attack:** 35
 
-       **Defense:** 3
+       **Defense:** 5
 
        **Sight:** 3
 
@@ -212,7 +212,7 @@ Rigor Mortis servants. You need to show them who is the King here.
    :widths: 50 150
 
    * - |e|
-     - **Attack:** 10
+     - **Attack:** 12
 
        **Defense:** 10
 
@@ -236,7 +236,7 @@ Rigor Mortis servants. You need to show them who is the King here.
    :widths: 50 150
 
    * - |g|
-     - **Attack:** 5
+     - **Attack:** 10
 
        **Defense:** 10
 
@@ -260,7 +260,7 @@ Rigor Mortis servants. You need to show them who is the King here.
    :widths: 50 150
 
    * - |m|
-     - **Attack:** 10
+     - **Attack:** 15
 
        **Defense:** 20
 

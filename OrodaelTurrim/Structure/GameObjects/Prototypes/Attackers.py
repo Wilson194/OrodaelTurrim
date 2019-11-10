@@ -116,8 +116,8 @@ class Necromancer(GameObjectPrototype):
     Represents a dark magician with ability to raise dead. My mom always said: "If you don't have any friends,
     you should go out and raise some ...
     """
-    ATTRIBUTES = AttributeBundle(25, 5, 75, 3, 2, 3)
-    COST = 50
+    ATTRIBUTES = AttributeBundle(30, 5, 75, 3, 2, 3)
+    COST = 0
     ASSET_NAME = "necromancer"
 
 
