@@ -161,18 +161,18 @@ on attack range for attack).
 Attacker spawn information
 -----------------------------
 
-In the game you can obtain information about incoming enemies. Unfortunately, your spies are not among the elite,
-so the information are not exactly accurate. Your spies trying to get the best information each round, so each round
+In the game, you can obtain information about incoming enemies. Unfortunately, your spies are not among the elite,
+so the information is not exactly accurate. Your spies trying to get the best information each round, so each round
 you can get better information.
 
-The system is simple, each round spies try to get best information about incoming enemies. Each round are more or
-less successful. If they are successful more than previous turn, information about incoming enemies are improved.
-If scouts have bad day, they only send you information about unknown incoming units. Also there are some probability,
-that units change direction on the last moment.
+The system is simple, each round spies try to get the best information about incoming enemies. Each round is more or
+less successful. If they are successful more than the previous turn, information about incoming enemies are improved.
+If scouts have a bad day, they only send you information about unknown incoming units. Also, there is some probability,
+that units change direction at the last moment.
 
-Result of this is list of information for N rounds (N is defined by current AI module). Each round those information
-are best what you can have. This information includes the type of upcoming unit and a list of fields where they
-can appear in the future.
+The result of this is a list of information for N rounds (N is defined by current AI module). Each round that information
+is best what you can have. This information includes the type of upcoming unit and a list of fields where they
+can appear in the future. The distribution of probabilities between fields is justified.
 
 It is up to you whether you will trust your Scouts or just use the well known information.
 

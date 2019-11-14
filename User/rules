@@ -6,5 +6,6 @@
 
 IF player_dont_have_base AND free_tile* mountain THEN build_base free_tile;
 # IF visible_free_tile* mountain AND money > 10 THEN build_archer visible_free_tile;
+# IF daemon_from_top [0.30] THEN build_ent WITH 0.20;
 
 

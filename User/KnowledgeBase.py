@@ -90,3 +90,16 @@ class KnowledgeBase(IKnowledgeBase):
             if terrain and not occupied and position not in border_tiles:
                 return position
         return None
+
+
+    def possible_spawn_tiles(self):
+        """ Get list of possible tiles, where enemy spawn a unit """
+        spawn_info = self.game_uncertainty_proxy.spawn_information()
+
+        next_round = spawn_info[0]
+
+        possible_tiles = set()
+        for unit in next_round:
+            possible_tiles.update([x.position for x in unit.positions])
+
+        return possible_tiles

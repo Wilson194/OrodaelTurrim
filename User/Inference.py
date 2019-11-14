@@ -40,6 +40,9 @@ class Inference(IInference):
         for rule in rules:
             condition = self.rule_evaluation(rule.condition)
 
+            if rule.uncertainty:
+                print(f'Rule {rule} has uncertainty {rule.uncertainty}')
+
             if condition:
                 self.conclusion_evaluation(rule.conclusion)
 
@@ -59,6 +62,8 @@ class Inference(IInference):
             return self.rule_evaluation(root_node.left) or self.rule_evaluation(root_node.right)
 
         elif isinstance(root_node.value, Expression):
+            if root_node.value.uncertainty:
+                print(f'Expression {root_node.value.name} has {root_node.value.uncertainty} uncertainty')
             try:
                 return self.knowledge_base[self.knowledge_base.index(root_node.value.name)](*root_node.value.args)
             except ValueError:
