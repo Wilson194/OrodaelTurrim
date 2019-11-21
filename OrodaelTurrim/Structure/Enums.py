@@ -194,7 +194,8 @@ class GameObjectType(Enum):
     @property
     def price(self) -> int:
         """ Return price of the unit """
-        return self.value[1]
+        from OrodaelTurrim.Structure.GameObjects.Prototypes.Prototype import GameObjectPrototypePool
+        return GameObjectPrototypePool[self].COST
 
 
     @property
