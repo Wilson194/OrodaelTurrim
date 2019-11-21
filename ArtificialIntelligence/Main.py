@@ -68,7 +68,7 @@ class AIPlayer(IAttacker):
         self.__most_expensive_unit = [x for x in self.__attackers if x.price == max_price][0]
 
         # Cheapest unit
-        min_price = min([x.price for x in self.__attackers])
+        min_price = min([x.price for x in self.__attackers if x.price != 0])
         self.__cheapest_unit = [x for x in self.__attackers if x.price == min_price][0]
 
         # Border tiles
@@ -194,6 +194,7 @@ class AIPlayer(IAttacker):
 
     def __spawn_unit(self, maximum_resources: int, remaining_resources: int) -> bool:
         """ Determinate if spawn new unit or not """
+
         if remaining_resources > self.__most_expensive_unit.price:
             return True
 
